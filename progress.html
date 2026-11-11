@@ -56,7 +56,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
 <body>
 <main>
 <h1>Báo cáo tiến độ theo 7 sơ đồ hướng dẫn</h1>
-<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt ngày 11/11/2026: FE <code>c2684f8</code> (PR #216), BE <code>da51003</code> (PR #304), Documents <code>d95d46c</code> (PR #100).</p>
+<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt ngày 11/11/2026: FE <code>68308fe</code> (PR #222), BE <code>0ec38bb</code> (PR #299), Documents <code>c8288cf</code> (PR #99).</p>
 
 <div class="card">
   <div class="grid" id="stats"></div>
@@ -66,10 +66,10 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <b>Kết luận nhanh</b>
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
-    <li><b>BE còn thiếu bốn mảng lớn trên main:</b> phiếu kho, phiếu trả NCC, yêu cầu trả và các thao tác kiện (đóng gói, báo sàn sẵn sàng, cập nhật giao).</li>
-    <li><b>Nhiều phần đã có PR BE, chỉ chờ merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #298 và #300 kiện, #271–#276 tài chính.</li>
-    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239), yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223).</li>
-    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Có 4 PR Docs đang mở (#96–#99) theo các PR BE về kiện.</li>
+    <li><b>BE còn thiếu ba mảng lớn trên main:</b> phiếu kho (kể cả kiểm kê đầu kỳ), phiếu trả NCC, yêu cầu trả; cùng đóng gói, báo sàn sẵn sàng và cập nhật giao của kiện.</li>
+    <li><b>Đã có PR BE, chờ sửa rồi merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #273–#276 tài chính (Bình, tám PR đang xung đột với main); #300 giao xong, giao thất bại, hoàn về (Khang, chờ thử trên shop Lazada).</li>
+    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239), yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223), sổ tiền nghe sự kiện thật (issue #228).</li>
+    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Còn 2 PR Docs mở: #98 (chờ phân hàng sau kiểm kê đầu kỳ), #106 (chuyển listing theo trạng thái sàn).</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
         <li><b>BE:</b> #301 (kho tệp R2, POST /files/uploads) đã merge. #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở.</li>
@@ -89,13 +89,22 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>FE merge PR #217</b> (sửa sau #204): ô "Hàng trên sàn" hiện một cụm cho mọi sàn, "305 sản phẩm · 812 phân loại"; chưa có số phân loại thì chỉ hiện số sản phẩm, chưa có số sản phẩm thì "—".</li>
         <li><b>FE merge PR #218</b> (#212): kho nhập số quét thật từng món khi nhận hàng hoàn, kiện thất lạc tìm thấy và nhận hàng trả; chờ xử lý tăng đúng số quét, phiếu kiểm có dòng thiếu và dòng sai mẫu. Để sau: spec e2e với BE thật.</li>
         <li><b>FE merge PR #195</b> (Bình, BE#250): cờ Lệch thuế, Không rõ đơn ở đối soát và sổ tiền.</li>
-        <li><b>FE PR #219</b> (một phần #140): đối soát sàn theo Test_UI v4, khung Dòng lệch chốt ngay trên dòng, dải số tiền, trang chi tiết có người liên quan và dòng tiền. Để sau: trang phí/thuế (#144), e2e với BE thật.</li>
+        <li><b>FE PR #219</b> (một phần #140, chờ sửa dòng tổng đang cộng cả giá vốn): đối soát sàn theo Test_UI v4, khung Dòng lệch chốt ngay trên dòng, dải số tiền, trang chi tiết có người liên quan và dòng tiền. Để sau: trang phí/thuế (#144), e2e với BE thật.</li>
         <li><b>Test_UI PR #4</b> (FE#143): thiết kế màn Nhập sản phẩm từ file, 4 bước, bảng nháp có ô gốc, ảnh theo màu, mục Chưa xử lý. Chờ Thành duyệt rồi mới code FE.</li>
-        <li><b>FE PR #220</b> (FE#155): sửa hàng loạt SKU ở /catalog, gợi ý giá, ngưỡng tồn, khối lượng chỉ lưu khi nhận, dòng lỗi báo trên dòng. Chạy MSW; hợp đồng đề xuất ở BE#242 chờ David xác nhận. Nhập Excel để sau.</li>
-        <li><b>FE PR #222</b> (FE#154): bỏ module con pricing (D9), giá chuẩn là cột SKU; hộp Thông tin SKU sửa giá, khối lượng, kích thước gói qua PATCH §17.2; độ hoàn thiện theo §5.2; tối đa 2 trục phân loại. Xếp sau #220. Chạy MSW; e2e/be chờ commerio-backend#204 lên staging.</li>
+        <li><b>FE merge PR #220</b> (FE#155): sửa hàng loạt SKU ở /catalog, gợi ý giá, ngưỡng tồn, khối lượng chỉ lưu khi nhận, dòng lỗi báo trên dòng. Chạy MSW; hợp đồng đề xuất ở BE#242 chờ David xác nhận. Nhập Excel để sau.</li>
+        <li><b>FE merge PR #222</b> (FE#154): bỏ module con pricing (D9), giá chuẩn là cột SKU; hộp Thông tin SKU sửa giá, khối lượng, kích thước gói qua PATCH §17.2; độ hoàn thiện theo §5.2; tối đa 2 trục phân loại. Xếp sau #220. Chạy MSW; e2e/be chờ commerio-backend#204 lên staging.</li>
         <li><b>FE #215</b> đã merge (đóng #138): giao diện Đơn bán và Khách hàng theo Test_UI v4. Tab trạng thái đơn có số đếm, nhãn giai đoạn có tooltip; chi tiết đơn có thanh bước, cột phải thanh toán và lịch sử; cách tính lãi vào popover; hướng dẫn lần đầu cho bốn trang. Để sau: đối chiếu sáng/tối bằng mắt, nút chuyển Bảng/Danh sách. Không ứng với bước nào trong sơ đồ.</li>
         <li><b>FE #216</b> đã merge (đóng #139): giao diện Kiện hàng, Đóng gói và Yêu cầu trả theo Test_UI v4. Kiện gấp có hạn bàn giao chữ đỏ, cờ kiện có tooltip; màn đóng gói có ô quét lớn và thanh tiến độ; chi tiết kiện và yêu cầu trả có cột Lịch sử bên phải; giải thích kiện không khớp và lý do từ chối theo sàn chuyển vào nút "?"; hướng dẫn lần đầu cho ba trang. Để sau: đối chiếu sáng/tối bằng mắt, bố cục hai cột của Test_UI. Không ứng với bước nào trong sơ đồ.</li>
-        <li><b>FE #202</b> (đẩy listing chạy nền, #164) còn chờ BE#219, chưa có PR BE; nhánh đang xung đột với main, sẽ rebase khi BE#219 có PR.</li>
+        <li><b>FE #202</b> đã merge (đẩy listing chạy nền, #164), sau BE#306.</li>
+      </ul>
+    </li>
+    <li><b>Cập nhật tối 11/11/2026.</b>
+      <ul class="key">
+        <li><b>BE đã merge:</b> #297 hai con số hàng trên sàn; #271, #272 nhãn Tự duyệt, CEO tự chốt lệch; #302 gắn tệp vào phiếu nhận; #289 thoát chờ kiểm kê đầu kỳ; #306 đẩy listing chạy nền; #298 chia hàng cho kiện, lấy lại phần giữ; #299 sự kiện giao xong cho dòng chưa ghép SKU.</li>
+        <li><b>FE đã merge:</b> #193, #194 nhãn Tự duyệt, CEO tự chốt lệch; #202, #220, #222 (chi tiết ở trên).</li>
+        <li><b>Documents đã merge:</b> #96, #97, #99, #101–#105.</li>
+        <li><b>FE đang mở:</b> #219, #223 bỏ not_listed khỏi chuyển delist của listing.</li>
+        <li><b>FE#196</b> (ô ngày giao dự kiến, Bình) bị GitHub tự đóng khi FE#195 merge kèm xoá nhánh; nhánh còn trên GitHub, cần mở lại và đổi base về main.</li>
       </ul>
     </li>
     <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> vẽ theo bản sắp có: BE #280 và FE #196 chưa merge, nên staging hiện chưa có ô này.</li>
@@ -129,11 +138,11 @@ const D = [
  {t:"1. Nhập hàng", docs:"§16, de-nghi-nhap, phieu-nhan, phieu-tra-ncc", rows:[
   ["Lập đề nghị nhập","Nhập hàng › Mua hàng", ["ok","Trang Đề nghị nhập"], ["ok","POST /purchasing/requests"], ["ok","§16.2"]],
   ["Duyệt đề nghị","Duyệt · Trả về · Từ chối", ["ok",""], ["ok","approve, request_changes, reject"], ["ok","§16.3"]],
-  ["Bấm Đã đặt NCC","nhập ngày giao dự kiến", ["pr","Có nút; ô ngày giao ở FE#196"], ["pr","Có thao tác order; ngày giao ở BE#280"], ["ok","§16.2, §16.3"]],
+  ["Bấm Đã đặt NCC","nhập ngày giao dự kiến", ["pr","Có nút; ô ngày giao ở FE#196 (bị đóng nhầm 11/11, cần mở lại)"], ["pr","Có thao tác order; ngày giao ở BE#280"], ["ok","§16.2, §16.3"]],
   ["Cộng vào Đang về","của từng biến thể", ["ok","Hiện ở tồn kho"], ["ok","Cộng khi ordered"], ["ok","§15.1"]],
   ["NCC giao hàng","tới kho", ["ext",""], ["ext",""], ["ext",""]],
-  ["Lập phiếu nhận","đếm số đạt, số lỗi giữ", ["ok","Trang Phiếu nhận"], ["ok","POST /goods-receipts; giao bù ở BE#281; tải tệp lên có (BE#301)"], ["ok","§16.2"]],
-  ["Ghi sổ phiếu nhận","người thứ hai, CEO tự duyệt được", ["part","Có nút; nhãn Tự duyệt ở FE#193"], ["part","post, post_short có; nhãn Tự duyệt ở BE#271; chặn ghi sổ khi thiếu bằng chứng ở BE#302"], ["ok","§16.3, §14.1"]],
+  ["Lập phiếu nhận","đếm số đạt, số lỗi giữ", ["ok","Trang Phiếu nhận"], ["ok","POST /goods-receipts; tải tệp (BE#301), gắn tệp vào phiếu (BE#302); giao bù ở BE#281"], ["ok","§16.2"]],
+  ["Ghi sổ phiếu nhận","người thứ hai, CEO tự duyệt được", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","post, post_short; nhãn Tự duyệt (BE#271); chặn ghi sổ khi thiếu bằng chứng (BE#302)"], ["ok","§16.3, §14.1"]],
   ["Cộng tồn kho","hàng lỗi vào chờ xử lý", ["ok",""], ["ok","Ghi sổ vào inventory"], ["ok","§15.1"]],
   ["Nhận xong","khi còn chờ = 0", ["ok",""], ["ok","Trạng thái received"], ["ok","§16.3"]],
   ["Đóng thiếu","NCC không giao bù, ghi lý do", ["ok",""], ["part","close_short có; đóng sau nhận một phần ở BE#280"], ["ok","§16.3"]],
@@ -145,22 +154,22 @@ const D = [
   ["Thiết lập gian hàng","ghép SKU, ngày trả hàng", ["ok","ShopSetupPage"], ["ok","/shops/:id/setup"], ["ok","§18.2, §18.7"]],
   ["Chọn tồn đầu kỳ, Hoàn tất","đẩy tồn hiện có hoặc kiểm kê", ["ok",""], ["part","Nhánh kiểm kê còn ném 501, chờ BE#278"], ["ok","§18.7.9"]],
   ["Đếm phiếu kiểm kê đầu kỳ","Sản phẩm và kho › Kho", ["ok","StockDocPage"], ["pr","BE#278, BE#277"], ["ok","§15, §18.6.11"]],
-  ["Duyệt và ghi sổ phiếu","mốc kéo đơn = lúc đếm", ["ok",""], ["pr","BE#289 thoát chờ kiểm kê"], ["pr","§18.6.11; Docs#98"]],
-  ["Kéo đơn còn mở, chia hàng","giữ hàng cho kiện chưa giao", ["ok",""], ["part","Kéo đơn và giữ hàng có; chia hàng ở BE#298"], ["pr","§19.2; Docs#97"]],
+  ["Duyệt và ghi sổ phiếu","mốc kéo đơn = lúc đếm", ["ok",""], ["pr","Thoát chờ kiểm kê có (BE#289); phiếu kiểm kê ở BE#278, BE#277"], ["pr","§18.6.11; Docs#98"]],
+  ["Kéo đơn còn mở, chia hàng","giữ hàng cho kiện chưa giao", ["ok",""], ["ok","Kéo đơn, giữ hàng, chia hàng (BE#298)"], ["ok","§19.2 (Docs#97)"]],
   ["Đẩy tồn lần đầu","tồn đã trừ phần giữ", ["ok",""], ["ok","Trong bước thiết lập"], ["ok","§18.7"]],
-  ["Ghép SKU, đẩy sản phẩm","gian hàng › Sản phẩm trên sàn", ["part","Có nút; đẩy chạy nền ở FE#202"], ["ok","/listings/push"], ["ok","§18.3, §18.5"]],
-  ["Sàn nhận, duyệt hoặc từ chối","trang tự cập nhật", ["pr","Tự đọc lại ở FE#202"], ["ok","/listings/sync"], ["ok","§18.5"]],
-  ["Sửa, đẩy lại","tab Đẩy lỗi, Giá chưa đẩy", ["pr","Tab ở FE#202, FE#204"], ["ok",""], ["ok","§18.6"]]
+  ["Ghép SKU, đẩy sản phẩm","gian hàng › Sản phẩm trên sàn", ["ok","Đẩy chạy nền (FE#202)"], ["ok","/listings/push chạy nền (BE#306); ghép SKU tay ở issue #220"], ["ok","§18.3, §18.5"]],
+  ["Sàn nhận, duyệt hoặc từ chối","trang tự cập nhật", ["ok","Tự đọc lại (FE#202)"], ["ok","/listings/sync"], ["ok","§18.5; chuyển theo trạng thái sàn ở Docs#106"]],
+  ["Sửa, đẩy lại","tab Đẩy lỗi, Giá chưa đẩy", ["ok","Tab Đẩy lỗi, Giá chưa đẩy (FE#202, FE#204)"], ["ok",""], ["ok","§18.6"]],
  ]},
  {t:"3. Đơn hàng và kiện", docs:"§19.1–§19.3, don-ban-full, kien-full", rows:[
   ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok ở issue #221"], ["ok","§19.3"]],
-  ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["part","Giữ hàng có; chia hàng ở BE#298"], ["pr","§19.2; Docs#97"]],
+  ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["ok","Giữ hàng, chia hàng, lấy lại phần giữ (BE#298)"], ["ok","§19.2 (Docs#97)"]],
   ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
   ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
   ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
-  ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["pr","§19.2; Docs#99"]],
-  ["Đã giao, đơn Hoàn tất","đơn sàn: sàn báo trạng thái", ["ok",""], ["pr","BE#300; issue #236"], ["pr","§19.2; Docs#99"]],
-  ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok",""], ["pr","BE#300"], ["pr","§19.2; Docs#99"]]
+  ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["ok","§19.2 (Docs#99)"]],
+  ["Đã giao, đơn Hoàn tất","đơn sàn: sàn báo trạng thái", ["ok",""], ["pr","BE#300; sự kiện giao xong cho tiền đã có khuôn (BE#299); issue #236"], ["ok","§19.2 (Docs#99)"]],
+  ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok","Quét theo số lượng từng món (FE#218)"], ["pr","BE#300; nhận số quét từng món ở PR sau"], ["ok","§19.2 (Docs#99, Docs#102)"]],
  ]},
  {t:"4. Yêu cầu trả", docs:"§20, §20.1, yeu-cau-tra", rows:[
   ["Khách gửi yêu cầu trả","qua sàn", ["ext",""], ["no","Kéo yêu cầu từ sàn: issue #202"], ["ok","§20.1"]],
@@ -185,9 +194,9 @@ const D = [
   ["Duyệt cấu hình","Duyệt · Trả về · Từ chối", ["ok",""], ["ok","submit, approve, request-changes, reject"], ["ok","§21.4"]],
   ["Áp dụng từ ngày hiệu lực","Đã lên lịch → Đang áp dụng", ["ok",""], ["ok",""], ["ok","§21.4"]],
   ["Kéo quyết toán từ sàn","sau khi kiện đầu giao xong", ["ok",""], ["part","Có bảng và lần chạy; kéo Lazada thật ở BE#276, chạy nền #273, về trước giao #275"], ["ok","§21.3"]],
-  ["So tiền sàn trả với dự tính","Khớp hoặc Lệch", ["part","Cờ Không rõ đơn ở FE#195"], ["part","Có so khớp; chống trùng ở BE#274"], ["ok","§21.3"]],
+  ["So tiền sàn trả với dự tính","Khớp hoặc Lệch", ["ok","Cờ Lệch thuế, Không rõ đơn (FE#195)"], ["part","Có so khớp; chống trùng ở BE#274"], ["ok","§21.3"]],
   ["Chốt lệch trong ngưỡng","Tài chính › Đối soát sàn", ["ok",""], ["ok",""], ["ok","§21.3"]],
-  ["Chốt lệch vượt ngưỡng","CEO tự chốt, nhãn Tự duyệt", ["pr","FE#194"], ["pr","BE#272"], ["ok","§21.3, §14.1"]]
+  ["Chốt lệch vượt ngưỡng","CEO tự chốt, nhãn Tự duyệt", ["ok","FE#194"], ["ok","BE#272"], ["ok","§21.3, §14.1"]],
  ]},
  {t:"7. Bắt đầu", docs:"§3–§6", rows:[
   ["Bật phân hệ","Quản trị › Phân hệ", ["ok",""], ["ok","/modules/:code"], ["ok","§4"]],
@@ -196,8 +205,8 @@ const D = [
   ["Đăng nhập, chọn công ty","thấy menu theo quyền", ["ok",""], ["ok","/select-company"], ["ok","§3"]],
   ["Danh mục, thuộc tính","kèm quy tắc SKU", ["ok",""], ["ok","/categories, /attributes"], ["ok","§5"]],
   ["Thêm sản phẩm, biến thể","Sản phẩm và kho › Sản phẩm", ["ok","Ảnh JPG/PNG nén ≤ 1 MB (FE#208)"], ["ok","/products, /variants"], ["ok","§5"]],
-  ["Đặt giá bán","giá chuẩn trên SKU (bảng giá bỏ theo D9)", ["part","Đã bỏ trang Bảng giá (FE#209, D9); giá trên form SKU chờ BE#204"], ["part","Có giá chuẩn trên biến thể; sửa giá trên form SKU ở issue #204"], ["ok","§17"]],
-  ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["part","Nhãn Tự duyệt ở FE#193"], ["part","/audit-logs có; nhãn Tự duyệt ở BE#271"], ["ok","§4"]]
+  ["Đặt giá bán","giá chuẩn trên SKU (bảng giá bỏ theo D9)", ["ok","Giá chuẩn, khối lượng, kích thước trên SKU (FE#222), sửa hàng loạt (FE#220); chạy trên mock"], ["part","Có giá chuẩn trên biến thể; route sửa SKU và sửa hàng loạt ở issue #204, #242"], ["ok","§17"]],
+  ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","/audit-logs; nhãn Tự duyệt (BE#271)"], ["ok","§4"]]
  ]}
 ];
 const NAME={ok:"Có",part:"Một phần",pr:"Đang PR",no:"Thiếu",ext:"Ngoài app"};
