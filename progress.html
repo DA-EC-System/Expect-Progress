@@ -45,6 +45,9 @@ ul.key{margin:6px 0 0;padding-left:20px}ul.key li{margin:4px 0}
 .bar i{display:block;height:100%}
 .dhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .dhead .mini{font-size:13px;color:var(--muted)}
+.who{display:inline-block;font-size:11.5px;font-weight:600;padding:0 6px;margin-left:2px;border-radius:4px;background:var(--ext-bg);color:var(--text)}
+.who.open{background:var(--pr-bg);color:var(--pr)}
+.owners li{margin:6px 0}
 code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
 @media (max-width:720px){
   .row{grid-template-columns:1fr;gap:6px}
@@ -68,8 +71,8 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
     <li><b>BE còn thiếu ba mảng lớn trên main:</b> phiếu kho (kể cả kiểm kê đầu kỳ), phiếu trả NCC, yêu cầu trả; cùng đóng gói, báo sàn sẵn sàng và cập nhật giao của kiện.</li>
     <li><b>Đã có PR BE, chờ sửa rồi merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #273–#276 tài chính (Bình, tám PR đang xung đột với main); #300 giao xong, giao thất bại, hoàn về (Khang, chờ thử trên shop Lazada).</li>
-    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239), yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223), sổ tiền nghe sự kiện thật (issue #228).</li>
-    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Còn 2 PR Docs mở: #98 (chờ phân hàng sau kiểm kê đầu kỳ), #106 (chuyển listing theo trạng thái sàn).</li>
+    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239, Khang), yêu cầu trả (issue #202, Bình), đẩy tồn khi đổi (issue #223, Thành), sổ tiền nghe sự kiện thật (issue #228, Thành).</li>
+    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Còn 2 PR Docs mở, đều của Thành: #98 (chờ phân hàng sau kiểm kê đầu kỳ, chờ Khoa review), #106 (chuyển listing theo trạng thái sàn).</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
         <li><b>BE:</b> #301 (kho tệp R2, POST /files/uploads) đã merge. #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở.</li>
@@ -103,12 +106,17 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>BE đã merge:</b> #297 hai con số hàng trên sàn; #271, #272 nhãn Tự duyệt, CEO tự chốt lệch; #302 gắn tệp vào phiếu nhận; #289 thoát chờ kiểm kê đầu kỳ; #306 đẩy listing chạy nền; #298 chia hàng cho kiện, lấy lại phần giữ; #299 sự kiện giao xong cho dòng chưa ghép SKU.</li>
         <li><b>FE đã merge:</b> #193, #194 nhãn Tự duyệt, CEO tự chốt lệch; #202, #220, #222 (chi tiết ở trên).</li>
         <li><b>Documents đã merge:</b> #96, #97, #99, #101–#105.</li>
-        <li><b>FE đang mở:</b> #219, #223 bỏ not_listed khỏi chuyển delist của listing.</li>
+        <li><b>FE đang mở:</b> #219 (Khoa), #223 (Thành) bỏ not_listed khỏi chuyển delist của listing.</li>
         <li><b>FE#196</b> (ô ngày giao dự kiến, Bình) bị GitHub tự đóng khi FE#195 merge kèm xoá nhánh; nhánh còn trên GitHub, cần mở lại và đổi base về main.</li>
       </ul>
     </li>
     <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> vẽ theo bản sắp có: BE #280 và FE #196 chưa merge, nên staging hiện chưa có ô này.</li>
   </ul>
+</div>
+
+<div class="card">
+  <b>Còn chờ ai</b> <span class="mini" style="color:var(--muted);font-size:13px">issue và PR còn mở trong bảng, theo người làm (người nhận issue, người mở PR)</span>
+  <ul class="key owners" id="owners"></ul>
 </div>
 
 <div class="card legend">
@@ -117,6 +125,8 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <span><span class="b pr">Đang PR</span> code nằm ở PR chưa merge</span>
   <span><span class="b no">Thiếu</span> chưa có code, chưa có PR</span>
   <span><span class="b ext">Ngoài app</span> việc của sàn hoặc NCC</span>
+  <span><span class="who open">Tên</span> người làm, issue hoặc PR còn mở</span>
+  <span><span class="who">Tên</span> người làm, đã xong</span>
 </div>
 
 <div id="diagrams"></div>
@@ -209,10 +219,14 @@ const D = [
   ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","/audit-logs; nhãn Tự duyệt (BE#271)"], ["ok","§4"]]
  ]}
 ];
+const OWN={"be:202":["Bình",1],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",1],"be:274":["Bình",1],"be:275":["Bình",1],"be:276":["Bình",1],"be:277":["Bình",1],"be:278":["Bình",1],"be:279":["Bình",1],"be:280":["Bình",1],"be:281":["Bình",1],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",1],"docs:97":["Khang",0],"docs:98":["Thành",1],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",1],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0]};
+const REF=/(BE|FE|Docs)?#(\d+)/g;
+const refsOf=(n,col)=>[...String(n).matchAll(REF)].map(m=>({label:m[0],key:(m[1]?m[1].toLowerCase():col)+":"+m[2]}));
+const tag=(n,col)=>esc(n).replace(REF,(m,p,num)=>{const o=OWN[(p?p.toLowerCase():col)+":"+num];return o?m+'<span class="who'+(o[1]?" open":"")+'">'+o[0]+"</span>":m});
 const NAME={ok:"Có",part:"Một phần",pr:"Đang PR",no:"Thiếu",ext:"Ngoài app"};
 const COL={ok:"var(--ok)",part:"var(--part)",pr:"var(--pr)",no:"var(--no)",ext:"var(--ext)"};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const badge=([s,n],lbl)=>`<div class="cell"><span class="lbl">${lbl}</span><span class="b ${s}">${NAME[s]}</span>${n?`<span class="note">${esc(n)}</span>`:""}</div>`;
+const badge=([s,n],lbl)=>`<div class="cell"><span class="lbl">${lbl}</span><span class="b ${s}">${NAME[s]}</span>${n?`<span class="note">${tag(n,{FE:"fe",BE:"be",Docs:"docs"}[lbl])}</span>`:""}</div>`;
 const total={FE:{},BE:{},Docs:{}};
 let html="";
 for(const d of D){
@@ -226,6 +240,17 @@ for(const d of D){
   html+=`</div>`;
 }
 document.getElementById("diagrams").innerHTML=html;
+const wait={};
+for(const d of D)for(const r of d.rows)[["fe",2],["be",3],["docs",4]].forEach(([col,i])=>{
+  if(!["pr","no","part"].includes(r[i][0]))return;
+  for(const x of refsOf(r[i][1],col)){const o=OWN[x.key];if(!o||!o[1])continue;
+    const p=(wait[o[0]]=wait[o[0]]||{});const lab=({fe:"FE",be:"BE",docs:"Docs"})[x.key.split(":")[0]]+"#"+x.key.split(":")[1];
+    (p[lab]=p[lab]||new Set()).add(d.t.replace(/^\d+\.\s*/,"")+": "+r[0]);}
+});
+document.getElementById("owners").innerHTML=["Thành","Khang","Bình","Khoa"].filter(w=>wait[w]).map(w=>{
+  const items=Object.entries(wait[w]).sort((a,b)=>a[0].localeCompare(b[0],"en",{numeric:true}));
+  return `<li><b>${w}</b> (${items.length}): ${items.map(([k,v])=>`<code>${k}</code> <span style="color:var(--muted)">${esc([...v].join("; "))}</span>`).join(" · ")}</li>`;
+}).join("")||"<li>Không còn việc mở.</li>";
 const steps=D.reduce((a,d)=>a+d.rows.filter(r=>r[3][0]!=="ext"||r[2][0]!=="ext").length,0);
 const st=(k,s)=>total[k][s]||0;
 document.getElementById("stats").innerHTML=[
