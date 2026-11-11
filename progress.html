@@ -66,9 +66,9 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <b>Kết luận nhanh</b>
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
-    <li><b>BE còn thiếu bốn mảng lớn trên main:</b> phiếu kho, phiếu trả NCC, yêu cầu trả và các thao tác kiện (đóng gói, báo sàn sẵn sàng, tự giao, cập nhật giao).</li>
+    <li><b>BE còn thiếu bốn mảng lớn trên main:</b> phiếu kho, phiếu trả NCC, yêu cầu trả và các thao tác kiện (đóng gói, báo sàn sẵn sàng, cập nhật giao).</li>
     <li><b>Nhiều phần đã có PR BE, chỉ chờ merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #298 và #300 kiện, #271–#276 tài chính.</li>
-    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239), tự giao, yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223), API bảng giá.</li>
+    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239), yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223).</li>
     <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Có 4 PR Docs đang mở (#96–#99) theo các PR BE về kiện.</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
@@ -149,7 +149,6 @@ const D = [
   ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok ở issue #221"], ["ok","§19.3"]],
   ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["part","Giữ hàng có; chia hàng ở BE#298"], ["pr","§19.2; Docs#97"]],
   ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
-  ["Tự giao","đơn tay chọn tự giao", ["ok",""], ["no","Chưa có route"], ["ok","§19.2"]],
   ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
   ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
   ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["pr","§19.2; Docs#99"]],
@@ -158,7 +157,6 @@ const D = [
  ]},
  {t:"4. Yêu cầu trả", docs:"§20, §20.1, yeu-cau-tra", rows:[
   ["Khách gửi yêu cầu trả","qua sàn", ["ext",""], ["no","Kéo yêu cầu từ sàn: issue #202"], ["ok","§20.1"]],
-  ["Lập yêu cầu tay","đơn tạo tay", ["ok","POST /returns"], ["no","Chưa có route /returns"], ["ok","§20"]],
   ["Xem yêu cầu","Đơn hàng › Yêu cầu trả", ["ok","ReturnDetailPage"], ["no",""], ["ok","§20"]],
   ["Hoàn tiền, khách giữ hàng","không cần nhận hàng", ["ok","Nút Chỉ hoàn tiền ở chi tiết yêu cầu"], ["no",""], ["ok","§20"]],
   ["Khách gửi hàng về","có mã vận đơn chiều về", ["ext",""], ["ext",""], ["ext",""]],
@@ -191,7 +189,7 @@ const D = [
   ["Đăng nhập, chọn công ty","thấy menu theo quyền", ["ok",""], ["ok","/select-company"], ["ok","§3"]],
   ["Danh mục, thuộc tính","kèm quy tắc SKU", ["ok",""], ["ok","/categories, /attributes"], ["ok","§5"]],
   ["Thêm sản phẩm, biến thể","Sản phẩm và kho › Sản phẩm", ["ok","Ảnh JPG/PNG nén ≤ 1 MB (FE#208)"], ["ok","/products, /variants"], ["ok","§5"]],
-  ["Đặt giá bán","Sản phẩm và kho › Bảng giá", ["part","Đã bỏ trang Bảng giá (FE#209, D9); giá trên form SKU chờ BE#204"], ["part","Chỉ có giá chuẩn trên biến thể; chưa có route bảng giá"], ["ok","§6"]],
+  ["Đặt giá bán","giá chuẩn trên SKU (bảng giá bỏ theo D9)", ["part","Đã bỏ trang Bảng giá (FE#209, D9); giá trên form SKU chờ BE#204"], ["part","Có giá chuẩn trên biến thể; sửa giá trên form SKU ở issue #204"], ["ok","§17"]],
   ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["part","Nhãn Tự duyệt ở FE#193"], ["part","/audit-logs có; nhãn Tự duyệt ở BE#271"], ["ok","§4"]]
  ]}
 ];
