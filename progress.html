@@ -56,7 +56,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
 <body>
 <main>
 <h1>Báo cáo tiến độ theo 7 sơ đồ hướng dẫn</h1>
-<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt ngày 11/11/2026: FE <code>fbcf962</code> (PR #210), BE <code>da51003</code> (PR #304), Documents <code>d95d46c</code> (PR #100).</p>
+<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt ngày 11/11/2026: FE <code>c7d1083</code> (PR #211), BE <code>da51003</code> (PR #304), Documents <code>d95d46c</code> (PR #100).</p>
 
 <div class="card">
   <div class="grid" id="stats"></div>
@@ -70,7 +70,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
     <li><b>Nhiều phần đã có PR BE, chỉ chờ merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #298 và #300 kiện, #271–#276 tài chính.</li>
     <li><b>Chưa có PR nào:</b> đơn tạo tay và xác nhận đơn, đóng gói và báo sàn sẵn sàng (issue #239), tự giao, yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223), API bảng giá.</li>
     <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Có 4 PR Docs đang mở (#96–#99) theo các PR BE về kiện.</li>
-    <li><b>Cập nhật 11/11/2026.</b> BE #301 (kho tệp R2, POST /files/uploads) đã merge. BE #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở. FE đã merge 5 PR: #206 sinh quyền và vai trò mock từ ma trận quyền (#152), #207 tìm kiếm và bảng lệnh Ctrl K (#133), #208 ảnh sản phẩm nén ≤ 1 MB (một phần #205), #209 bỏ trang Bảng giá (một phần #154), #210 giao diện Tổng quan và Báo cáo theo Test_UI v4 (#134). Các PR #206, #207, #210 không ứng với bước nào trong sơ đồ. FE mở PR #211 (#153, sửa nhỏ theo hợp đồng): phiếu kho thêm loại xuất theo kiện (XK) và huỷ bàn giao (DX), bỏ phiếu nhập, xuất cũ; nhãn nhật ký theo tên bảng mới; câu báo cho 6 mã lỗi của Docs#55; chia kiện chuyển sang trang kiện để Kho dùng được.</li>
+    <li><b>Cập nhật 11/11/2026.</b> BE #301 (kho tệp R2, POST /files/uploads) đã merge. BE #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở. FE đã merge 5 PR: #206 sinh quyền và vai trò mock từ ma trận quyền (#152), #207 tìm kiếm và bảng lệnh Ctrl K (#133), #208 ảnh sản phẩm nén ≤ 1 MB (một phần #205), #209 bỏ trang Bảng giá (một phần #154), #210 giao diện Tổng quan và Báo cáo theo Test_UI v4 (#134). Các PR #206, #207, #210 không ứng với bước nào trong sơ đồ. FE đã merge PR #211 (đóng #153, sửa nhỏ theo hợp đồng): phiếu kho thêm loại xuất theo kiện (XK) và huỷ bàn giao (DX), bỏ phiếu nhập, xuất cũ; nhãn nhật ký theo tên bảng mới; câu báo cho 6 mã lỗi của Docs#55; chia kiện chuyển sang trang kiện để Kho dùng được.</li>
     <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> vẽ theo bản sắp có: BE #280 và FE #196 chưa merge, nên staging hiện chưa có ô này.</li>
   </ul>
 </div>
@@ -129,11 +129,11 @@ const D = [
   ["Tạo đơn tay","Đơn hàng › Đơn hàng", ["ok","OrderCreatePage, POST /sales/orders"], ["no","Chưa có route, chưa có issue"], ["ok","§19.1"]],
   ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok ở issue #221"], ["ok","§19.3"]],
   ["Xác nhận đơn COD","trả trước: gửi mã thanh toán", ["ok","POST /orders/:id/confirm"], ["no","Chưa có route"], ["ok","§19.1"]],
-  ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (PR FE#211)"], ["part","Giữ hàng có; chia hàng ở BE#298"], ["pr","§19.2; Docs#97"]],
+  ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["part","Giữ hàng có; chia hàng ở BE#298"], ["pr","§19.2; Docs#97"]],
   ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
   ["Tự giao","đơn tay chọn tự giao", ["ok",""], ["no","Chưa có route"], ["ok","§19.2"]],
   ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
-  ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (PR FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
+  ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
   ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["pr","§19.2; Docs#99"]],
   ["Đã giao, đơn Hoàn tất","đơn sàn: sàn báo trạng thái", ["ok",""], ["pr","BE#300; issue #236"], ["pr","§19.2; Docs#99"]],
   ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok",""], ["pr","BE#300"], ["pr","§19.2; Docs#99"]]
