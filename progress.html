@@ -66,9 +66,9 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <b>Kết luận nhanh</b>
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
-    <li><b>BE còn thiếu bốn mảng lớn trên main:</b> phiếu kho, phiếu trả NCC, yêu cầu trả và các thao tác kiện (đóng gói, báo sàn sẵn sàng, tự giao, cập nhật giao). Đơn tạo tay và xác nhận đơn cũng chưa có route.</li>
+    <li><b>BE còn thiếu bốn mảng lớn trên main:</b> phiếu kho, phiếu trả NCC, yêu cầu trả và các thao tác kiện (đóng gói, báo sàn sẵn sàng, tự giao, cập nhật giao).</li>
     <li><b>Nhiều phần đã có PR BE, chỉ chờ merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #298 và #300 kiện, #271–#276 tài chính.</li>
-    <li><b>Chưa có PR nào:</b> đơn tạo tay và xác nhận đơn, đóng gói và báo sàn sẵn sàng (issue #239), tự giao, yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223), API bảng giá.</li>
+    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239), tự giao, yêu cầu trả (issue #202), đẩy tồn khi đổi (issue #223), API bảng giá.</li>
     <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Có 4 PR Docs đang mở (#96–#99) theo các PR BE về kiện.</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
@@ -146,9 +146,7 @@ const D = [
   ["Sửa, đẩy lại","tab Đẩy lỗi, Giá chưa đẩy", ["pr","Tab ở FE#202, FE#204"], ["ok",""], ["ok","§18.6"]]
  ]},
  {t:"3. Đơn hàng và kiện", docs:"§19.1–§19.3, don-ban-full, kien-full", rows:[
-  ["Tạo đơn tay","Đơn hàng › Đơn hàng", ["ok","OrderCreatePage, POST /sales/orders"], ["no","Chưa có route, chưa có issue"], ["ok","§19.1"]],
   ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok ở issue #221"], ["ok","§19.3"]],
-  ["Xác nhận đơn COD","trả trước: gửi mã thanh toán", ["ok","POST /orders/:id/confirm"], ["no","Chưa có route"], ["ok","§19.1"]],
   ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["part","Giữ hàng có; chia hàng ở BE#298"], ["pr","§19.2; Docs#97"]],
   ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
   ["Tự giao","đơn tay chọn tự giao", ["ok",""], ["no","Chưa có route"], ["ok","§19.2"]],
