@@ -70,9 +70,9 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
     <li><b>BE đã có trên main ba mảng lớn trước đây còn thiếu</b> (12/11/2026): phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC (chuỗi #277–#281 của Bình, gộp qua BE#311) và yêu cầu trả (BE#316, #202). <b>Còn thiếu:</b> đóng gói, báo sàn sẵn sàng (#239, Khang) và cập nhật giao của kiện (BE#300, Khang).</li>
-    <li><b>PR BE còn mở:</b> #300 giao xong, giao thất bại, hoàn về (Khang: xung đột với main, chờ thử trên shop Lazada); #314 mail mất uỷ quyền (Thành). Đã merge 12/11: #309 ghép SKU tay, #315 chặn đẩy tồn khi đơn chưa cập nhật, #317 chặn migration sai thứ tự.</li>
+    <li><b>PR BE còn mở:</b> #300 giao xong, giao thất bại, hoàn về (Khang: xung đột với main, chờ thử trên shop Lazada); Đã merge 12/11: #314 mail mất uỷ quyền, #309 ghép SKU tay, #315 chặn đẩy tồn khi đơn chưa cập nhật, #317 chặn migration sai thứ tự.</li>
     <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239, Khang); sửa SKU, sửa hàng loạt (issue #204, #242, Khang).</li>
-    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở, đều của Thành: #109 (Lệch tồn bật ở lượt đối chiếu thứ hai), #111 (mail mất uỷ quyền). Đã merge 12/11: #98, #106, #107, #108, #110, #112, #113.</li>
+    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở, của Thành: #109 (Lệch tồn bật ở lượt đối chiếu thứ hai). Đã merge 12/11: #98, #106, #107, #108, #110, #111, #112, #113.</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
         <li><b>BE:</b> #301 (kho tệp R2, POST /files/uploads) đã merge. #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở.</li>
@@ -140,7 +140,8 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>BE#309</b> (#220) merge kèm Docs#107: ghép SKU tay, CEO duyệt, bản sao SKU sàn trong CSDL.</li>
         <li><b>BE#317</b> merge: lệnh migrate chặn migration sai thứ tự, CI kiểm thêm, có lệnh sinh lại migration khi gộp main.</li>
         <li><b>BE#315</b> (tiếp #223) merge kèm FE#228, Docs#112: không đẩy tăng tồn khi gian hàng có đơn chưa cập nhật, Lazada đẩy số bán được, nút Đồng bộ chạy nền.</li>
-        <li>Còn chờ: BE#314 + Docs#111 (mail mất uỷ quyền, phải gộp main và sinh lại migration), Docs#109.</li>
+        <li><b>BE#314</b> (đóng #312) merge kèm Docs#111: mail báo CEO, Admin khi gian hàng sắp hết uỷ quyền (3 ngày, 1 ngày) và đã mất (ngay, rồi 6 giờ một lần).</li>
+        <li>Còn chờ: Docs#109.</li>
         <li>Còn 501 trên main chỉ ở cổng thanh toán (ngoài MVP).</li>
       </ul>
     </li>
@@ -253,7 +254,7 @@ const D = [
   ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","/audit-logs; nhãn Tự duyệt (BE#271)"], ["ok","§4"]]
  ]}
 ];
-const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",0],"be:310":["Thành",0],"docs:107":["Thành",0],"docs:108":["Thành",0],"be:314":["Thành",1],"be:315":["Thành",0],"docs:109":["Thành",1],"docs:110":["Thành",0],"docs:111":["Thành",1],"docs:112":["Thành",0],"fe:228":["Thành",0],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0],"be:317":["Thành",0]};
+const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",0],"be:310":["Thành",0],"docs:107":["Thành",0],"docs:108":["Thành",0],"be:314":["Thành",0],"be:315":["Thành",0],"docs:109":["Thành",1],"docs:110":["Thành",0],"docs:111":["Thành",0],"docs:112":["Thành",0],"fe:228":["Thành",0],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0],"be:317":["Thành",0]};
 const REF=/(BE|FE|Docs)?#(\d+)/g;
 const refsOf=(n,col)=>[...String(n).matchAll(REF)].map(m=>({label:m[0],key:(m[1]?m[1].toLowerCase():col)+":"+m[2]}));
 const tag=(n,col)=>esc(n).replace(REF,(m,p,num)=>{const o=OWN[(p?p.toLowerCase():col)+":"+num];return o?m+'<span class="who'+(o[1]?" open":"")+'">'+o[0]+"</span>":m});
