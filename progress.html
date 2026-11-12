@@ -59,7 +59,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
 <body>
 <main>
 <h1>Báo cáo tiến độ theo 7 sơ đồ hướng dẫn</h1>
-<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt ngày 11/11/2026: FE <code>68308fe</code> (PR #222), BE <code>0ec38bb</code> (PR #299), Documents <code>c8288cf</code> (PR #99).</p>
+<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt chiều 12/11/2026: FE <code>a3a8d1e</code> (PR #223), BE <code>7866439</code> (PR #308), Documents <code>b743a54</code> (PR #110).</p>
 
 <div class="card">
   <div class="grid" id="stats"></div>
@@ -69,10 +69,10 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <b>Kết luận nhanh</b>
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
-    <li><b>BE còn thiếu ba mảng lớn trên main:</b> phiếu kho (kể cả kiểm kê đầu kỳ), phiếu trả NCC, yêu cầu trả; cùng đóng gói, báo sàn sẵn sàng và cập nhật giao của kiện.</li>
-    <li><b>Đã có PR BE, chờ sửa rồi merge:</b> #277 phiếu kho, #278 kiểm kê đầu kỳ, #279 trả NCC, #280–#281 nhập hàng tiếp, #273–#276 tài chính (Bình, tám PR đang xung đột với main); #300 giao xong, giao thất bại, hoàn về (Khang, chờ thử trên shop Lazada).</li>
-    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239, Khang), yêu cầu trả đã merge (BE#316, issue #202); đẩy tồn khi chia hàng xong đã merge (BE#307), phần bịt chỗ hở ở BE#315; sổ tiền nghe sự kiện thật (BE#308), ghép SKU tay (BE#309) chờ merge.</li>
-    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở, đều của Thành: #107 (ghép SKU tay), #109 (Lệch tồn bật ở lượt đối chiếu thứ hai), #110 (sổ tiền theo loại khoản), #111 (mail mất uỷ quyền), #112 (đơn chưa cập nhật). Đã merge: #98, #106, #108.</li>
+    <li><b>BE đã có trên main ba mảng lớn trước đây còn thiếu</b> (12/11/2026): phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC (chuỗi #277–#281 của Bình, gộp qua BE#311) và yêu cầu trả (BE#316, #202). <b>Còn thiếu:</b> đóng gói, báo sàn sẵn sàng (#239, Khang) và cập nhật giao của kiện (BE#300, Khang).</li>
+    <li><b>PR BE còn mở:</b> #300 giao xong, giao thất bại, hoàn về (Khang: xung đột với main, chờ thử trên shop Lazada); #309 ghép SKU tay, #315 chặn đẩy tồn khi đơn chưa cập nhật, #314 mail mất uỷ quyền (Thành).</li>
+    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239, Khang); sửa SKU, sửa hàng loạt (issue #204, #242, Khang).</li>
+    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở, đều của Thành: #107 (ghép SKU tay), #109 (Lệch tồn bật ở lượt đối chiếu thứ hai), #111 (mail mất uỷ quyền), #112 (đơn chưa cập nhật). Đã merge 12/11: #98, #106, #108, #110, #113.</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
         <li><b>BE:</b> #301 (kho tệp R2, POST /files/uploads) đã merge. #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở.</li>
@@ -131,7 +131,15 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li>Việc của người khác còn lại: tính lại dòng đơn theo ghép mới (#237, Khang); trường "ai huỷ" của sự kiện huỷ đơn theo Documents/21 (Khang); nhãn, nút trên FE (FE#135, #165, anh Khoa).</li>
       </ul>
     </li>
-    <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> vẽ theo bản sắp có: BE #280 và FE #196 chưa merge, nên staging hiện chưa có ô này.</li>
+    <li><b>Chiều 12/11/2026.</b>
+      <ul class="key">
+        <li><b>BE#311</b> (Bình) merge: sửa theo review và gộp cả chuỗi #273–#281 vào main (đối soát chạy nền, chống trùng quyết toán, phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC, đặt NCC có ngày giao, giao bù). FE#196, #224, #225 (Bình) merge theo.</li>
+        <li><b>BE#316</b> (#202, Thành nhận lại từ Bình) merge: yêu cầu trả đủ máy trạng thái, route <code>/returns</code>, kéo yêu cầu trả Lazada và TikTok sau mỗi lượt kéo đơn, quét nhận nối kho thật (#208), kiện không khớp. Kèm Docs#113.</li>
+        <li><b>BE#308</b> (#228, #229) merge kèm Docs#110: sổ tiền nghe sự kiện thật.</li>
+        <li>Còn 501 trên main chỉ ở cổng thanh toán (ngoài MVP).</li>
+      </ul>
+    </li>
+    <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> đã có trên main (BE#280, FE#196).</li>
   </ul>
 </div>
 
@@ -169,27 +177,27 @@ const D = [
  {t:"1. Nhập hàng", docs:"§16, de-nghi-nhap, phieu-nhan, phieu-tra-ncc", rows:[
   ["Lập đề nghị nhập","Nhập hàng › Mua hàng", ["ok","Trang Đề nghị nhập"], ["ok","POST /purchasing/requests"], ["ok","§16.2"]],
   ["Duyệt đề nghị","Duyệt · Trả về · Từ chối", ["ok",""], ["ok","approve, request_changes, reject"], ["ok","§16.3"]],
-  ["Bấm Đã đặt NCC","nhập ngày giao dự kiến", ["pr","Có nút; ô ngày giao ở FE#196 (bị đóng nhầm 11/11, cần mở lại)"], ["pr","Có thao tác order; ngày giao ở BE#280"], ["ok","§16.2, §16.3"]],
+  ["Bấm Đã đặt NCC","nhập ngày giao dự kiến", ["ok","Ô ngày giao (FE#196)"], ["ok","order cần ngày giao (BE#280)"], ["ok","§16.2, §16.3"]],
   ["Cộng vào Đang về","của từng biến thể", ["ok","Hiện ở tồn kho"], ["ok","Cộng khi ordered"], ["ok","§15.1"]],
   ["NCC giao hàng","tới kho", ["ext",""], ["ext",""], ["ext",""]],
-  ["Lập phiếu nhận","đếm số đạt, số lỗi giữ", ["ok","Trang Phiếu nhận"], ["ok","POST /goods-receipts; tải tệp (BE#301), gắn tệp vào phiếu (BE#302); giao bù ở BE#281"], ["ok","§16.2"]],
+  ["Lập phiếu nhận","đếm số đạt, số lỗi giữ", ["ok","Trang Phiếu nhận"], ["ok","POST /goods-receipts; tải tệp (BE#301), gắn tệp vào phiếu (BE#302); giao bù (BE#281)"], ["ok","§16.2"]],
   ["Ghi sổ phiếu nhận","người thứ hai, CEO tự duyệt được", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","post, post_short; nhãn Tự duyệt (BE#271); chặn ghi sổ khi thiếu bằng chứng (BE#302)"], ["ok","§16.3, §14.1"]],
   ["Cộng tồn kho","hàng lỗi vào chờ xử lý", ["ok",""], ["ok","Ghi sổ vào inventory"], ["ok","§15.1"]],
   ["Nhận xong","khi còn chờ = 0", ["ok",""], ["ok","Trạng thái received"], ["ok","§16.3"]],
-  ["Đóng thiếu","NCC không giao bù, ghi lý do", ["ok",""], ["part","close_short có; đóng sau nhận một phần ở BE#280"], ["ok","§16.3"]],
-  ["Phiếu trả NCC","tạo sẵn nháp khi có hàng lỗi", ["ok","Tab Trả NCC, gọi /supplier-returns"], ["pr","Chưa có route; BE#279 (issue #210)"], ["ok","§16, phieu-tra-ncc"]]
+  ["Đóng thiếu","NCC không giao bù, ghi lý do", ["ok",""], ["ok","close_short, đóng sau nhận một phần (BE#280)"], ["ok","§16.3"]],
+  ["Phiếu trả NCC","tạo sẵn nháp khi có hàng lỗi", ["ok","Tab Trả NCC, gọi /supplier-returns"], ["ok","/supplier-returns đủ vòng đời (BE#279)"], ["ok","§16, phieu-tra-ncc"]]
  ]},
  {t:"2. Kênh bán", docs:"§18.1–§18.7, gian-hang, listing", rows:[
   ["Kết nối gian hàng","Bán trên sàn › Kênh bán", ["ok",""], ["ok","/shops/:platform/authorize-url"], ["ok","§18.1, §18.4"]],
   ["Trang uỷ quyền của sàn","đăng nhập shop, cho phép", ["ext","Trang của sàn"], ["ok","/callback, /token"], ["ok","§18.4"]],
   ["Thiết lập gian hàng","ghép SKU, ngày trả hàng", ["ok","ShopSetupPage"], ["ok","/shops/:id/setup"], ["ok","§18.2, §18.7"]],
-  ["Chọn tồn đầu kỳ, Hoàn tất","đẩy tồn hiện có hoặc kiểm kê", ["ok",""], ["part","Nhánh kiểm kê còn ném 501, chờ BE#278"], ["ok","§18.7.9"]],
-  ["Đếm phiếu kiểm kê đầu kỳ","Sản phẩm và kho › Kho", ["ok","StockDocPage"], ["pr","BE#278, BE#277"], ["ok","§15, §18.6.11"]],
-  ["Duyệt và ghi sổ phiếu","mốc kéo đơn = lúc đếm", ["ok",""], ["pr","Thoát chờ kiểm kê có (BE#289); phiếu kiểm kê ở BE#278, BE#277"], ["pr","§18.6.11; Docs#98"]],
+  ["Chọn tồn đầu kỳ, Hoàn tất","đẩy tồn hiện có hoặc kiểm kê", ["ok",""], ["ok","Nhánh kiểm kê gọi bản thật (BE#278)"], ["ok","§18.7.9"]],
+  ["Đếm phiếu kiểm kê đầu kỳ","Sản phẩm và kho › Kho", ["ok","StockDocPage"], ["ok","Phiếu kiểm kê đầu kỳ (BE#278, BE#277)"], ["ok","§15, §18.6.11"]],
+  ["Duyệt và ghi sổ phiếu","mốc kéo đơn = lúc đếm", ["ok",""], ["ok","Thoát chờ kiểm kê (BE#289), ghi sổ phiếu kiểm kê (BE#277)"], ["ok","§18.6.11 (Docs#98)"]],
   ["Kéo đơn còn mở, chia hàng","giữ hàng cho kiện chưa giao", ["ok",""], ["ok","Kéo đơn, giữ hàng, chia hàng (BE#298)"], ["ok","§19.2 (Docs#97)"]],
   ["Đẩy tồn lần đầu","tồn đã trừ phần giữ", ["ok",""], ["ok","Trong bước thiết lập"], ["ok","§18.7"]],
   ["Ghép SKU, đẩy sản phẩm","gian hàng › Sản phẩm trên sàn", ["ok","Đẩy chạy nền (FE#202)"], ["ok","/listings/push chạy nền (BE#306); ghép SKU tay, CEO duyệt, bản sao SKU sàn ở BE#309"], ["ok","§18.3, §18.5; ghép SKU tay ở Docs#107"]],
-  ["Sàn nhận, duyệt hoặc từ chối","trang tự cập nhật", ["ok","Tự đọc lại (FE#202)"], ["ok","/listings/sync"], ["ok","§18.5; chuyển theo trạng thái sàn ở Docs#106"]],
+  ["Sàn nhận, duyệt hoặc từ chối","trang tự cập nhật", ["ok","Tự đọc lại (FE#202)"], ["ok","/listings/sync"], ["ok","§18.5; chuyển theo trạng thái sàn (Docs#106)"]],
   ["Sửa, đẩy lại","tab Đẩy lỗi, Giá chưa đẩy", ["ok","Tab Đẩy lỗi, Giá chưa đẩy (FE#202, FE#204)"], ["ok",""], ["ok","§18.6"]],
  ]},
  {t:"3. Đơn hàng và kiện", docs:"§19.1–§19.3, don-ban-full, kien-full", rows:[
@@ -200,32 +208,32 @@ const D = [
   ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
   ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["ok","§19.2 (Docs#99)"]],
   ["Đã giao, đơn Hoàn tất","đơn sàn: sàn báo trạng thái", ["ok",""], ["pr","BE#300; sự kiện giao xong cho tiền đã có khuôn (BE#299); issue #236"], ["ok","§19.2 (Docs#99)"]],
-  ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok","Quét theo số lượng từng món (FE#218)"], ["pr","BE#300; nhận số quét từng món ở PR sau"], ["ok","§19.2 (Docs#99, Docs#102)"]],
+  ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok","Quét theo số lượng từng món (FE#218)"], ["pr","BE#300; kho nhận số quét từng món đã có (BE#277)"], ["ok","§19.2 (Docs#99, Docs#102)"]],
  ]},
  {t:"4. Yêu cầu trả", docs:"§20, §20.1, yeu-cau-tra", rows:[
-  ["Khách gửi yêu cầu trả","qua sàn", ["ext",""], ["no","Kéo yêu cầu từ sàn: issue #202"], ["ok","§20.1"]],
-  ["Xem yêu cầu","Đơn hàng › Yêu cầu trả", ["ok","ReturnDetailPage"], ["no",""], ["ok","§20"]],
-  ["Hoàn tiền, khách giữ hàng","không cần nhận hàng", ["ok","Nút Chỉ hoàn tiền ở chi tiết yêu cầu"], ["no",""], ["ok","§20"]],
+  ["Khách gửi yêu cầu trả","qua sàn", ["ext",""], ["ok","Kéo yêu cầu Lazada, TikTok sau mỗi lượt kéo đơn (BE#316)"], ["ok","§20.1"]],
+  ["Xem yêu cầu","Đơn hàng › Yêu cầu trả", ["ok","ReturnDetailPage"], ["ok","GET /returns, /returns/:id (BE#316)"], ["ok","§20"]],
+  ["Hoàn tiền, khách giữ hàng","không cần nhận hàng", ["ok","Nút Chỉ hoàn tiền ở chi tiết yêu cầu"], ["ok","refund-only; Lazada chỉ hoàn tiền (BE#316)"], ["ok","§20"]],
   ["Khách gửi hàng về","có mã vận đơn chiều về", ["ext",""], ["ext",""], ["ext",""]],
-  ["Khách không gửi hàng","đóng yêu cầu", ["ok",""], ["no",""], ["ok","§20"]],
-  ["Nhận hàng trả","tạo phiếu kiểm hàng về", ["ok","POST /returns/receive"], ["no",""], ["ok","§20"]],
-  ["Quét, chia hàng","bán lại được hoặc hỏng", ["ok","Phiếu Kiểm hàng về"], ["pr","Phiếu kiểm hàng về ở BE#277"], ["ok","§15"]],
-  ["Cộng tồn phần bán lại, đóng","hỏng vào chờ xử lý", ["ok",""], ["no","Cần cả #277 và #202"], ["ok","§15, §20"]]
+  ["Khách không gửi hàng","đóng yêu cầu", ["ok",""], ["ok","no-show (BE#316)"], ["ok","§20"]],
+  ["Nhận hàng trả","tạo phiếu kiểm hàng về", ["ok","POST /returns/receive"], ["ok","Quét nhận, kiện không khớp (BE#316); §20 bổ sung ở Docs#113"], ["ok","§20"]],
+  ["Quét, chia hàng","bán lại được hoặc hỏng", ["ok","Phiếu Kiểm hàng về"], ["ok","Phiếu kiểm hàng về (BE#277)"], ["ok","§15"]],
+  ["Cộng tồn phần bán lại, đóng","hỏng vào chờ xử lý", ["ok",""], ["ok","Ghi sổ phiếu kiểm, yêu cầu tự đóng (BE#277, BE#316)"], ["ok","§15, §20"]]
  ]},
  {t:"5. Phiếu kho", docs:"§15, phieu-kho, ton-kho", rows:[
-  ["Lập phiếu","Sản phẩm và kho › Kho", ["ok","POST /inventory/documents"], ["pr","Chưa có route; BE#277 (issue #208)"], ["ok","§15.2"]],
-  ["Nhập số lượng, lý do","Lưu nháp → Gửi duyệt", ["ok",""], ["pr","BE#277"], ["ok","§15.3"]],
-  ["Huỷ phiếu","khi còn nháp", ["ok",""], ["pr","BE#277"], ["ok","§15.3"]],
-  ["Duyệt và ghi sổ","hoặc Từ chối kèm lý do", ["ok",""], ["pr","BE#277"], ["ok","§15.3"]],
-  ["Tồn kho thay đổi","theo loại phiếu", ["ok",""], ["pr","BE#277"], ["ok","§15.1"]],
+  ["Lập phiếu","Sản phẩm và kho › Kho", ["ok","POST /inventory/documents"], ["ok","/inventory/documents (BE#277)"], ["ok","§15.2"]],
+  ["Nhập số lượng, lý do","Lưu nháp → Gửi duyệt", ["ok",""], ["ok",""], ["ok","§15.3"]],
+  ["Huỷ phiếu","khi còn nháp", ["ok",""], ["ok",""], ["ok","§15.3"]],
+  ["Duyệt và ghi sổ","hoặc Từ chối kèm lý do", ["ok",""], ["ok",""], ["ok","§15.3"]],
+  ["Tồn kho thay đổi","theo loại phiếu", ["ok",""], ["ok",""], ["ok","§15.1"]],
   ["Đẩy tồn mới lên sàn","các gian hàng đang bán", ["ext","Chạy ngầm"], ["part","Đẩy khi chia hàng xong, đối chiếu 15 phút đã merge (BE#307); chặn đẩy tăng khi đơn chưa cập nhật, đối chiếu Lazada, khuyến mãi khoá ở BE#315 (issue #223)"], ["pr","§18.6; Docs#112"]],
  ]},
  {t:"6. Tài chính", docs:"§21.3, §21.4, doi-soat, phien-ban-cau-hinh", rows:[
   ["Soạn cấu hình, chạy thử","Tài chính › Cấu hình phí và thuế", ["ok",""], ["ok","/configs, /:id/dry-run"], ["ok","§21.4"]],
   ["Duyệt cấu hình","Duyệt · Trả về · Từ chối", ["ok",""], ["ok","submit, approve, request-changes, reject"], ["ok","§21.4"]],
   ["Áp dụng từ ngày hiệu lực","Đã lên lịch → Đang áp dụng", ["ok",""], ["ok",""], ["ok","§21.4"]],
-  ["Kéo quyết toán từ sàn","sau khi kiện đầu giao xong", ["ok",""], ["part","Có bảng và lần chạy; kéo Lazada thật ở BE#276, chạy nền #273, về trước giao #275"], ["ok","§21.3"]],
-  ["So tiền sàn trả với dự tính","Khớp hoặc Lệch", ["ok","Cờ Lệch thuế, Không rõ đơn (FE#195)"], ["part","Có so khớp; chống trùng ở BE#274"], ["ok","§21.3"]],
+  ["Kéo quyết toán từ sàn","sau khi kiện đầu giao xong", ["ok",""], ["ok","Kéo chạy nền (BE#273), về trước khi giao (BE#275), khoản chưa ánh xạ (BE#276)"], ["ok","§21.3"]],
+  ["So tiền sàn trả với dự tính","Khớp hoặc Lệch", ["ok","Cờ Lệch thuế, Không rõ đơn (FE#195)"], ["ok","So khớp, chống trùng theo gian hàng (BE#274)"], ["ok","§21.3"]],
   ["Chốt lệch trong ngưỡng","Tài chính › Đối soát sàn", ["ok",""], ["ok",""], ["ok","§21.3"]],
   ["Chốt lệch vượt ngưỡng","CEO tự chốt, nhãn Tự duyệt", ["ok","FE#194"], ["ok","BE#272"], ["ok","§21.3, §14.1"]],
  ]},
@@ -240,7 +248,7 @@ const D = [
   ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","/audit-logs; nhãn Tự duyệt (BE#271)"], ["ok","§4"]]
  ]}
 ];
-const OWN={"be:202":["Bình",1],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",1],"be:274":["Bình",1],"be:275":["Bình",1],"be:276":["Bình",1],"be:277":["Bình",1],"be:278":["Bình",1],"be:279":["Bình",1],"be:280":["Bình",1],"be:281":["Bình",1],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",1],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",1],"be:309":["Thành",1],"be:310":["Thành",0],"docs:107":["Thành",1],"docs:108":["Thành",0],"be:314":["Thành",1],"be:315":["Thành",1],"docs:109":["Thành",1],"docs:110":["Thành",1],"docs:111":["Thành",1],"docs:112":["Thành",1],"fe:228":["Thành",1]};
+const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",1],"be:310":["Thành",0],"docs:107":["Thành",1],"docs:108":["Thành",0],"be:314":["Thành",1],"be:315":["Thành",1],"docs:109":["Thành",1],"docs:110":["Thành",0],"docs:111":["Thành",1],"docs:112":["Thành",1],"fe:228":["Thành",1],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0]};
 const REF=/(BE|FE|Docs)?#(\d+)/g;
 const refsOf=(n,col)=>[...String(n).matchAll(REF)].map(m=>({label:m[0],key:(m[1]?m[1].toLowerCase():col)+":"+m[2]}));
 const tag=(n,col)=>esc(n).replace(REF,(m,p,num)=>{const o=OWN[(p?p.toLowerCase():col)+":"+num];return o?m+'<span class="who'+(o[1]?" open":"")+'">'+o[0]+"</span>":m});
