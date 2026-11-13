@@ -99,6 +99,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>FE merge PR #219</b> (một phần #140): đối soát sàn theo Test_UI v4, khung Dòng lệch chốt ngay trên dòng, dải số tiền, trang chi tiết có người liên quan và dòng tiền. Để sau: trang phí/thuế (#144), e2e với BE thật.</li>
         <li><b>FE PR #234</b> (một phần #140, 13/11): soát đối soát sáng/tối ở 1440 và 390; sửa mã đơn xuống dòng và thêm nhãn từng số ở Dòng lệch trên điện thoại; e2e mock. Trang phí/thuế chờ #144, commerio-backend#230 (Thành).</li>
         <li><b>FE PR #235</b> (một phần #205, 13/11): spec e2e/be ảnh sản phẩm, tự bỏ qua khi BE còn trả 422 "Chưa hỗ trợ ảnh" (chờ commerio-backend#303). Sửa trang sửa sản phẩm sập trên staging vì BE chưa trả trường biến thể của commerio-backend#204.</li>
+        <li><b>FE PR #236</b> (một phần #150, 13/11): gỡ phần tiền cũ (chứng từ, phiếu chi, COD, hoàn tiền, khoản thu chưa khớp, giao dịch cổng, cổng thanh toán, khung thanh toán ở chi tiết đơn) để commerio-backend#324 merge được. Tab lãi theo đơn chờ commerio-backend#323.</li>
         <li><b>Test_UI PR #4</b> (FE#143): thiết kế màn Nhập sản phẩm từ file, 4 bước, bảng nháp có ô gốc, ảnh theo màu, mục Chưa xử lý. Chờ Thành duyệt rồi mới code FE.</li>
         <li><b>FE merge PR #220</b> (FE#155): sửa hàng loạt SKU ở /catalog, gợi ý giá, ngưỡng tồn, khối lượng chỉ lưu khi nhận, dòng lỗi báo trên dòng. Chạy MSW; hợp đồng đề xuất ở BE#242 chờ David xác nhận. Nhập Excel để sau.</li>
         <li><b>FE merge PR #222</b> (FE#154): bỏ module con pricing (D9), giá chuẩn là cột SKU; hộp Thông tin SKU sửa giá, khối lượng, kích thước gói qua PATCH §17.2; độ hoàn thiện theo §5.2; tối đa 2 trục phân loại. Xếp sau #220. Chạy MSW; e2e/be chờ commerio-backend#204 lên staging.</li>
@@ -155,7 +156,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>BE#300</b> (Khang): Thành yêu cầu sửa, còn phải gọi thật <code>/logistic/order/trace</code> và đo shipping_fee trên shop thử; Docs#115 đi kèm.</li>
         <li><b>BE#321</b> (Thành) merge: cố định giờ cho cả file test đọc SKU Lazada (tiếp BE#318); trước đó CI của BE#300, #313 đỏ ở ca "sàn đổi thứ tự" (43 lời gọi, quá trần 40) vì số lời gọi đổi theo ngày chạy.</li>
         <li><b>BE#313</b> (Dependabot nâng <code>docker/login-action</code> v3 lên v4) merge; deploy staging sau đó xanh trọn (đăng nhập ghcr, migrate, deploy, blackbox).</li>
-        <li><b>FE đang mở của Khoa:</b> #227 (Refs #165, đã gộp main, CI đạt), #230 (một phần #135, đã sửa sau review 13/11, chờ Thành), #234 (một phần #140), #235 (một phần #205).</li>
+        <li><b>FE đang mở của Khoa:</b> #227 (Refs #165, đã gộp main, CI đạt), #230 (một phần #135, đã sửa sau review 13/11, chờ Thành), #234 (một phần #140), #235 (một phần #205), #236 (một phần #150).</li>
       </ul>
     </li>
     <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> đã có trên main (BE#280, FE#196).</li>
