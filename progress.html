@@ -59,7 +59,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
 <body>
 <main>
 <h1>Báo cáo tiến độ theo 7 sơ đồ hướng dẫn</h1>
-<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt chiều 12/11/2026: FE <code>a3a8d1e</code> (PR #223), BE <code>7866439</code> (PR #308), Documents <code>b743a54</code> (PR #110).</p>
+<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt sáng 13/11/2026: FE <code>eaad409</code> (PR #226), BE <code>24dfb0f</code> (PR #318), Documents <code>c27554d</code> (PR #114).</p>
 
 <div class="card">
   <div class="grid" id="stats"></div>
@@ -69,10 +69,10 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <b>Kết luận nhanh</b>
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
-    <li><b>BE đã có trên main ba mảng lớn trước đây còn thiếu</b> (12/11/2026): phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC (chuỗi #277–#281 của Bình, gộp qua BE#311) và yêu cầu trả (BE#316, #202). <b>Còn thiếu:</b> đóng gói, báo sàn sẵn sàng (#239, Khang) và cập nhật giao của kiện (BE#300, Khang).</li>
-    <li><b>PR BE còn mở:</b> #300 giao xong, giao thất bại, hoàn về (Khang: xung đột với main, chờ thử trên shop Lazada); Đã merge 12/11: #314 mail mất uỷ quyền, #309 ghép SKU tay, #315 chặn đẩy tồn khi đơn chưa cập nhật, #317 chặn migration sai thứ tự.</li>
-    <li><b>Chưa có PR nào:</b> đóng gói và báo sàn sẵn sàng (issue #239, Khang); sửa SKU, sửa hàng loạt (issue #204, #242, Khang).</li>
-    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở, của Thành: #109 (Lệch tồn bật ở lượt đối chiếu thứ hai). Đã merge 12/11: #98, #106, #107, #108, #110, #111, #112, #113.</li>
+    <li><b>BE đã có trên main ba mảng lớn trước đây còn thiếu</b> (12/11/2026): phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC (chuỗi #277–#281 của Bình, gộp qua BE#311) và yêu cầu trả (BE#316, #202). <b>Đang PR:</b> đóng gói, báo sàn sẵn sàng, vận đơn (#239: BE#319, #320 và FE#233 của David) và cập nhật giao của kiện (BE#300, Khang).</li>
+    <li><b>PR BE còn mở:</b> #319 cổng sàn đóng gói, RTS, vận đơn PDF và #320 danh sách nhặt, đóng gói, báo sẵn sàng, in vận đơn (David, #239); #300 giao xong, giao thất bại, hoàn về (Khang; Thành yêu cầu sửa: chưa gọi thật <code>/logistic/order/trace</code> và chưa đo shipping_fee trên shop thử Lazada). Đã merge 12–13/11: #309, #314, #315, #316, #317, #318.</li>
+    <li><b>Chưa có PR nào:</b> sửa SKU, sửa hàng loạt (issue #204, #242, Khang).</li>
+    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở (David): #115 thử trace và shipping_fee Lazada (BE#300), #116 đóng gói, RTS, vận đơn PDF (BE#239). Đã merge 12–13/11: #98, #106–#114.</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
         <li><b>BE:</b> #301 (kho tệp R2, POST /files/uploads) đã merge. #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở.</li>
@@ -93,10 +93,10 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>FE merge PR #218</b> (#212): kho nhập số quét thật từng món khi nhận hàng hoàn, kiện thất lạc tìm thấy và nhận hàng trả; chờ xử lý tăng đúng số quét, phiếu kiểm có dòng thiếu và dòng sai mẫu. Để sau: spec e2e với BE thật.</li>
         <li><b>FE merge PR #195</b> (Bình, BE#250): cờ Lệch thuế, Không rõ đơn ở đối soát và sổ tiền.</li>
         <li><b>FE PR #230</b> (một phần #135, sau backend#289): nút "Lập lại phiếu kiểm kê" khi phiếu kiểm kê đầu kỳ bị từ chối hoặc đã huỷ; báo lỗi opening_stocktake_open kèm số phiếu; bước allocate trong tiến độ thiết lập; làm mới gian hàng sau khi phiếu kho đổi; mock, vitest, e2e.</li>
-        <li><b>FE PR #229</b> (Closes #141): khu Quản trị theo Test_UI: Phân hệ thành danh sách có công tắc, HelpTip, lý do khoá và thẻ phân hệ cốt lõi; Vai trò khoá quyền không có kèm lý do; Nhật ký có nút Chi tiết; hướng dẫn lần đầu staff, roles, modules, platform-companies; e2e mock. Để sau: soát giao diện sáng/tối.</li>
-        <li><b>FE PR #227</b> (Closes #165, xếp sau #226): nhãn đồng bộ theo §18.6.6 (Lệch tồn, Cập nhật tồn lên sàn lỗi, Đẩy giá lỗi, Giá đã đổi chưa đẩy, Đang ẩn bằng tồn 0), HelpTip giải thích ghép SKU, hướng dẫn lần đầu trang ghép SKU, spec e2e/be nhãn và quyền nút. Để sau: kiểm staging, soát giao diện sáng/tối.</li>
-        <li><b>FE PR #226</b> (một phần #165): ghép SKU theo quyền <code>channel.listing.match</code>, nên Sale ghép được nhưng không đẩy, không gỡ. Hộp ghép có lựa chọn "Không quản tồn"; khi BE trả 202 thì báo đã gửi CEO duyệt. Theo route của BE PR #309. Để sau: "Bỏ ghép" chưa có route BE; Duyệt/Từ chối là phần của Thành.</li>
-        <li><b>FE PR #219</b> (một phần #140, chờ sửa dòng tổng đang cộng cả giá vốn): đối soát sàn theo Test_UI v4, khung Dòng lệch chốt ngay trên dòng, dải số tiền, trang chi tiết có người liên quan và dòng tiền. Để sau: trang phí/thuế (#144), e2e với BE thật.</li>
+        <li><b>FE merge PR #229</b> (Closes #141): khu Quản trị theo Test_UI: Phân hệ thành danh sách có công tắc, HelpTip, lý do khoá và thẻ phân hệ cốt lõi; Vai trò khoá quyền không có kèm lý do; Nhật ký có nút Chi tiết; hướng dẫn lần đầu staff, roles, modules, platform-companies; e2e mock. Để sau: soát giao diện sáng/tối.</li>
+        <li><b>FE PR #227</b> (Refs #165; 13/11 đã gộp main sau #226, #219, sửa sau review: tab Giá chưa đẩy theo <code>priceSync</code>, bỏ nhãn tồn trùng khi đẩy tồn lỗi; CI đạt, chờ merge): nhãn đồng bộ theo §18.6.6 (Lệch tồn, Cập nhật tồn lên sàn lỗi, Đẩy giá lỗi, Giá đã đổi chưa đẩy, Đang ẩn bằng tồn 0), HelpTip giải thích ghép SKU, hướng dẫn lần đầu trang ghép SKU, spec e2e/be nhãn và quyền nút. Để sau: kiểm staging, soát giao diện sáng/tối.</li>
+        <li><b>FE merge PR #226</b> (một phần #165): ghép SKU theo quyền <code>channel.listing.match</code>, nên Sale ghép được nhưng không đẩy, không gỡ. Hộp ghép có lựa chọn "Không quản tồn"; khi BE trả 202 thì báo đã gửi CEO duyệt. Theo route của BE PR #309. Để sau: "Bỏ ghép" chưa có route BE; Duyệt/Từ chối là phần của Thành.</li>
+        <li><b>FE merge PR #219</b> (một phần #140): đối soát sàn theo Test_UI v4, khung Dòng lệch chốt ngay trên dòng, dải số tiền, trang chi tiết có người liên quan và dòng tiền. Để sau: trang phí/thuế (#144), e2e với BE thật.</li>
         <li><b>Test_UI PR #4</b> (FE#143): thiết kế màn Nhập sản phẩm từ file, 4 bước, bảng nháp có ô gốc, ảnh theo màu, mục Chưa xử lý. Chờ Thành duyệt rồi mới code FE.</li>
         <li><b>FE merge PR #220</b> (FE#155): sửa hàng loạt SKU ở /catalog, gợi ý giá, ngưỡng tồn, khối lượng chỉ lưu khi nhận, dòng lỗi báo trên dòng. Chạy MSW; hợp đồng đề xuất ở BE#242 chờ David xác nhận. Nhập Excel để sau.</li>
         <li><b>FE merge PR #222</b> (FE#154): bỏ module con pricing (D9), giá chuẩn là cột SKU; hộp Thông tin SKU sửa giá, khối lượng, kích thước gói qua PATCH §17.2; độ hoàn thiện theo §5.2; tối đa 2 trục phân loại. Xếp sau #220. Chạy MSW; e2e/be chờ commerio-backend#204 lên staging.</li>
@@ -144,6 +144,14 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>BE#314</b> (đóng #312) merge kèm Docs#111: mail báo CEO, Admin khi gian hàng sắp hết uỷ quyền (3 ngày, 1 ngày) và đã mất (ngay, rồi 6 giờ một lần).</li>
         <li>Còn chờ: Docs#109.</li>
         <li>Còn 501 trên main chỉ ở cổng thanh toán (ngoài MVP).</li>
+      </ul>
+    </li>
+    <li><b>Sáng 13/11/2026.</b>
+      <ul class="key">
+        <li><b>BE#318</b> (Thành) merge: test trần lời gọi đọc SKU Lazada không phụ thuộc giờ chạy. <b>Docs#114</b> merge: kịch bản test live trên staging.</li>
+        <li><b>#239 có PR</b> (David): BE#319 cổng sàn (adapter, đóng gói, RTS, vận đơn PDF), BE#320 fulfillment (danh sách nhặt, đóng gói, báo sẵn sàng, mở kiện, in vận đơn), FE#233 nối API, Docs#116. Chưa review.</li>
+        <li><b>BE#300</b> (Khang): Thành yêu cầu sửa, còn phải gọi thật <code>/logistic/order/trace</code> và đo shipping_fee trên shop thử; Docs#115 đi kèm.</li>
+        <li><b>FE đang mở của Khoa:</b> #227 (Refs #165, đã gộp main, CI đạt), #230 (một phần #135, CI đạt, chưa review).</li>
       </ul>
     </li>
     <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> đã có trên main (BE#280, FE#196).</li>
@@ -210,8 +218,8 @@ const D = [
  {t:"3. Đơn hàng và kiện", docs:"§19.1–§19.3, don-ban-full, kien-full", rows:[
   ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok: adapter và cổng tách kiện, báo sẵn sàng đã merge (BE#310), phần app chờ #205, #238, #239 của Khang"], ["ok","§19.3"]],
   ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["ok","Giữ hàng, chia hàng, lấy lại phần giữ (BE#298)"], ["ok","§19.2 (Docs#97)"]],
-  ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
-  ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready"], ["no","Issue #239, chưa có PR"], ["ok","§19.2"]],
+  ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["pr","#239: BE#320 đóng gói, BE#319 cổng sàn; FE#233 nối API"], ["ok","§19.2"]],
+  ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready"], ["pr","#239: BE#320 báo sẵn sàng, BE#319 RTS và vận đơn PDF"], ["ok","§19.2"]],
   ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
   ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["ok","§19.2 (Docs#99)"]],
   ["Đã giao, đơn Hoàn tất","đơn sàn: sàn báo trạng thái", ["ok",""], ["pr","BE#300; sự kiện giao xong cho tiền đã có khuôn (BE#299); issue #236"], ["ok","§19.2 (Docs#99)"]],
