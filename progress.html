@@ -142,7 +142,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>BE#317</b> merge: lệnh migrate chặn migration sai thứ tự, CI kiểm thêm, có lệnh sinh lại migration khi gộp main.</li>
         <li><b>BE#315</b> (tiếp #223) merge kèm FE#228, Docs#112: không đẩy tăng tồn khi gian hàng có đơn chưa cập nhật, Lazada đẩy số bán được, nút Đồng bộ chạy nền.</li>
         <li><b>BE#314</b> (đóng #312) merge kèm Docs#111: mail báo CEO, Admin khi gian hàng sắp hết uỷ quyền (3 ngày, 1 ngày) và đã mất (ngay, rồi 6 giờ một lần).</li>
-        <li>Còn chờ: Docs#109.</li>
+        <li><b>Docs#109</b> merge: Lệch tồn chỉ bật ở lượt đối chiếu thứ hai. Staging đã chạy đủ 48 migration, không lệch thứ tự (kiểm bằng <code>db:migrate:check:staging</code>).</li>
         <li>Còn 501 trên main chỉ ở cổng thanh toán (ngoài MVP).</li>
       </ul>
     </li>
@@ -151,6 +151,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>BE#318</b> (Thành) merge: test trần lời gọi đọc SKU Lazada không phụ thuộc giờ chạy. <b>Docs#114</b> merge: kịch bản test live trên staging.</li>
         <li><b>#239 có PR</b> (David): BE#319 cổng sàn (adapter, đóng gói, RTS, vận đơn PDF), BE#320 fulfillment (danh sách nhặt, đóng gói, báo sẵn sàng, mở kiện, in vận đơn), FE#233 nối API, Docs#116. Chưa review.</li>
         <li><b>BE#300</b> (Khang): Thành yêu cầu sửa, còn phải gọi thật <code>/logistic/order/trace</code> và đo shipping_fee trên shop thử; Docs#115 đi kèm.</li>
+        <li><b>BE#313</b> (Dependabot nâng <code>docker/login-action</code> v3 lên v4): Thành đã duyệt; cập nhật nhánh theo main sau BE#318 rồi merge, xem lần deploy staging kế tiếp qua bước đăng nhập ghcr.</li>
         <li><b>FE đang mở của Khoa:</b> #227 (Refs #165, đã gộp main, CI đạt), #230 (một phần #135, CI đạt, chưa review).</li>
       </ul>
     </li>
@@ -263,7 +264,7 @@ const D = [
   ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","/audit-logs; nhãn Tự duyệt (BE#271)"], ["ok","§4"]]
  ]}
 ];
-const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",0],"be:310":["Thành",0],"docs:107":["Thành",0],"docs:108":["Thành",0],"be:314":["Thành",0],"be:315":["Thành",0],"docs:109":["Thành",1],"docs:110":["Thành",0],"docs:111":["Thành",0],"docs:112":["Thành",0],"fe:228":["Thành",0],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0],"be:317":["Thành",0]};
+const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",0],"be:310":["Thành",0],"docs:107":["Thành",0],"docs:108":["Thành",0],"be:314":["Thành",0],"be:315":["Thành",0],"docs:109":["Thành",0],"docs:110":["Thành",0],"docs:111":["Thành",0],"docs:112":["Thành",0],"fe:228":["Thành",0],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0],"be:317":["Thành",0],"be:313":["Thành",1]};
 const REF=/(BE|FE|Docs)?#(\d+)/g;
 const refsOf=(n,col)=>[...String(n).matchAll(REF)].map(m=>({label:m[0],key:(m[1]?m[1].toLowerCase():col)+":"+m[2]}));
 const tag=(n,col)=>esc(n).replace(REF,(m,p,num)=>{const o=OWN[(p?p.toLowerCase():col)+":"+num];return o?m+'<span class="who'+(o[1]?" open":"")+'">'+o[0]+"</span>":m});
