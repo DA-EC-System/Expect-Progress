@@ -59,7 +59,7 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
 <body>
 <main>
 <h1>Báo cáo tiến độ theo 7 sơ đồ hướng dẫn</h1>
-<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt sáng 13/11/2026: FE <code>eaad409</code> (PR #226), BE <code>24dfb0f</code> (PR #318), Documents <code>c27554d</code> (PR #114).</p>
+<p class="sub">So từng bước trong sơ đồ với code FE và BE trên nhánh <code>main</code> và với Documents. Số liệu chốt 14/11/2026: FE <code>1397ccb</code> (PR #233), BE <code>d92a558</code> (PR #320), Documents <code>aa40bc7</code> (PR #116).</p>
 
 <div class="card">
   <div class="grid" id="stats"></div>
@@ -69,10 +69,10 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
   <b>Kết luận nhanh</b>
   <ul class="key">
     <li><b>FE đi trước BE.</b> Gần như bước nào FE cũng có màn hình và gọi API, kể cả phần BE chưa có route. FE chạy được nhờ chế độ giả lập.</li>
-    <li><b>BE đã có trên main ba mảng lớn trước đây còn thiếu</b> (12/11/2026): phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC (chuỗi #277–#281 của Bình, gộp qua BE#311) và yêu cầu trả (BE#316, #202). <b>Đang PR:</b> đóng gói, báo sàn sẵn sàng, vận đơn (#239: BE#319, #320 và FE#233 của David) và cập nhật giao của kiện (BE#300, Khang).</li>
-    <li><b>PR BE còn mở:</b> #319 cổng sàn đóng gói, RTS, vận đơn PDF và #320 danh sách nhặt, đóng gói, báo sẵn sàng, in vận đơn (David, #239); #300 giao xong, giao thất bại, hoàn về (Khang; Thành yêu cầu sửa: chưa gọi thật <code>/logistic/order/trace</code> và chưa đo shipping_fee trên shop thử Lazada). Đã merge 12–13/11: #309, #313, #314, #315, #316, #317, #318, #321.</li>
+    <li><b>BE đã có trên main ba mảng lớn trước đây còn thiếu</b> (12/11/2026): phiếu kho có duyệt, kiểm kê đầu kỳ, phiếu trả NCC (chuỗi #277–#281 của Bình, gộp qua BE#311) và yêu cầu trả (BE#316, #202). Chiều 13/11 thêm đóng gói, báo sàn sẵn sàng, vận đơn (#239: BE#319, #320, FE#233 của Khang). <b>Đang PR:</b> cập nhật giao của kiện, quét nhận hàng hoàn (BE#300, Khang).</li>
+    <li><b>PR BE của sơ đồ còn mở:</b> #300 giao xong, giao thất bại, hoàn về (Khang; Thành yêu cầu sửa lần ba 13/11: giá vốn dòng kiện khi nhận hàng hoàn; 14/11 thấy thêm thiếu <code>lines</code> và route <code>found</code>, xem mục 14/11). Đã merge 12–13/11: #309, #313–#321.</li>
     <li><b>Chưa có PR nào:</b> sửa SKU, sửa hàng loạt (issue #204, #242, Khang).</li>
-    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). PR Docs mở (David): #115 thử trace và shipping_fee Lazada (BE#300), #116 đóng gói, RTS, vận đơn PDF (BE#239). Đã merge 12–13/11: #98, #106–#114.</li>
+    <li><b>Documents đã có đặc tả cho mọi bước</b> (21-hop-dong-api-fe-be.md §3–§21 và các file trong so-do-vong-doi). Đã merge 12–13/11: #98, #106–#116 (#115 thử trace và shipping_fee Lazada, #116 đóng gói, RTS, vận đơn PDF của Khang).</li>
     <li><b>Cập nhật 11/11/2026.</b>
       <ul class="key">
         <li><b>BE:</b> #301 (kho tệp R2, POST /files/uploads) đã merge. #302 (gắn tệp vào phiếu nhận, chặn ghi sổ khi thiếu bằng chứng) đang mở.</li>
@@ -159,6 +159,15 @@ code{font-size:12.5px;background:var(--ext-bg);padding:0 4px;border-radius:4px}
         <li><b>FE đang mở của Khoa:</b> #227 (Refs #165, đã gộp main, CI đạt), #230 (một phần #135, đã sửa sau review 13/11, chờ Thành), #234 (một phần #140), #235 (một phần #205), #236 (một phần #150).</li>
       </ul>
     </li>
+    <li><b>Chiều 13/11/2026.</b> Merge #239 của Khang: BE#319 (adapter Lazada, TikTok; cổng đóng gói, RTS, vận đơn PDF), BE#320 (danh sách nhặt, đóng gói, báo sẵn sàng, mở kiện, in vận đơn), FE#233 nối API, Docs#115, #116. FE#230 của Khoa merge. Issue #239 còn mở.</li>
+    <li><b>14/11/2026: soát lại PR trong bảng đã merge.</b>
+      <ul class="key">
+        <li><b>BE#319, #320:</b> merge sau lần review cuối, nhưng commit sau đó chỉ là gộp main, không có chỗ sửa xung đột. Không cần review lại.</li>
+        <li><b>BE#277</b> (Bình): merge khi còn yêu cầu sửa, commit sau đó chỉ là gộp nhánh và đổi tên migration. Ba lỗi code đã sửa trên main qua #278, #311: <code>countedAt</code> trong <code>stocktake_posted</code>, phát <code>stock_changed</code> khi gửi duyệt hoặc từ chối, giá vốn dòng kiện khi bán lại. FE có <code>e2e/be/p2/phieu-kho-tra-ncc.spec.ts</code>; issue #208 còn mở.</li>
+        <li><b>FE#211</b> (Khoa): loại phiếu <code>shipment</code>, <code>shipment_reversal</code> khớp BE. Không thấy lỗi.</li>
+        <li><b>FE#218</b> (Khoa): gửi <code>lines</code> đúng Documents/21 §15.3, §19.2, §20. <code>/returns/receive</code> trên main đã nhận <code>lines</code>. <b>BE#300 chưa nhận</b>: <code>ReceiveReturnBody</code> chỉ có <code>version, code</code> nên <code>lines</code> bị bỏ qua và chờ xử lý tăng theo số trên kiện, không theo số quét; route <code>POST /packages/:id/found</code> chưa có. Review 13/11 trên BE#300 ghi phần <code>found</code> đã xong, ghi sai.</li>
+      </ul>
+    </li>
     <li><b>Ô "nhập ngày giao dự kiến" ở sơ đồ 1</b> đã có trên main (BE#280, FE#196).</li>
   </ul>
 </div>
@@ -221,14 +230,14 @@ const D = [
   ["Sửa, đẩy lại","tab Đẩy lỗi, Giá chưa đẩy", ["ok","Tab Đẩy lỗi, Giá chưa đẩy (FE#202, FE#204)"], ["ok",""], ["ok","§18.6"]],
  ]},
  {t:"3. Đơn hàng và kiện", docs:"§19.1–§19.3, don-ban-full, kien-full", rows:[
-  ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok: adapter và cổng tách kiện, báo sẵn sàng đã merge (BE#310), phần app chờ #205, #238, #239 của Khang"], ["ok","§19.3"]],
+  ["Đơn sàn tự về","Lazada, TikTok Shop", ["ok",""], ["part","Lazada có; TikTok: adapter và cổng tách kiện, báo sẵn sàng đã merge (BE#310), đóng gói và RTS đã merge (BE#319, #320); phần app còn chờ #205, #238 của Khang"], ["ok","§19.3"]],
   ["Giữ hàng, tạo kiện","thiếu hàng: kiện Chờ hàng", ["ok","Chia kiện ở trang kiện (FE#211)"], ["ok","Giữ hàng, chia hàng, lấy lại phần giữ (BE#298)"], ["ok","§19.2 (Docs#97)"]],
-  ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage"], ["pr","#239: BE#320 đóng gói, BE#319 cổng sàn; FE#233 nối API"], ["ok","§19.2"]],
-  ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready"], ["pr","#239: BE#320 báo sẵn sàng, BE#319 RTS và vận đơn PDF"], ["ok","§19.2"]],
+  ["Đóng gói","Đơn hàng › Kiện hàng", ["ok","PackScanPage, nối API (FE#233)"], ["ok","Đóng gói, danh sách nhặt (BE#320), cổng sàn (BE#319)"], ["ok","§19.2 (Docs#116)"]],
+  ["Báo sàn sẵn sàng","giao qua hãng vận chuyển", ["ok","Nút trên chi tiết kiện, gọi lệnh ready (FE#233)"], ["ok","Báo sẵn sàng (BE#320), RTS và vận đơn PDF (BE#319)"], ["ok","§19.2 (Docs#116)"]],
   ["Bàn giao","quét kiện khi shipper lấy", ["ok","Phiếu XK, DX chỉ xem (FE#211)"], ["ok","/packages/hand-over, undo-handover"], ["ok","§19.2"]],
   ["Cập nhật giao đơn tay","Đã giao · Giao thất bại · Hoàn về", ["ok",""], ["pr","BE#300"], ["ok","§19.2 (Docs#99)"]],
   ["Đã giao, đơn Hoàn tất","đơn sàn: sàn báo trạng thái", ["ok",""], ["pr","BE#300; sự kiện giao xong cho tiền đã có khuôn (BE#299); issue #236"], ["ok","§19.2 (Docs#99)"]],
-  ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok","Quét theo số lượng từng món (FE#218)"], ["pr","BE#300; kho nhận số quét từng món đã có (BE#277)"], ["ok","§19.2 (Docs#99, Docs#102)"]],
+  ["Quét nhận hàng hoàn","kiện bị hoàn về kho", ["ok","Quét theo số lượng từng món (FE#218)"], ["pr","BE#300; kho nhận số quét từng món đã có (BE#277). BE#300 chưa nhận lines số quét, chưa có route found"], ["ok","§19.2 (Docs#99, Docs#102)"]],
  ]},
  {t:"4. Yêu cầu trả", docs:"§20, §20.1, yeu-cau-tra", rows:[
   ["Khách gửi yêu cầu trả","qua sàn", ["ext",""], ["ok","Kéo yêu cầu Lazada, TikTok sau mỗi lượt kéo đơn (BE#316)"], ["ok","§20.1"]],
@@ -268,7 +277,7 @@ const D = [
   ["Xem nhật ký, báo cáo","Quản trị › Nhật ký thao tác", ["ok","Nhãn Tự duyệt (FE#193)"], ["ok","/audit-logs; nhãn Tự duyệt (BE#271)"], ["ok","§4"]]
  ]}
 ];
-const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",0],"be:310":["Thành",0],"docs:107":["Thành",0],"docs:108":["Thành",0],"be:314":["Thành",0],"be:315":["Thành",0],"docs:109":["Thành",0],"docs:110":["Thành",0],"docs:111":["Thành",0],"docs:112":["Thành",0],"fe:228":["Thành",0],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0],"be:317":["Thành",0],"be:313":["Thành",0],"be:321":["Thành",0]};
+const OWN={"be:202":["Thành",0],"be:204":["Khang",1],"be:208":["Bình",1],"be:210":["Bình",1],"be:220":["Thành",1],"be:221":["Thành",1],"be:223":["Thành",1],"be:236":["Khang",1],"be:239":["Khang",1],"be:242":["Khang",1],"be:205":["Khang",1],"be:238":["Khang",1],"be:271":["Bình",0],"be:272":["Bình",0],"be:273":["Bình",0],"be:274":["Bình",0],"be:275":["Bình",0],"be:276":["Bình",0],"be:277":["Bình",0],"be:278":["Bình",0],"be:279":["Bình",0],"be:280":["Bình",0],"be:281":["Bình",0],"be:289":["Thành",0],"be:298":["Khang",0],"be:299":["Khang",0],"be:300":["Khang",1],"be:301":["Khang",0],"be:302":["Khang",0],"be:306":["Thành",0],"be:228":["Thành",1],"docs:102":["Thành",0],"docs:106":["Thành",0],"docs:97":["Khang",0],"docs:98":["Thành",0],"docs:99":["Khang",0],"fe:193":["Bình",0],"fe:194":["Bình",0],"fe:195":["Bình",0],"fe:196":["Bình",0],"fe:202":["Khoa",0],"fe:204":["Khoa",0],"fe:208":["Khoa",0],"fe:211":["Khoa",0],"fe:218":["Khoa",0],"fe:220":["Khoa",0],"fe:222":["Khoa",0],"be:307":["Thành",0],"be:308":["Thành",0],"be:309":["Thành",0],"be:310":["Thành",0],"docs:107":["Thành",0],"docs:108":["Thành",0],"be:314":["Thành",0],"be:315":["Thành",0],"docs:109":["Thành",0],"docs:110":["Thành",0],"docs:111":["Thành",0],"docs:112":["Thành",0],"fe:228":["Thành",0],"be:316":["Thành",0],"be:311":["Bình",0],"docs:113":["Thành",0],"be:317":["Thành",0],"be:313":["Thành",0],"be:321":["Thành",0],"be:319":["Khang",0],"be:320":["Khang",0],"fe:233":["Khang",0],"fe:230":["Khoa",0],"docs:115":["Khang",0],"docs:116":["Khang",0]};
 const REF=/(BE|FE|Docs)?#(\d+)/g;
 const refsOf=(n,col)=>[...String(n).matchAll(REF)].map(m=>({label:m[0],key:(m[1]?m[1].toLowerCase():col)+":"+m[2]}));
 const tag=(n,col)=>esc(n).replace(REF,(m,p,num)=>{const o=OWN[(p?p.toLowerCase():col)+":"+num];return o?m+'<span class="who'+(o[1]?" open":"")+'">'+o[0]+"</span>":m});
