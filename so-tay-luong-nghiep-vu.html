@@ -1,0 +1,1231 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sổ tay luồng Commerio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#f3efe6; --paper:#fffcf5; --paper2:#f8f3e8; --ink:#1b2130; --muted:#5b6170; --faint:#8a8f9a; --line:#ddd4c2; --line2:#cfc4ae;
+  --accent:#c4410f; --accent-ink:#fff; --accent-soft:#fbe4d6;
+  --sys:#3653c9; --sys-soft:#e2e7fa;
+  --up:#1d7f46; --up-soft:#dcf1e3; --down:#b8322a; --down-soft:#f8dedb; --warn:#9a6512; --warn-soft:#f6ead2;
+  --l-ceo:#8a3ab0; --l-admin:#257686; --l-sale:#c75a22; --l-kho:#557520; --l-nv:#6a5d8f; --l-he:#3653c9; --l-san:#b8336a; --l-ncc:#83652f; --l-khach:#5f6673;
+  --shadow:0 1px 0 rgba(27,33,48,.04),0 6px 20px -12px rgba(27,33,48,.25);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14171e; --paper:#1c2029; --paper2:#222733; --ink:#ebe6da; --muted:#a8acb6; --faint:#7d828d; --line:#323846; --line2:#414858;
+  --accent:#ff7a3d; --accent-ink:#1a0c04; --accent-soft:#3b2116;
+  --sys:#8ea2ff; --sys-soft:#232c4d;
+  --up:#5fd08e; --up-soft:#16301f; --down:#ff7f74; --down-soft:#3a1d1b; --warn:#f0bd62; --warn-soft:#352a14;
+  --l-ceo:#c88ae6; --l-admin:#5ec2d3; --l-sale:#f29a63; --l-kho:#a3cc5c; --l-nv:#a99ae0; --l-he:#8ea2ff; --l-san:#f27aa9; --l-ncc:#d5b06c; --l-khach:#a3a9b5;
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 10px 26px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#14171e; --paper:#1c2029; --paper2:#222733; --ink:#ebe6da; --muted:#a8acb6; --faint:#7d828d; --line:#323846; --line2:#414858;
+  --accent:#ff7a3d; --accent-ink:#1a0c04; --accent-soft:#3b2116;
+  --sys:#8ea2ff; --sys-soft:#232c4d;
+  --up:#5fd08e; --up-soft:#16301f; --down:#ff7f74; --down-soft:#3a1d1b; --warn:#f0bd62; --warn-soft:#352a14;
+  --l-ceo:#c88ae6; --l-admin:#5ec2d3; --l-sale:#f29a63; --l-kho:#a3cc5c; --l-nv:#a99ae0; --l-he:#8ea2ff; --l-san:#f27aa9; --l-ncc:#d5b06c; --l-khach:#a3a9b5;
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 10px 26px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3,h4{font-family:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;text-wrap:balance;margin:0;line-height:1.15}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.86em}
+code{background:var(--paper2);border:1px solid var(--line);border-radius:4px;padding:0 .3em;white-space:nowrap}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* masthead */
+.mast{border-bottom:1px solid var(--line);background:var(--paper)}
+.mast .wrap{padding-block:28px 22px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
+.kicker{font:600 11px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.mast h1{font-size:clamp(28px,4.6vw,46px);font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.mast p{margin:10px 0 0;color:var(--muted);max-width:62ch}
+.docno{border:1.5px dashed var(--line2);border-radius:10px;padding:10px 14px;font:12px/1.5 "JetBrains Mono",monospace;color:var(--muted);min-width:0}
+.docno b{color:var(--ink);font-weight:600}
+.theme-btn{margin-top:8px;border:1px solid var(--line2);background:var(--paper2);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:21}
+.nav .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid transparent;background:none;border-radius:8px;padding:6px 11px;cursor:pointer;font-weight:500;font-size:14px;color:var(--muted);display:flex;gap:7px;align-items:center;white-space:nowrap}
+.tab .no{font:600 11px "JetBrains Mono",monospace;color:var(--faint)}
+.tab:hover{color:var(--ink);background:var(--paper2)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.tab[aria-selected="true"] .no{color:var(--accent-soft)}
+.tab.sep{margin-left:8px}
+
+main{padding-block:28px 64px}
+section[data-view]{display:block}
+.lead{font-size:17px;max-width:68ch;color:var(--ink)}
+.sub{color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin:34px 0 12px}
+.sec-h h2{font-size:22px;font-weight:700}
+.sec-h .mono{color:var(--faint);font-size:12px}
+.label{font:600 10.5px/1.2 "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+
+/* flow header */
+.fhead{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:stretch}
+.fhead .card{padding:20px 22px}
+.fhead h2{font-size:clamp(26px,3.6vw,36px);font-weight:800;letter-spacing:-.015em}
+.fhead .flowno{font:600 12px "JetBrains Mono",monospace;color:var(--accent);letter-spacing:.1em}
+.ends{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin-top:14px;font-size:14px}
+.ends dt{font:600 10.5px/1.9 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.ends dd{margin:0;min-width:0}
+.example{background:var(--accent-soft);border-color:transparent}
+.example .label{color:var(--accent)}
+.example p{margin:8px 0 0;font-size:14.5px}
+
+/* stage */
+.stage{margin-top:16px;padding:0;overflow:hidden}
+.stage-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.stage-top .ctrl{display:flex;gap:6px;align-items:center}
+.btn{border:1px solid var(--line2);background:var(--paper2);border-radius:8px;padding:5px 11px;cursor:pointer;font-size:13.5px;font-weight:500}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.counter{font:600 12px "JetBrains Mono",monospace;color:var(--muted)}
+.svgbox{overflow-x:auto;background:var(--paper2);-webkit-overflow-scrolling:touch}
+.svgbox svg{display:block}
+.lane-bg{fill:var(--paper)}
+.lane-bg.alt{fill:var(--paper2)}
+.lane-name{font:600 11px "Be Vietnam Pro",sans-serif;fill:var(--muted)}
+.lane-bar{opacity:.9}
+.node rect{fill:var(--paper);stroke:var(--line2);stroke-width:1.2;transition:fill .25s,stroke .25s}
+.node text{font:500 11.5px "Be Vietnam Pro",sans-serif;fill:var(--ink);pointer-events:none}
+.node .num{font:600 9.5px "JetBrains Mono",monospace;fill:var(--faint)}
+.node{cursor:pointer}
+.node:hover rect{stroke:var(--ink)}
+.node.done rect{fill:var(--paper2)}
+.node.done text{fill:var(--muted)}
+.node.on rect{fill:var(--ink);stroke:var(--ink)}
+.node.on text{fill:var(--bg)}
+.node.on .num{fill:var(--accent-soft)}
+.node.branch rect{stroke-dasharray:4 3}
+.node:focus-visible{outline:none}
+.node:focus-visible rect{stroke:var(--accent);stroke-width:2.5}
+.edge{fill:none;stroke:var(--line2);stroke-width:1.5}
+.edge.branch{stroke-dasharray:5 4}
+.edge.done{stroke:var(--muted)}
+.edge.on{stroke:var(--accent);stroke-width:2.2}
+.token{transition:transform .55s cubic-bezier(.5,.1,.2,1)}
+.token circle.core{fill:var(--accent)}
+.token circle.halo{fill:var(--accent);opacity:.22;animation:pulse 1.6s ease-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes pulse{0%{transform:scale(.6);opacity:.35}100%{transform:scale(1.8);opacity:0}}
+
+/* meter (thẻ kho) */
+.meter{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));border-top:1px solid var(--line)}
+.cell{padding:10px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0;transition:background .3s}
+.cell .label{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cell .v{font:700 22px/1.25 "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;margin-top:3px;overflow-wrap:anywhere}
+.cell .v.txt{font:600 13.5px/1.35 "Be Vietnam Pro",sans-serif;margin-top:5px}
+.cell .d{font:600 11.5px "JetBrains Mono",monospace;color:var(--faint);min-height:1.3em}
+.cell.up{background:var(--up-soft)} .cell.up .d{color:var(--up)}
+.cell.down{background:var(--down-soft)} .cell.down .d{color:var(--down)}
+.cell.chg{background:var(--warn-soft)} .cell.chg .d{color:var(--warn)}
+.meter-note{padding:8px 16px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);background:var(--paper)}
+
+/* detail */
+.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border-top:1px solid var(--line)}
+.dhead{grid-column:1/-1;padding:16px 18px 6px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline}
+.dhead h3{font-size:21px;font-weight:700}
+.dhead .stepno{font:600 12px "JetBrains Mono",monospace;color:var(--accent)}
+.chips{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;padding:4px 18px 12px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;padding:2px 10px;font-size:12.5px;background:var(--paper);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.chip i{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.blk{padding:12px 18px 14px;border-top:1px solid var(--line);min-width:0}
+.blk:nth-of-type(odd){border-right:1px solid var(--line)}
+.blk.full{grid-column:1/-1;border-right:0}
+.blk p{margin:6px 0 0}
+.blk ul{margin:6px 0 0;padding-left:18px}
+.blk li{margin:3px 0}
+.st{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.pill{border-radius:6px;padding:3px 9px;font:600 12.5px "JetBrains Mono",monospace;background:var(--paper2);border:1px solid var(--line2);overflow-wrap:anywhere}
+.pill.to{background:var(--sys-soft);border-color:transparent;color:var(--sys)}
+.arrow{color:var(--faint)}
+.api{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.api code{white-space:normal;overflow-wrap:anywhere;display:inline-block;width:fit-content;max-width:100%}
+.warnbox{background:var(--warn-soft);border-left:3px solid var(--warn)}
+
+/* summary blocks */
+.panel{padding:18px 20px}
+.panel h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.sm{display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.sm .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13.5px}
+.links{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.link{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--paper2);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:14px}
+.link:hover{border-color:var(--ink)}
+.link b{font-family:"Bricolage Grotesque",sans-serif;white-space:nowrap}
+details.faq{border-top:1px solid var(--line);padding:10px 0}
+details.faq:first-of-type{border-top:0}
+details.faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;gap:10px}
+details.faq summary::before{content:"+";font:600 14px "JetBrains Mono",monospace;color:var(--accent);width:12px;flex:0 0 auto}
+details.faq[open] summary::before{content:"−"}
+details.faq p{margin:6px 0 0 22px;color:var(--muted)}
+.note{font-size:14px}
+.note li{margin:5px 0}
+.tag{display:inline-block;font:600 10px/1.6 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:0 6px;background:var(--paper2);border:1px solid var(--line2);color:var(--muted);vertical-align:middle}
+.tag.out{background:var(--down-soft);color:var(--down);border-color:transparent}
+
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11px "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);background:var(--paper2);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.plus{color:var(--up);font-weight:600}.minus{color:var(--down);font-weight:600}.zero{color:var(--faint)}
+
+/* map */
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;counter-reset:f}
+.mapc{position:relative;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:14px 14px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.mapc:hover{border-color:var(--ink)}
+.mapc .mono{color:var(--accent);font-weight:600;font-size:11.5px}
+.mapc h3{font-size:17px;margin:4px 0 4px}
+.mapc p{margin:0;font-size:13px;color:var(--muted)}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13.5px;margin-top:10px}
+.chain span.s{background:var(--paper);border:1px solid var(--line2);border-radius:6px;padding:3px 9px}
+.chain span.k{background:var(--sys-soft);color:var(--sys);border-radius:6px;padding:3px 9px}
+
+/* sim */
+.sim{padding:18px 20px}
+.simbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.simlog{margin-top:12px;font:12.5px/1.6 "JetBrains Mono",monospace;color:var(--muted);max-height:150px;overflow:auto;background:var(--paper2);border-radius:8px;padding:8px 12px;border:1px solid var(--line)}
+.simlog .bad{color:var(--down)}
+.simmeter{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-top:12px}
+.simmeter div{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--paper2);transition:background .3s}
+.simmeter b{display:block;font:700 24px "Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums}
+.simmeter .flash-up{background:var(--up-soft)} .simmeter .flash-down{background:var(--down-soft)}
+
+/* glossary */
+.search{width:100%;max-width:420px;border:1px solid var(--line2);background:var(--paper);border-radius:10px;padding:9px 12px;font:inherit;color:var(--ink)}
+.gl{columns:2 340px;column-gap:28px;margin-top:16px}
+.gl div{break-inside:avoid;padding:9px 0;border-bottom:1px dashed var(--line)}
+.gl dt{font-weight:700;font-family:"Bricolage Grotesque",sans-serif;font-size:16px}
+.gl dt small{font:500 11px "JetBrains Mono",monospace;color:var(--faint);margin-left:6px}
+.gl dd{margin:2px 0 0;color:var(--muted);font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.filters button{border:1px solid var(--line2);background:var(--paper);border-radius:999px;padding:3px 11px;font-size:13px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.faqlist .card{padding:6px 18px;margin-top:12px}
+.faqlist .tag{margin-left:6px}
+
+footer{border-top:1px solid var(--line);color:var(--faint);font-size:13px}
+footer .wrap{padding-block:18px}
+
+@media (max-width:760px){
+  .mast .wrap{grid-template-columns:1fr}
+  .fhead{grid-template-columns:1fr}
+  .detail{grid-template-columns:1fr}
+  .blk:nth-of-type(odd){border-right:0}
+  .cell .v{font-size:19px}
+}
+@media (prefers-reduced-motion: reduce){
+  .token{transition:none}
+  .token circle.halo{animation:none;opacity:.2}
+  .cell,.node rect,.simmeter div{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Commerio · sổ tay nghiệp vụ</div>
+      <h1>Hàng đi đâu, ai bấm, số nào đổi</h1>
+      <p>Bảy luồng nghiệp vụ của Commerio, từng bước một: người làm, việc hệ thống tự làm, trạng thái chứng từ trước và sau, và các con số tồn đổi ra sao. Mỗi luồng có một SKU ví dụ chạy xuyên suốt.</p>
+    </div>
+    <div class="docno">
+      <div>Nguồn <b>Documents/24, 25, 21, 27</b></div>
+      <div>Sơ đồ <b>Expect-Progress/expect.html</b></div>
+      <div>Bản <b>18/11/2026</b> · MVP</div>
+      <button class="theme-btn" id="themeBtn" type="button">Đổi giao diện sáng/tối</button>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Các phần của sổ tay">
+  <div class="wrap" role="tablist" id="tabs"></div>
+</nav>
+
+<main class="wrap" id="main"></main>
+
+<footer><div class="wrap">Số liệu ví dụ là số giả định để minh hoạ. Chỗ các tài liệu nói khác nhau được ghi ở mục “Tài liệu còn vênh” của từng luồng. Phần ngoài MVP (đơn tạo tay, tự giao, Khách hàng, Báo cáo) chỉ được nhắc tên.</div></footer>
+
+<script>
+/* ===================== DỮ LIỆU ===================== */
+const ACTORS = {
+  ceo:{n:"CEO",c:"--l-ceo"}, admin:{n:"Admin",c:"--l-admin"}, sale:{n:"Sale",c:"--l-sale"},
+  kho:{n:"Nhân viên kho",c:"--l-kho"}, nv:{n:"Mọi nhân viên",c:"--l-nv"}, he:{n:"Hệ thống",c:"--l-he"},
+  san:{n:"Sàn",c:"--l-san"}, ncc:{n:"NCC",c:"--l-ncc"}, khach:{n:"Khách",c:"--l-khach"}
+};
+const LANE_ORDER = ["khach","san","ncc","sale","kho","nv","admin","ceo","he"];
+
+const STOCK = [
+  {k:"tt",l:"Tồn thực"},{k:"dg",l:"Đang giữ"},{k:"gl",l:"Giữ lại chờ duyệt"},{k:"ctb",l:"Có thể bán"},
+  {k:"dv",l:"Đang về"},{k:"cxl",l:"Chờ xử lý"},{k:"san",l:"Số trên sàn"}
+];
+const STOCK_NOTE = "Có thể bán = max(0, tồn thực − đang giữ − giữ lại chờ duyệt). Số trên sàn = có thể bán, không có tồn đệm.";
+
+const FLOWS = [
+{
+  id:"bat-dau", no:"0", short:"Bắt đầu", title:"Bắt đầu: dựng công ty",
+  goal:"Đưa một công ty từ con số 0 tới lúc làm việc được: có phân hệ đang bật, nhân viên đúng vai, danh mục, sản phẩm và giá.",
+  start:"CEO đăng ký công ty ở trang /register.", end:"Có SKU đầy đủ thông tin, nhân viên đăng nhập thấy menu theo quyền.",
+  example:"Công ty BK Shop bán áo thun. CEO mời 3 người (Admin, Sale, Kho), tạo sản phẩm “Áo thun basic” 2 màu × 3 size.",
+  meter:[{k:"mod",l:"Phân hệ đang bật"},{k:"nv",l:"Người dùng"},{k:"sku",l:"SKU"},{k:"ton",l:"Tồn mỗi SKU mới"}],
+  init:{mod:"—",nv:0,sku:0,ton:"—"},
+  meterNote:"Luồng này không đổi tồn. SKU mới luôn có tồn bằng 0; tồn chỉ tăng qua phiếu nhận hoặc phiếu kho.",
+  steps:[
+    {n:"Đăng ký\ncông ty",a:"ceo",scr:"/register",t:"Đăng ký công ty",
+     do:"Nhập tên công ty, email, mật khẩu.",
+     sys:"Tạo trong một giao dịch: công ty, tài khoản CEO, các phân hệ mặc định, gán vai CEO, ghi nhật ký.",
+     st:["—","Công ty, 1 người dùng"],k:"Một bước lỗi thì không để lại dữ liệu dở dang. Bước này không có trên sơ đồ expect.html nhưng là điểm bắt đầu thật.",
+     e:["Email đã có tài khoản: từ chối."],api:["POST /identity/register"],s:{mod:"Mặc định",nv:1}},
+    {n:"Bật\nphân hệ",a:"ceo",scr:"Quản trị › Phân hệ",t:"Bật hoặc tắt phân hệ",
+     do:"Bật, tắt các phân hệ tuỳ chọn như Nhập hàng, Kênh bán.",
+     sys:"Phân hệ tắt thì ẩn menu và route; API của phân hệ đó trả 403 `module_disabled`.",
+     k:"Chỉ CEO có quyền `platform.module.manage`. Phân hệ lõi không tắt được.",
+     e:["Phân hệ đã có dữ liệu: 409 `module_has_data`, không tắt được.","Phiên khác vừa đổi: 409 `module_state_changed`.","Admin không thấy nút bật/tắt."],
+     api:["GET /platform/modules","PUT /platform/modules/:code"],s:{mod:"Nhập hàng, Kênh bán, Kho"}},
+    {n:"Vai trò\ntuỳ biến",a:"admin",scr:"Quản trị › Vai trò",t:"Tạo vai trò tuỳ biến (khi cần)",
+     do:"Khi 4 vai có sẵn chưa đủ: tạo vai mới, chọn quyền từ danh sách. Ví dụ vai Kế toán.",
+     sys:"Chặn chọn quyền mình không có (403 `permission_not_held`). Chặn sửa, xoá vai có sẵn (403 `builtin_role`).",
+     k:"4 vai có sẵn: CEO, Admin, Sale, Nhân viên kho. Người gán chỉ thêm hay gỡ được vai gồm những quyền mình đang có.",
+     api:["GET|POST|PUT|DELETE /identity/roles","GET /identity/permissions"]},
+    {n:"Mời\nnhân viên",a:"admin",scr:"Quản trị › Nhân viên",t:"Mời nhân viên, gán vai trò",
+     do:"Tạo link mời kèm vai trò; sau đó duyệt yêu cầu tham gia ở tab Chờ duyệt.",
+     sys:"Link dùng một lần, hạn 72 giờ. Người được mời xác minh email bằng OTP và đặt mật khẩu. Chỉ khi được duyệt mới tạo tài khoản, membership và gán vai.",
+     st:["open","claimed → pending → duyệt"],k:"Membership là tư cách thành viên của một tài khoản trong một công ty. Một người có thể làm cho nhiều công ty.",
+     e:["Chọn vai CEO, hoặc đổi vai, khoá CEO hay chính mình: 403 `protected_account`.","Email đã là thành viên: 409 `already_member`.","Hai Admin sửa cùng lúc: người sau nhận 409 `version_conflict`."],
+     api:["POST /identity/invitations","GET /identity/invitations?status=open,claimed"],s:{nv:4}},
+    {n:"Đăng nhập\nchọn công ty",a:"nv",scr:"/login · /select-company",t:"Đăng nhập, chọn công ty",
+     do:"Đăng nhập bằng mật khẩu hoặc Google, rồi chọn công ty.",
+     sys:"Cấp token gắn với công ty đã chọn. Chỉ thuộc một công ty thì vào thẳng. Đang dùng mật khẩu tạm thì buộc đổi trước. Menu hiện theo quyền và phân hệ đang bật.",
+     e:["Google không tự tạo tài khoản mới.","Membership bị khoá: 403 `account_locked`, có hiệu lực ngay.","Quản trị nền tảng vào /platform, không thấy dữ liệu kinh doanh."],
+     api:["POST /identity/login","POST /identity/google","POST /identity/select-company"]},
+    {n:"Danh mục\n& thuộc tính",a:"admin",scr:"Sản phẩm và kho › Danh mục & thuộc tính",t:"Danh mục, thuộc tính, quy tắc SKU",
+     do:"Tạo danh mục kèm quy tắc sinh mã SKU, ví dụ `AO-{SEQ}-{VAL}`. Tạo thuộc tính màu, size.",
+     sys:"Sinh mã SKU theo quy tắc, ví dụ `AO-0001-TRANG-M`.",
+     e:["Không xoá được thuộc tính đang dùng ở biến thể."],api:["/catalog/categories","/catalog/attributes"]},
+    {n:"Sản phẩm\n+ biến thể",a:"admin",scr:"Sản phẩm và kho › Sản phẩm",t:"Sản phẩm cha và biến thể (SKU)",
+     do:"Tạo sản phẩm cha với tối đa 2 trục phân loại.",
+     sys:"Sinh một SKU cho mỗi tổ hợp: 2 màu × 3 size = 6 SKU, trạng thái Kinh doanh. Tự tính độ hoàn thiện.",
+     st:["—","selling · Chờ hoàn thiện"],
+     k:"Tồn, giá vốn, listing đều tính theo SKU; sản phẩm cha không có tồn riêng. SKU thành Sẵn sàng khi có đủ: tên, SKU, danh mục, giá muốn bán, ngưỡng, ít nhất 1 ảnh, cân nặng, kích thước gói. Thiếu thông tin vẫn nhập và bán được, chỉ bị chặn đẩy lên sàn.",
+     e:["Trục thứ ba: 422 `too_many_axes`.","Trùng tổ hợp: 409 `variant_exists`.","Mã SKU bị khoá khi đã có listing hoặc chứng từ."],
+     api:["POST /catalog/products","POST /catalog/products/:id/variants"],s:{sku:6,ton:0}},
+    {n:"Giá, ngưỡng\ntrên SKU",a:"admin",scr:"Sản phẩm (cột giá) · Kho (ngưỡng)",t:"Đặt giá và ngưỡng tồn",
+     do:"Nhập giá chuẩn và giá muốn thực nhận ngay trên SKU. Đặt ngưỡng tồn ở trang Tồn kho.",
+     sys:"Đổi giá phát sự kiện `catalog.variant_price_changed`. Giá theo từng sàn tính ở listing (luồng Kênh bán).",
+     k:"Ngưỡng tồn dùng cho cảnh báo sắp hết và gợi ý nhập lại (luồng Nhập hàng).",
+     e:["SKU còn listing thì không xoá trống trường bắt buộc: 409 `listing_field_required`."],
+     api:["PATCH /catalog/products/:id/variants/:variantId","PUT /inventory/stock/:variantId/reorder-rule"]},
+    {n:"Nhật ký\nthao tác",a:"ceo",scr:"Quản trị › Nhật ký thao tác",t:"Theo dõi nhật ký",
+     do:"Xem ai làm gì, lúc nào, dữ liệu trước và sau.",sys:"Mỗi lần tự duyệt có nhãn riêng để CEO soát.",
+     e:["Sale không thấy menu; API trả 403."],api:["GET /audit/logs","GET /audit/logs/:id"]}
+  ],
+  machines:[
+    {n:"Trạng thái kinh doanh SKU",rows:[["selling","⇄","paused"],["selling · paused","⇄","discontinued"],["discontinued","→","archived (khôi phục được)"]]},
+    {n:"Độ hoàn thiện (tự tính)",rows:[["Chờ hoàn thiện","⇄","Sẵn sàng"]]}
+  ],
+  links:[["kenh-ban","Kết nối gian hàng, đẩy SKU lên sàn."],["nhap-hang","SKU cũng sinh ra khi CEO duyệt dòng “sản phẩm mới” của đề nghị nhập."],["nhap-hang","Ngưỡng tồn dùng cho gợi ý nhập lại."]],
+  faq:[["Admin có duyệt nhập hàng được không?","Không. Chỉ CEO có quyền duyệt đề nghị nhập."],["Tắt phân hệ có làm mất dữ liệu không?","Phân hệ đã có dữ liệu thì không tắt được."],["Một người làm cho hai công ty được không?","Được. Mỗi lần đăng nhập chọn một công ty."],["Sản phẩm thiếu thông tin có bán được không?","Được. Hệ thống chỉ nhắc hoàn thiện; thiếu thông tin sàn nào cần thì chỉ chặn đẩy lên sàn đó."]],
+  vênh:["Sơ đồ expect.html có bước “Bảng giá”, nhưng bảng giá đã bỏ khỏi MVP (02/11/2026). Giá chuẩn là cột của SKU, giá theo sàn nằm ở listing.","Tài liệu 24 ghi chưa có API thêm nhân viên; bản mới (21, 27) đã chuyển sang mời bằng link `POST /identity/invitations`.","Tên trạng thái lời mời sau khi duyệt hoặc từ chối: tài liệu chưa ghi."]
+},
+{
+  id:"nhap-hang", no:"1", short:"Nhập hàng", title:"Nhập hàng: từ đề nghị tới Nhận xong",
+  goal:"Mua hàng từ một NCC có người duyệt và chứng từ, để tồn tăng đúng số hàng tốt thực nhận.",
+  start:"Nhân viên kho lập đề nghị nhập, hoặc hệ thống gợi ý khi SKU chạm ngưỡng.",
+  end:"Đề nghị ở Đã nhận xong (`received`) hoặc Đóng, nhận thiếu (`closed_short`). Hàng lỗi đi tiếp phiếu trả NCC.",
+  example:"SKU AO-0001-TRANG-M còn 4 cái, 1 cái đang giữ cho một kiện, và có 1 kiện khác đang thiếu 2 cái. Kho xin nhập 20 cái. NCC giao 18: 16 đạt, 2 lỗi.",
+  meter:STOCK, init:{tt:4,dg:1,gl:0,ctb:3,dv:0,cxl:0,san:3}, meterNote:STOCK_NOTE,
+  steps:[
+    {n:"Lập đề nghị\nnhập",a:"kho",scr:"Nhập hàng › Mua hàng",t:"Lập đề nghị nhập, gửi duyệt",
+     do:"Chọn một NCC, thêm dòng (SKU có sẵn hoặc “sản phẩm mới”, số lượng, giá nhập), bấm Gửi duyệt.",
+     sys:"Kiểm có NCC, có ít nhất một dòng, số lượng và giá > 0, NCC đang giao dịch. Khoá sửa, báo CEO.",
+     st:["draft","pending_approval"],k:"Giá nhập là giá đã thoả thuận với NCC; sẽ chốt cứng khi CEO duyệt.",
+     e:["Không có dòng: 409 `empty_document`.","NCC ngừng giao dịch: 422 `supplier_inactive`.","Muốn sửa khi đang chờ duyệt: rút về Nháp."],
+     api:["POST /purchasing/requests","POST /purchasing/requests/:id/submit"]},
+    {n:"CEO duyệt",a:"ceo",scr:"Nhập hàng › Mua hàng (lọc Chờ duyệt)",t:"CEO duyệt, trả về hoặc từ chối",
+     do:"Duyệt, trả về hoặc từ chối (hai cách sau bắt buộc lý do). Được loại từng dòng kèm lý do, nhưng không sửa số.",
+     sys:"Chốt giá nhập. Dòng “sản phẩm mới” sinh SKU; các dòng chung một sản phẩm cha mới sinh một sản phẩm cha.",
+     st:["pending_approval","approved"],k:"Người duyệt phải khác người lập. CEO tự lập thì được tự duyệt, nhật ký gắn nhãn.",
+     e:["Loại hết dòng: 409 `all_lines_excluded`.","Người lập (không phải CEO) tự duyệt: 409 `second_person_required`.","Trả về: sang `changes_requested`, kho sửa rồi gửi lại."],
+     api:["POST /purchasing/requests/:id/approve","…/request_changes · …/reject","POST /purchasing/requests/:id/lines/:lineId/exclude"]},
+    {n:"Đã đặt NCC",a:"kho",scr:"Chi tiết đề nghị",t:"Bấm Đã đặt NCC",
+     do:"Nhập ngày giao dự kiến (bắt buộc) và mã đơn NCC nếu có.",
+     sys:"Cộng còn chờ của từng dòng vào Đang về của SKU.",
+     st:["approved","ordered (Đang chờ vận chuyển)"],k:"Còn chờ = số đặt − đã nhận − đã đóng do giao thiếu. Đang về là tổng còn chờ, luôn được tính lại, không ai cộng trừ tay.",
+     e:["Quá ngày giao dự kiến: nhắc người lập.","NCC không giao được: CEO huỷ kèm lý do, Đang về giảm.","NCC đòi đổi giá: không sửa được; huỷ hoặc đóng thiếu rồi lập đề nghị mới."],
+     api:["POST /purchasing/requests/:id/order"],s:{dv:20}},
+    {n:"NCC giao,\nlập phiếu nhận",a:"kho",scr:"Nhập hàng › Phiếu nhận",t:"NCC giao, lập phiếu nhận",
+     do:"Chọn cách giao, đính ảnh phiếu giao. Mỗi dòng nhập: NCC báo giao, số đạt, số lỗi giữ lại, số trả tại chỗ.",
+     sys:"Tự tính thiếu = max(0, báo giao − đạt − lỗi giữ lại − trả lại).",
+     st:["—","counting (Đang kiểm)"],k:"Hai cách giao: người giao chờ kiểm (lỗi trả ngay tại chỗ), hoặc người giao rời đi (ký theo số thùng, kho kiểm chi tiết trong 24 giờ). Hàng đang kiểm chưa bán được.",
+     e:["Hàng về mà không có đề nghị, hoặc đề nghị đã kết thúc: không lập được phiếu.","Không có phiếu giao: lấy số người giao khai, ghi “không có phiếu”.","Đang kiểm quá 24 giờ: nhắc kho và CEO."],
+     api:["POST /purchasing/goods-receipts","PUT /purchasing/goods-receipts/:id"]},
+    {n:"Ghi sổ\nphiếu nhận",a:"kho",scr:"Phiếu nhận",t:"Ghi sổ phiếu nhận (người thứ hai)",
+     do:"Người kho khác người lập đề nghị (hoặc CEO) bấm Ghi sổ, hoặc “Ghi sổ, báo giao thiếu”.",
+     sys:"Cộng tồn, tính lại giá vốn bình quân. Phân hàng cho kiện đang thiếu hàng trước, rồi đẩy tồn lên sàn. Có hàng lỗi giữ lại thì tự sinh phiếu trả NCC nháp.",
+     st:["counting","short (Giao thiếu)"],k:"16 đạt vào tồn thực, 2 lỗi vào chờ xử lý. Kiện đang thiếu 2 cái được giữ hàng ngay, nên đang giữ 1 → 3. Đang về giảm 18, còn 2 (phần NCC giao thiếu).",
+     e:["Đạt + lỗi vượt còn chờ: 422 `over_outstanding`.","Người giao đã đi, có lỗi mà chưa có ảnh mở thùng: 422 `evidence_required`.","Ghi nhầm số: không sửa phiếu; lập phiếu kiểm kê tham chiếu phiếu gốc, CEO duyệt."],
+     api:["POST /purchasing/goods-receipts/:id/post","…/post_short"],s:{tt:20,dg:3,ctb:17,dv:2,cxl:2,san:17}},
+    {n:"Nhận\nmột phần",a:"he",scr:"—",t:"Đề nghị tự chuyển trạng thái",
+     do:"Không ai thao tác.",sys:"Còn dòng có còn chờ > 0 thì sang Đã nhận một phần; mọi dòng bằng 0 thì sang Đã nhận xong.",
+     st:["ordered","partially_received"],k:"Lỗi giữ lại cũng trừ còn chờ. Ở ví dụ: 20 − 16 − 2 = 2 còn chờ.",
+     e:["Gọi thẳng receive_partial hoặc receive_all: 409 `invalid_transition`."]},
+    {n:"Phiếu trả\nNCC",a:"ceo",scr:"Nhập hàng › Trả NCC",t:"Phiếu trả NCC cho 2 cái lỗi",
+     do:"Kho sửa phiếu nháp tự sinh rồi gửi duyệt. CEO duyệt và gửi trả (một bước). Sau đó ghi kết quả: NCC hoàn tiền, bù hàng hoặc không nhận.",
+     sys:"Gửi trả thì trừ chờ xử lý.",st:["draft → pending_approval","sent"],
+     k:"Người ghi kết quả phải khác người gửi. Chọn hoàn tiền thì bắt buộc nhập số tiền.",
+     e:["NCC không nhận: chờ xử lý cộng lại, có thể lập phiếu xuất huỷ.","NCC bù hàng: lập đề nghị mới có liên kết, giá bằng giá gốc.","Huỷ phiếu: phải chọn nhập lại tồn (`restock`) hoặc xuất huỷ (`write_off`)."],
+     api:["POST /purchasing/supplier-returns","POST /purchasing/supplier-returns/:id/:action"],s:{cxl:0}},
+    {n:"Đóng thiếu",a:"ceo",scr:"Chi tiết đề nghị",t:"CEO đóng thiếu",
+     do:"NCC không giao bù 2 cái còn lại: CEO đóng đề nghị, bắt buộc lý do.",
+     sys:"Bỏ phần còn chờ; phiếu Giao thiếu còn lại tự sang Đã xử lý.",st:["partially_received","closed_short"],
+     k:"Phiếu Giao thiếu có thể ghi kết quả: giao bù, đóng do giao thiếu, hoặc NCC nhận sai phiếu.",
+     e:["Còn phiếu Đang kiểm: 409 `receipt_counting`.","Đề nghị chưa nhận lần nào: không có nút đóng thiếu, dùng Huỷ."],
+     api:["POST /purchasing/goods-receipts/:id/short-resolution","POST /purchasing/requests/:id/close_short"],s:{dv:0}},
+    {n:"Gợi ý\nnhập lại",a:"he",scr:"Kho › Tồn kho",t:"Ngưỡng tồn và gợi ý nhập lại",
+     do:"Kho xem đề nghị nháp được gợi ý rồi tự gửi duyệt.",
+     sys:"Báo khi có thể bán + đang về − còn thiếu cho đơn ≤ ngưỡng. Số gợi ý = 2 × ngưỡng − (có thể bán + đang về) + còn thiếu cho đơn. Gom vào đề nghị nháp của NCC gần nhất.",
+     k:"Ví dụ ngưỡng 5: hiện 17 + 0 > 5 nên chưa gợi ý. Khi bán dần còn 4 thì gợi ý 10 − 4 = 6 cái. Hệ thống không tự gửi duyệt.",
+     e:["SKU Ngừng nhập hoặc Lưu trữ: không gợi ý.","Mỗi lần chạm ngưỡng chỉ báo một lần."],
+     api:["PUT /inventory/stock/:variantId/reorder-rule","POST /purchasing/requests/add-line"]}
+  ],
+  machines:[
+    {n:"Đề nghị nhập",rows:[["draft","→","pending_approval"],["pending_approval","→","approved · changes_requested · rejected"],["approved","→","ordered"],["ordered","→","partially_received · received"],["partially_received","→","received · closed_short"],["draft … ordered","→","cancelled"]]},
+    {n:"Phiếu nhận",rows:[["counting","→","matched"],["counting","→","short → resolved"],["counting","→","cancelled"]]},
+    {n:"Phiếu trả NCC",rows:[["draft","⇄","pending_approval"],["pending_approval","→","sent"],["sent","→","refunded · replaced · returned_to_us"]]}
+  ],
+  links:[["don-kien","Ghi sổ nhận làm có thể bán tăng: phân hàng cho kiện thiếu hàng trước."],["kenh-ban","Tồn mới được đẩy lên mọi gian hàng; giá nhập là giá vốn cho chặn giá thấp nhất."],["phieu-kho","Sửa số nhập nhầm, xuất huỷ, chuyển chờ xử lý."],["tai-chinh","Tiền trả NCC, tiền NCC hoàn."]],
+  faq:[["Sau khi duyệt có sửa số lượng hay giá được không?","Không. Trước khi đặt NCC thì CEO huỷ, kho lập đề nghị mới. Sau khi đặt thì nhận theo số thực rồi đóng thiếu."],["Người lập đề nghị có ghi sổ phiếu nhận được không?","Không. Người kho khác ghi, hoặc CEO."],["Phiếu nhận đang kiểm thì hàng đã bán được chưa?","Chưa. Hàng chỉ vào tồn khi ghi sổ."],["Vì sao Đang về không bao giờ lệch?","Vì nó được tính lại từ còn chờ của các dòng đề nghị, không ai cộng trừ tay."]],
+  vênh:["Sơ đồ expect.html ghi CEO ghi sổ phiếu nhận. Tài liệu 25 §11 và US-NH-07 ghi Nhân viên kho làm được, miễn khác người lập đề nghị; CEO được tự duyệt."]
+},
+{
+  id:"kenh-ban", no:"2", short:"Kênh bán", title:"Kênh bán: nối gian hàng, đẩy lên sàn",
+  goal:"Nối một shop Lazada hoặc TikTok Shop vào công ty, chốt số tồn đầu kỳ, rồi đẩy sản phẩm lên sàn để tồn và giá được đồng bộ liên tục.",
+  start:"Admin hoặc CEO bấm Kết nối gian hàng ở Bán trên sàn › Kênh bán.",
+  end:"Gian hàng Hoạt động, tồn đã đẩy, listing được sàn duyệt. Lối ra cuối là ngắt gian hàng.",
+  example:"Đây là gian hàng đầu tiên của công ty, nên bắt buộc kiểm kê. Sổ đang ghi 20 cái, kho đếm được 18. Trên sàn có 2 đơn còn mở chưa bàn giao.",
+  meter:STOCK, init:{tt:20,dg:0,gl:0,ctb:20,dv:0,cxl:0,san:"chưa nối"}, meterNote:STOCK_NOTE,
+  steps:[
+    {n:"Kết nối\ngian hàng",a:"admin",scr:"Bán trên sàn › Kênh bán",t:"Kết nối gian hàng",
+     do:"Chọn sàn, bấm Kết nối (OAuth) hoặc dán access token. Nút nào hiện ra tuỳ sàn hỗ trợ.",
+     sys:"Tạo link uỷ quyền có `state` ký sẵn, hết hạn sau 10 phút. Dán token thì gọi sàn lấy danh sách gian hàng.",
+     k:"Shop thử của Lazada không có mật khẩu nên phải dán token.",
+     e:["Sàn bị tắt: hiện `connectable: false` kèm lý do.","Sale hoặc Kho bấm Kết nối: 403."],
+     api:["GET /channel/shops/platforms","GET /channel/shops/:platform/authorize-url","POST /channel/shops/:platform/token"]},
+    {n:"Trang uỷ quyền\ncủa sàn",a:"san",scr:"Trang của sàn",t:"Uỷ quyền trên trang của sàn",
+     do:"Đăng nhập shop trên trang sàn, bấm Cho phép.",
+     sys:"Nhận `code` qua callback, đổi lấy token. Seller mới thì tạo gian hàng; seller cũ thì nối lại bản ghi cũ.",
+     st:["—","connecting"],k:"Một lần uỷ quyền có thể ra nhiều gian hàng.",
+     e:["Quá 10 phút mới quay về: `oauth_state_invalid`.","Shop đang gắn công ty khác: `shop_connected_elsewhere`.","Kết nối lại mà đăng nhập nhầm shop: `shop_mismatch`."],
+     api:["POST /channel/shops/:platform/callback"]},
+    {n:"Thiết lập:\nghép SKU",a:"admin",scr:"/channel/shops/:id/setup",t:"Thiết lập: ghép SKU, hạn trả hàng",
+     do:"Xem bảng gợi ý ghép SKU sàn ↔ SKU Commerio, đổi hoặc bỏ từng dòng. Lazada: nhập số ngày trả hàng (1–60).",
+     sys:"Trùng mã thì ghép theo SKU; không trùng thì so tên (nhận khi điểm ≥ 0,4). Mỗi dòng hiện trạng thái và tồn trên sàn.",
+     k:"Bảng ghép lưu (gian hàng, SKU sàn) → SKU app, hoặc → “không quản tồn”. Ghép một lần, mọi đơn sau tự áp. TikTok không cần nhập hạn trả.",
+     e:["Gian hàng quá lớn: bỏ ghép theo tên (`nameMatchSkipped`).","Gọi lại thiết lập khi đã active: 409 `invalid_transition`."],
+     api:["GET /channel/shops/:id/setup"]},
+    {n:"Chọn tồn\nđầu kỳ",a:"admin",scr:"Thiết lập › Hoàn tất",t:"Chọn tồn đầu kỳ, bấm Hoàn tất",
+     do:"Chọn “đẩy tồn hiện có” hoặc “kiểm kê”, xem mốc kéo đơn (không sửa được), bấm Hoàn tất.",
+     sys:"Gian hàng sang Hoạt động. Chọn kiểm kê thì sinh phiếu kiểm kê đầu kỳ nháp, mỗi SKU một dòng, gian hàng vào chế độ chờ kiểm kê.",
+     st:["connecting","active · chờ kiểm kê"],k:"Gian hàng đầu tiên của công ty bắt buộc kiểm kê; gian hàng thứ hai trở đi được chọn đẩy tồn hiện có. Trong lúc chờ kiểm kê: không đẩy tồn, không giữ hàng.",
+     e:["Gian hàng đầu tiên mà chọn đẩy tồn: 422 `errors.openingStock`.","Đang chờ phiếu đầu kỳ của gian hàng khác: 422."],
+     api:["POST /channel/shops/:id/setup"]},
+    {n:"Đếm phiếu\nkiểm kê",a:"kho",scr:"Sản phẩm và kho › Kho",t:"Kho đếm phiếu kiểm kê đầu kỳ",
+     do:"Đếm thật, sửa số trên phiếu (đếm được 18), Gửi duyệt.",
+     sys:"Đơn và kiện vẫn được kéo về và lưu; cập nhật kiện từ sàn được lưu nhưng hoãn áp. Phiếu giảm tồn gửi duyệt thì giữ lại phần giảm.",
+     st:["draft","pending"],k:"Δ = số đếm − tồn sổ lúc đếm = 18 − 20 = −2.",
+     e:["Đẩy sản phẩm lúc này: 409 `shop_awaiting_stocktake`.","Phiếu bị từ chối: bấm “Lập lại phiếu kiểm kê”."],
+     api:["POST /channel/shops/:id/opening-stocktake"],s:{gl:2,ctb:18}},
+    {n:"CEO duyệt,\nghi sổ",a:"ceo",scr:"Kho › Phiếu kho",t:"CEO duyệt và ghi sổ phiếu đầu kỳ",
+     do:"Duyệt và ghi sổ.",
+     sys:"Trong một giao dịch: đặt mốc kéo đơn bằng lúc đếm; áp các cập nhật đã hoãn; phân hàng cho kiện chưa bàn giao; xếp lượt kéo đơn còn mở.",
+     st:["pending","posted"],k:"Mốc kéo đơn chỉ có một giá trị đúng là lúc chốt tồn. Lùi mốc sẽ trừ tồn hai lần cho kiện đã rời kho.",
+     e:["Phiếu đã posted mà gian hàng vẫn chờ: lỗi chốt, báo quản trị nền tảng.","Đẩy sản phẩm lúc đang chia hàng: 409 `shop_awaiting_allocation`."],
+     s:{tt:18,gl:0,ctb:18}},
+    {n:"Kéo đơn\ncòn mở",a:"he",scr:"Tiến độ thiết lập",t:"Kéo đơn còn mở, chia hàng",
+     do:"Không ai thao tác.",
+     sys:"Kéo một lượt mọi đơn chưa bàn giao, bất kể ngày đặt. Kiện chưa bàn giao: giữ hàng. Bàn giao trước mốc: chỉ lưu. Bàn giao sau mốc: trừ tồn.",
+     k:"2 đơn còn mở được giữ hàng: đang giữ +2, có thể bán 16.",
+     e:["Có trần số đơn mở (`OPEN_ORDER_PULL_MAX`): đơn cũ hơn bị bỏ qua, chưa được giữ hàng.","Lượt kéo hỏng: `lastError` báo, chưa đẩy tồn."],
+     s:{dg:2,ctb:16}},
+    {n:"Đẩy tồn\nlần đầu",a:"he",scr:"—",t:"Đẩy tồn lần đầu",
+     do:"Không ai thao tác.",sys:"Đẩy số có thể bán cho mọi listing đang có trên sàn, chỉ sau khi kéo đơn còn mở (và chia hàng) đã xong.",
+     st:["stockSync pending","synced"],k:"Đẩy sau khi chia hàng để không đẩy sai, và không đẩy 0 lúc mới nối.",
+     e:["Một SKU lỗi thì chỉ SKU đó có `stockSyncError`, SKU khác vẫn đi."],s:{san:16}},
+    {n:"Ghép SKU,\nđẩy sản phẩm",a:"admin",scr:"Gian hàng › Sản phẩm trên sàn",t:"Ghép SKU, đẩy sản phẩm (≤ 20 biến thể/lần)",
+     do:"Ghép tay SKU sàn còn sót, ghép danh mục với danh mục lá của sàn và điền thuộc tính bắt buộc, chọn biến thể rồi bấm Đẩy lên sàn.",
+     sys:"Kiểm từng dòng: giá, ảnh, kích thước gói, danh mục, giá thấp nhất. Mỗi dòng hợp lệ thành một việc nền, lỗi tạm thử lại tối đa 5 lần.",
+     st:["not_listed","pushing"],k:"Hiện mỗi SKU là một sản phẩm trên sàn. Ghép sang “không quản tồn”, hoặc đổi ghép đã có đơn, cần CEO duyệt. Sale cũng ghép SKU được nhờ quyền `channel.listing.match`.",
+     e:["Dòng bị chặn: `price_missing`, `below_floor`, `category_unmapped`, `dimensions_missing`, `images_missing`…; các dòng khác vẫn đẩy."],
+     api:["POST /channel/shops/:id/listings/push","POST /channel/shops/:id/listings/match","PUT /channel/shops/:id/category-maps/:categoryId"]},
+    {n:"Sàn duyệt\nhoặc từ chối",a:"san",scr:"Trang tự cập nhật",t:"Sàn nhận, duyệt hoặc từ chối",
+     do:"Không ai thao tác.",sys:"Đọc trạng thái sàn trả về. Lượt đồng bộ 15 phút xử lý duyệt hoặc từ chối. Listing sang live thì đẩy tồn ngay.",
+     st:["pushing","live · under_review · push_failed"],k:"Mỗi listing có trạng thái riêng: đẩy được sàn A mà lỗi sàn B thì chỉ thử lại B.",
+     e:["`pushing` quá 30 phút: chuyển `push_failed`.","Sàn từ chối: `rejected` kèm lý do."]},
+    {n:"Sửa,\nđẩy lại",a:"admin",scr:"Tab Đẩy lỗi · Giá chưa đẩy",t:"Sửa, đẩy lại",
+     do:"Đọc câu lỗi của sàn, sửa sản phẩm hoặc danh mục, đẩy lại. Xác nhận giá mới đang chờ.",
+     sys:"Đẩy lại. Sàn báo lỗi nhưng vẫn tạo sản phẩm: ghép tay SKU sàn vào listing lỗi, không đẩy lại.",
+     st:["push_failed · rejected","pushing"],
+     api:["GET /channel/listings/pending-prices","POST /channel/listings/:id/confirm-price"]}
+  ],
+  after:[
+    "Đồng bộ tồn: có thể bán đổi thì đẩy lên mọi listing đang hiện. Mỗi 15 phút đối chiếu: sàn cao hơn app thì đẩy giảm ngay; sàn thấp hơn thì chờ thêm một lượt, vẫn lệch mới đẩy tăng và bật cờ Lệch tồn.",
+    "Giá mới (do đổi giá SKU hoặc cấu hình phí) chờ người xác nhận rồi mới đẩy. Sàn từ chối giá (thường do khuyến mãi) thì giữ giá cũ.",
+    "Sửa nội dung listing (chỉ TikTok): sàn vẫn bán bản cũ thì listing giữ live kèm nhãn “Bản sửa đang duyệt”; sàn ngừng bán để duyệt thì sang `under_review`.",
+    "Token hết hạn: gian hàng sang Cần kết nối lại. CEO và Admin nhận mail khi còn 3 ngày, 1 ngày, lúc mất quyền. Kết nối lại thì lấy đơn từ lần thành công cuối.",
+    "Ngắt gian hàng: bị chặn khi còn đơn chưa hoàn tất hoặc chưa huỷ (409 `shop_has_open_orders`). Có thể đẩy tồn 0 trước khi ngắt; listing sang `delisted`."
+  ],
+  machines:[
+    {n:"Gian hàng",rows:[["(OAuth lần đầu)","→","connecting"],["connecting","→","active"],["connecting · active","→","needs_reauth"],["needs_reauth · disconnected","→","active (kết nối lại)"],["connecting · active · needs_reauth","→","disconnected"]]},
+    {n:"Listing",rows:[["not_listed · push_failed · rejected","→","pushing"],["pushing","→","live · under_review · push_failed"],["under_review","→","live · rejected"],["live","⇄","hidden"],["live · hidden","→","platform_hold → live"],["mọi trạng thái trừ pushing","→","delisted"]]}
+  ],
+  extra:"price",
+  links:[["nhap-hang","Ghi sổ phiếu nhận làm tồn tăng, tồn mới được đẩy lên sàn."],["phieu-kho","Kiểm kê đầu kỳ dùng chung máy trạng thái phiếu kho."],["don-kien","Sau mốc, đơn được kéo mỗi 5 phút; bảng ghép SKU quyết định trừ tồn SKU nào."],["tra-hang","Hạn trả hàng: số ngày (Lazada) hoặc trạng thái COMPLETED (TikTok)."],["tai-chinh","Cấu hình phí và thuế là đầu vào của bộ lọc giá."]],
+  faq:[["Vì sao gian hàng đầu tiên phải kiểm kê?","Để có số tồn thật và một mốc kéo đơn đúng. Nếu không, app có thể đẩy tồn sai hoặc đẩy 0 lên sàn lúc mới nối."],["Bấm Đẩy thì bị báo “Đang kéo đơn còn mở” hoặc “Đang chia hàng”?","Đợi bước đó xong; app không đẩy sản phẩm khi tồn chưa chốt."],["Ngắt gian hàng bị chặn?","Còn đơn chưa hoàn tất hoặc chưa huỷ. Mất uỷ quyền thì không cần ngắt, chỉ cần Kết nối lại."],["Người bán sửa giá trên Seller Center thì sao?","Listing sang ẩn kèm nhãn “Giá trên sàn bị sửa”. CEO chọn đẩy lại giá app, nhận giá sàn (vẫn qua giá thấp nhất) hoặc gỡ listing."]],
+  vênh:["Lúc đẩy tồn khi chọn “đẩy tồn hiện có”: US-GH-03 ghi đẩy ngay lúc Hoàn tất; 21 §18.6.2 ghi chỉ đẩy giá ngay, tồn đẩy sau lượt kéo đơn còn mở. Sổ tay theo 21.","Đẩy lại SKU đã gỡ: US-GH-11 ghi listing mới ở Chưa đăng; 21 §18.3 ghi ở `pushing`.","Bộ lọc giá: US-GH-09 ghi chưa có code, trong khi 21 §18.6.7 đã có `pendingPrice`, `below_floor`."]
+},
+{
+  id:"don-kien", no:"3", short:"Đơn & kiện", title:"Đơn và kiện: từ đơn mới tới giao xong",
+  goal:"Đưa một đơn sàn từ lúc hệ thống kéo về tới khi khách nhận hàng và đơn Hoàn tất. Giao hỏng thì kết thúc khi kho quét nhận hàng hoàn.",
+  start:"Hệ thống kéo đơn từ sàn (mỗi 5 phút).", end:"Đơn Hoàn tất, hoặc kiện hoàn về kho, hoặc đơn huỷ.",
+  example:"SKU còn 10 cái, chưa giữ cho ai. Khách đặt 2 cái trên TikTok Shop, đơn thành một kiện.",
+  meter:STOCK, init:{tt:10,dg:0,gl:0,ctb:10,dv:0,cxl:0,san:10}, meterNote:STOCK_NOTE+" Tồn thực chỉ bị trừ lúc bàn giao.",
+  steps:[
+    {n:"Đơn sàn\ntự về",a:"he",scr:"Nền",t:"Đơn sàn tự về",
+     do:"Không ai thao tác.",sys:"Mỗi 5 phút kéo đơn từ cả Lazada và TikTok (không dùng webhook); đơn đổi thì đẩy lên giao diện qua SSE. Kéo cả đơn chưa thanh toán.",
+     st:["—","unpaid (hoặc processing)"],k:"Khoá duy nhất của đơn là (gian hàng, mã đơn sàn), nên kéo lại chỉ cập nhật đơn đã có. Sàn trừ tồn ngay khi khách đặt, nên app cũng giữ hàng ngay.",
+     e:["Cập nhật tới sai thứ tự: so thời điểm của sàn, bỏ bản cũ.","Đơn về lần đầu mà đã giao xong: xét từng kiện, có thể là bàn giao bắt buộc."],
+     api:["POST /channel/shops/:id/orders/pull","GET /sales/orders"]},
+    {n:"Ghép SKU\n(tự áp)",a:"he",scr:"—",t:"Áp bảng ghép SKU",
+     do:"Lần đầu Admin hoặc CEO ghép (luồng Kênh bán); các đơn sau tự áp.",sys:"Dòng chưa ghép mang cờ “Chưa ghép SKU” và nhắc ngay.",
+     k:"“Chưa ghép” là cờ, không phải trạng thái. Kiện có dòng chưa ghép thì chưa giữ hàng được.",
+     e:["Đổi ghép khi kiện đang giữ hàng: nhả phần giữ theo SKU cũ, giữ lại theo SKU mới."]},
+    {n:"Giữ hàng,\ntạo kiện",a:"he",scr:"Đơn hàng › Kiện hàng",t:"Giữ hàng, tạo kiện",
+     do:"Không ai thao tác.",sys:"Lập kiện theo sàn (chưa có thì một kiện tạm cho cả đơn). Thử giữ hàng ngay, kể cả đơn chưa thanh toán. Giữ theo nguyên kiện.",
+     st:["—","kiện reserved"],k:"Giữ nguyên kiện: chỉ giữ khi mọi dòng có quản tồn đều đủ. Thiếu thì kiện ở Thiếu hàng (`backordered`) và được phân hàng mỗi khi có thể bán tăng.",
+     e:["Hai sàn cùng bán món cuối: kiện của đơn sau ở Thiếu hàng.","Kiểm kê thấy thiếu: lấy lại phần giữ, ưu tiên kiện của đơn chưa thanh toán."],
+     api:["GET /fulfillment/packages?tab=reserved|backordered"],s:{dg:2,ctb:8,san:8}},
+    {n:"Đơn sang\nĐang xử lý",a:"san",scr:"—",t:"Đơn sang Đang xử lý",
+     do:"Không ai thao tác.",sys:"Khách đã trả tiền (hoặc COD được sàn xác nhận) và hết thời gian khách được huỷ: kiện vào danh sách chờ đóng gói.",
+     st:["unpaid","processing"],e:["TikTok “on hold” coi như chưa thanh toán: kiện được giữ hàng nhưng chưa đóng gói được."]},
+    {n:"Đóng gói",a:"kho",scr:"Đơn hàng › Kiện hàng",t:"Đóng gói",
+     do:"In phiếu nhặt, nhặt hàng, quét đủ từng món, đóng hộp. Có thể tách kiện chưa đóng.",sys:"Kiểm số quét khớp từng dòng.",
+     st:["reserved","packed"],k:"Hàng trong hộp vẫn tính vào tồn thực. Nhóm gói (TikTok gộp nhiều đơn của một khách) phải đủ điều kiện cả nhóm mới đóng được.",
+     e:["Nhặt thấy thiếu: kiện về Thiếu hàng, kèm phiếu chuyển chờ xử lý hoặc kiểm kê.","Sửa kiện đã đóng: phải Mở kiện trước."],
+     api:["GET /fulfillment/pick-list","POST /fulfillment/packages/:id/pack","POST /fulfillment/packages/:id/split"]},
+    {n:"Báo sàn\nsẵn sàng",a:"kho",scr:"Kiện hàng",t:"Báo sàn sẵn sàng (RTS), in vận đơn",
+     do:"Báo sàn sẵn sàng giao, lấy vận đơn, in nhãn và dán.",sys:"Gọi API sàn, lỗi thì thử lại.",
+     st:["packed","awaiting_pickup"],k:"Sau bước này shop thường không còn tự huỷ hay tách kiện được.",
+     e:["Lấy vận đơn lỗi: kiện ở lại packed, cờ Lỗi lấy vận đơn."],
+     api:["POST /fulfillment/packages/:id/ready","GET /fulfillment/packages/documents?kind=awb"]},
+    {n:"Bàn giao",a:"kho",scr:"Kiện hàng › Bàn giao",t:"Bàn giao: quét khi shipper lấy",
+     do:"Quét kiện khi shipper tới lấy (1–50 kiện một lần).",sys:"Ghi bàn giao đúng một lần, theo lần tới trước: kho quét hoặc sàn báo đã lấy. Lưu giá vốn vào dòng kiện, sinh phiếu xuất `XK`.",
+     st:["awaiting_pickup","in_transit"],k:"Đây là lúc duy nhất tồn thực bị trừ. Đang giữ cũng giảm, nên có thể bán không đổi.",
+     e:["Bàn giao bắt buộc: sàn báo đã lấy khi app chưa giữ đủ: vẫn trừ, có thể tồn âm, bắt buộc kiểm kê.","Kho quét mà 24 giờ sàn chưa xác nhận: cờ cảnh báo; CEO duyệt huỷ bàn giao nhầm."],
+     api:["POST /fulfillment/packages/hand-over","POST /fulfillment/packages/:id/undo-handover"],s:{tt:8,dg:0}},
+    {n:"Đã giao,\nHoàn tất",a:"san",scr:"—",t:"Đã giao, đơn Hoàn tất",
+     do:"Không ai thao tác; đơn sàn không cập nhật giao bằng tay.",
+     sys:"Đơn tự Hoàn tất khi: mọi kiện đã dừng (giao, hoàn, thất lạc, huỷ; ít nhất một kiện không huỷ), đã hết hạn trả hàng, không còn yêu cầu trả đang mở.",
+     st:["in_transit · processing","delivered · completed"],k:"Kết quả đơn: Giao đủ, Giao một phần, hoặc Không giao được. Kiện giao xong cũng là lúc ghi sổ tiền ước tính (luồng Tài chính).",
+     e:["Đơn nhiều kiện hiện “x/y kiện đã giao”.","Mọi kiện hoàn về: Hoàn tất với kết quả Không giao được."]},
+    {n:"Hoàn về:\nquét nhận",a:"kho",scr:"Kiện hàng › Nhận hàng hoàn",t:"Nhánh lỗi: giao thất bại, hàng hoàn về",from:6,br:1,
+     do:"Kho quét mã kiện hoặc vận đơn khi hàng hoàn về.",sys:"Cộng chờ xử lý theo số quét thực tế, sinh phiếu kiểm hàng hoàn `KT` nháp (đi tiếp như luồng Trả hàng, bước chia hàng).",
+     st:["in_transit → delivery_failed → returning","returned"],k:"Hoàn là kiện quay về trước khi khách nhận; khác yêu cầu trả (sau khi khách nhận).",
+     e:["Sàn im lặng 3 ngày sau giao thất bại: cho chuyển tay sang Đang hoàn.","Hàng hoàn mãi không về: sau 14 ngày khiếu nại rồi đánh dấu Thất lạc (cần người duyệt khác). Thất lạc không đổi tồn."],
+     api:["POST /fulfillment/packages/:id/receive-return","POST /fulfillment/packages/:id/report-lost"],s:{cxl:2}},
+    {n:"Huỷ trước\nbàn giao",a:"sale",scr:"Đơn hàng",t:"Nhánh: huỷ đơn trước bàn giao",from:2,br:1,
+     do:"Sàn hoặc khách huỷ; hoặc Sale huỷ đơn sàn với lý do sàn quy định. Kiện đã đóng thì kho dỡ kiện về kệ.",
+     sys:"Kiện chưa đóng: huỷ ngay, nhả phần giữ. Kiện đã đóng: cờ Chờ dỡ kiện về kệ, chỉ nhả khi kho xác nhận đã dỡ.",
+     st:["unpaid · processing","cancelled"],
+     e:["Sàn huỷ khi đã có kiện bàn giao: đơn không huỷ mà mang cờ “Sàn đã huỷ”.","Khách xin huỷ: bật cờ để shop đồng ý hay từ chối."],
+     api:["GET /sales/orders/:id/cancel-reasons","POST /sales/orders/:id/platform-cancel","POST /fulfillment/packages/:id/open"],s:{dg:0,ctb:10,san:10}}
+  ],
+  machines:[
+    {n:"Đơn (4 trạng thái)",rows:[["unpaid","→","processing"],["unpaid · processing","→","cancelled (chưa kiện nào bàn giao)"],["processing","→","completed"]]},
+    {n:"Kiện",rows:[["backordered","⇄","reserved"],["reserved","→","packed → awaiting_pickup"],["awaiting_pickup","→","in_transit → delivered"],["in_transit","→","delivery_failed → returning → returned"],["in_transit","→","lost"],["trước bàn giao","→","cancelled"]]}
+  ],
+  extra:"timing",
+  links:[["kenh-ban","Ghép SKU, mốc kéo đơn, đẩy tồn sau mỗi biến động."],["tra-hang","Kiện đã giao vẫn nhận được yêu cầu trả; yêu cầu đang mở chặn đơn Hoàn tất."],["phieu-kho","Phiếu kiểm hàng hoàn, kiểm kê bắt buộc sau bàn giao bắt buộc."],["nhap-hang","Hàng về làm có thể bán tăng, kéo theo phân hàng cho kiện Thiếu hàng."],["tai-chinh","Kiện giao xong sinh dòng sổ ước tính, chờ quyết toán."]],
+  faq:[["Vì sao kiện ở Thiếu hàng dù kho còn hàng?","Hàng đã giữ cho kiện khác, có dòng chưa ghép SKU, hoặc kiện chưa đủ mọi món (giữ theo nguyên kiện)."],["Vì sao chưa đóng gói được?","Đơn còn Chờ thanh toán, hoặc là đơn TikTok on hold."],["Khi nào tồn thực bị trừ?","Chỉ lúc bàn giao, đúng một lần."],["Đơn đã giao sao chưa Hoàn tất?","Chưa hết hạn trả hàng, hoặc còn yêu cầu trả đang mở."],["Sao tách đơn và kiện?","Đơn là cái khách mua (tiền, huỷ, trả); kiện là cái kho gửi (một mã vận đơn). Một đơn có thể nhiều kiện, nên giữ hàng, đóng gói, giao đều tính theo kiện."]],
+  vênh:["Sơ đồ expect.html gọi `backordered` là “Chờ hàng”; tài liệu 25 gọi “Thiếu hàng”. Sổ tay dùng “Thiếu hàng”.","Tạo đơn tay, xác nhận COD, tự giao vẫn còn trên sơ đồ nhưng đã ẩn khỏi MVP (FE#249, route bỏ 11/11/2026)."]
+},
+{
+  id:"tra-hang", no:"4", short:"Trả hàng", title:"Yêu cầu trả hàng: từ yêu cầu tới đóng",
+  goal:"Xử lý khi khách đã nhận hàng rồi muốn trả qua sàn: quyết định, nhận hàng về, kiểm và đưa phần còn tốt về tồn.",
+  start:"Sàn đẩy yêu cầu trả về app.", end:"Yêu cầu Đóng (đã kiểm, khách không gửi, khách rút), hoặc Chỉ hoàn tiền.",
+  example:"SKU còn 8 cái. Khách trả 2 cái của đơn đã giao. Kiểm thấy 1 cái còn bán được, 1 cái hỏng.",
+  meter:STOCK, init:{tt:8,dg:0,gl:0,ctb:8,dv:0,cxl:0,san:8}, meterNote:STOCK_NOTE+" Hàng trả luôn vào Chờ xử lý trước, không vào thẳng tồn thực.",
+  steps:[
+    {n:"Khách gửi\nyêu cầu",a:"khach",scr:"Trên sàn",t:"Khách gửi yêu cầu trả qua sàn",
+     do:"Khách gửi yêu cầu trên sàn.",sys:"Kéo yêu cầu về, gắn với đơn, dòng, số lượng và các kiện liên quan. Đơn bật cờ “Có yêu cầu trả”, sinh việc cần làm hạn 2 ngày.",
+     st:["—","requested"],k:"Yêu cầu từ sàn luôn được nhận. Trả một phần đơn thì yêu cầu có dòng và số lượng riêng.",
+     e:["Kiện trong app chưa thấy Đã giao: nhảy cóc tới Đã giao, cờ Cần xử lý.","Đơn đã Hoàn tất: vẫn nhận yêu cầu, chỉ bật cờ."],
+     api:["GET /returns","GET /returns/:id"]},
+    {n:"Sale chấp nhận\n/ từ chối",a:"sale",scr:"Đơn hàng › Yêu cầu trả",t:"Sale chấp nhận hoặc từ chối",
+     do:"Chấp nhận, hoặc từ chối kèm lý do sàn quy định (có lý do bắt buộc ảnh).",sys:"Báo quyết định lên sàn.",
+     st:["requested","awaiting_return"],k:"Từ chối (`rejected`) gần như kết thúc: sàn vẫn có thể phân xử cho khách và mở lại yêu cầu.",
+     api:["POST /returns/:id/accept","POST /returns/:id/reject","GET /returns/:id/reasons"]},
+    {n:"Chỉ hoàn tiền\n(khách giữ hàng)",a:"sale",scr:"Yêu cầu trả",t:"Nhánh: hoàn tiền, khách giữ hàng",from:0,br:1,
+     do:"Chọn hoàn tiền mà không cần nhận hàng về.",sys:"Ghi số tiền hoàn; tồn không đổi.",
+     st:["requested","refund_only (kết thúc)"],k:"`refund_only` không tính là yêu cầu đang mở khi xét đơn Hoàn tất.",
+     api:["POST /returns/:id/refund-only"]},
+    {n:"Khách gửi\nhàng về",a:"khach",scr:"Vận đơn chiều về",t:"Khách gửi hàng về",
+     do:"Khách gửi hàng qua ĐVVC của sàn.",sys:"Theo dõi mã vận đơn chiều về.",st:["awaiting_return","awaiting_return"],
+     e:["Khách gửi thành nhiều kiện: kiện đầu đưa yêu cầu sang Đã nhận; kiện sau quét thêm vào phiếu kiểm còn nháp."],from:1},
+    {n:"Khách\nkhông gửi",a:"sale",scr:"Yêu cầu trả",t:"Nhánh: khách không gửi hàng",from:3,br:1,
+     do:"Quá hạn không thấy hàng: bấm “Khách không gửi”, lý do bắt buộc.",sys:"Đóng yêu cầu, không hoàn tiền.",
+     st:["awaiting_return","closed (no_show)"],k:"Khách rút yêu cầu hoặc sàn tự đóng: hệ thống tự đóng với kết quả `buyer_cancelled`.",
+     api:["POST /returns/:id/no-show"]},
+    {n:"Kho nhận\nhàng trả",a:"kho",scr:"Kho › Nhận hàng trả",t:"Kho nhận hàng trả",from:3,
+     do:"Quét mã yêu cầu, vận đơn chiều về hoặc mã đơn, nhập số quét từng món.",sys:"Cộng chờ xử lý theo số quét thực tế. Sinh phiếu kiểm hàng hoàn nháp. Báo sàn đã nhận hàng.",
+     st:["awaiting_return","received"],k:"Cộng theo số kho đếm được, không theo số trên yêu cầu.",
+     e:["Kiện về không khớp yêu cầu nào: vẫn vào chờ xử lý, cờ Cần xử lý, hạn 24 giờ.","Sau đó sàn mới mở yêu cầu: gắn kiện đã nhận vào, không cộng lần hai."],
+     api:["POST /returns/receive","GET /returns/unmatched"],s:{cxl:2}},
+    {n:"Chia:\nbán lại / hỏng",a:"kho",scr:"Sản phẩm và kho › Kho",t:"Quét, chia hàng trên phiếu kiểm",
+     do:"Chia mỗi dòng thành ba phần: bán lại, hỏng, trả NCC. Tổng ba phần bằng số quét.",sys:"Thiếu = số dự kiến − số quét. Có thiếu thì phiếu cần người khác duyệt trước khi ghi sổ.",
+     st:["phiếu KT draft","draft"],k:"Hàng sai mẫu ghi vào dòng SKU thực nhận; không rõ SKU thì vào phần hỏng.",
+     e:["Hàng về sai hoặc thiếu: ghi trên phiếu, bật cờ Khiếu nại sàn."],api:["PUT /inventory/documents/:id"]},
+    {n:"Ghi sổ,\nđóng yêu cầu",a:"he",scr:"—",t:"Ghi sổ phiếu: bán lại vào tồn, đóng yêu cầu",
+     do:"Không ai thao tác thêm (trừ khi phiếu cần duyệt).",sys:"Phần bán lại: chờ xử lý −1, tồn thực +1, chạy phân hàng cho kiện thiếu hàng. Phần hỏng sinh phiếu xuất huỷ; phần trả NCC sinh phiếu trả NCC. Yêu cầu tự đóng.",
+     st:["received","closed (inspected)"],k:"Giá vốn của hàng trả lấy theo dòng kiện đã giao.",s:{tt:9,ctb:9,san:9,cxl:1}},
+    {n:"Xuất huỷ\nphần hỏng",a:"ceo",scr:"Kho › Phiếu kho",t:"CEO duyệt phiếu xuất huỷ phần hỏng",
+     do:"CEO duyệt phiếu xuất huỷ tự sinh.",sys:"Chờ xử lý giảm khi phiếu ghi sổ.",st:["pending","posted"],
+     k:"Chờ xử lý nằm quá 7 ngày thì được nhắc.",s:{cxl:0}}
+  ],
+  machines:[
+    {n:"Yêu cầu trả",rows:[["requested","→","awaiting_return · rejected · refund_only"],["rejected","→","awaiting_return · refund_only (sàn phân xử)"],["awaiting_return","→","received"],["awaiting_return","→","closed (no_show)"],["requested · awaiting_return","→","closed (khách rút)"],["received","→","closed (inspected)"]]}
+  ],
+  links:[["don-kien","Chỉ kiện đã giao mới có yêu cầu trả; hoàn trước khi khách nhận đi luồng kiện."],["phieu-kho","Phiếu kiểm hàng hoàn, phiếu xuất huỷ phần hỏng."],["nhap-hang","Phiếu trả NCC cho hàng lỗi do NCC."],["tai-chinh","Tiền hoàn cho khách, phí trả hàng của sàn."]],
+  faq:[["Nhận hàng trả xong sao chưa bán được?","Hàng mới vào chờ xử lý; phải kiểm và ghi sổ phiếu thì phần bán lại mới vào tồn thực."],["Kiện trả về không khớp yêu cầu nào?","Kho vẫn nhận vào chờ xử lý, có cờ Cần xử lý; sau đó gắn vào yêu cầu hoặc bỏ qua."],["Từ chối rồi có mở lại được không?","Có, nếu sàn phân xử cho khách."],["Khách gửi thiếu hoặc sai hàng?","Ghi trên phiếu, phiếu cần người khác duyệt, bật cờ Khiếu nại sàn."]],
+  vênh:["Sơ đồ expect.html đặt “Hoàn tiền, khách giữ hàng” ở làn Hệ thống; API cho thấy Sale bấm `refund-only` (quyền `sales.return.process`). Với đơn sàn, thường sàn quyết định.","Sơ đồ ghi “hỏng vào chờ xử lý”; tài liệu 25 chi tiết hơn: mọi hàng trả vào chờ xử lý lúc nhận, phần hỏng ra khỏi chờ xử lý khi phiếu xuất huỷ ghi sổ.","Lập yêu cầu trả tay cho đơn tạo tay: ngoài MVP."]
+},
+{
+  id:"phieu-kho", no:"5", short:"Phiếu kho", title:"Phiếu kho: kiểm kê, xuất huỷ, chuyển chờ xử lý",
+  goal:"Sửa số tồn cho khớp thực tế bằng chứng từ, không ai sửa tay con số.",
+  start:"Nhân viên kho lập phiếu ở Sản phẩm và kho › Kho.", end:"CEO ghi sổ (tồn đổi, đẩy lên sàn), hoặc phiếu bị từ chối hay huỷ.",
+  example:"Sổ ghi 20 cái, 3 cái đang giữ cho kiện. Kiểm kê đếm được 18.",
+  meter:STOCK, init:{tt:20,dg:3,gl:0,ctb:17,dv:0,cxl:0,san:17}, meterNote:STOCK_NOTE,
+  steps:[
+    {n:"Lập phiếu",a:"kho",scr:"Sản phẩm và kho › Kho",t:"Lập phiếu",
+     do:"Chọn loại: kiểm kê, xuất huỷ, hoặc chuyển chờ xử lý. Kiểm kê chọn khu vực đếm (tồn thực hay chờ xử lý); xuất huỷ chọn nguồn (kệ hay chờ xử lý).",
+     sys:"Tạo phiếu nháp, số có tiền tố như `KK-`, `XK-`.",st:["—","draft"],
+     e:["Bấm hai lần có thể ra hai bản nháp: huỷ bớt một bản."],api:["POST /inventory/documents"]},
+    {n:"Nhập số,\nlưu nháp",a:"kho",scr:"Phiếu kho",t:"Nhập số lượng, lý do, lưu nháp",
+     do:"Nhập từng dòng SKU, số lượng, lý do. Kiểm kê thì nhập số đếm được (18).",
+     sys:"Kiểm kê: lưu thời điểm đếm và tồn sổ lúc đó.",st:["draft","draft"],
+     k:"Δ = số đếm − tồn sổ lúc đếm = 18 − 20 = −2. Vì tính theo lúc đếm, kiện bàn giao giữa lúc đếm và lúc duyệt không làm sai số.",
+     api:["PUT /inventory/documents/:id"]},
+    {n:"Gửi duyệt",a:"kho",scr:"Phiếu kho",t:"Gửi duyệt",
+     do:"Bấm Gửi duyệt.",sys:"Phiếu làm giảm tồn thì tạm giữ phần giảm (giữ lại chờ duyệt). Có thể bán giảm ngay và đẩy số giảm lên sàn ngay.",
+     st:["draft","pending"],k:"Giữ lại để món đã biết thiếu không bị bán tiếp trong lúc chờ CEO. Phiếu lấy từ chờ xử lý thì không giữ tồn thực.",
+     e:["Phiếu trống: `empty_document`.","Không đủ số để giảm: 422 `stock_insufficient`, báo theo dòng."],
+     api:["POST /inventory/documents/:id/submit"],s:{gl:2,ctb:15,san:15}},
+    {n:"Huỷ nháp",a:"kho",scr:"Phiếu kho",t:"Nhánh: huỷ phiếu nháp",from:1,br:1,
+     do:"Phiếu còn nháp, không cần nữa: huỷ.",sys:"Không đổi tồn.",st:["draft","cancelled"],api:["POST /inventory/documents/:id/cancel"]},
+    {n:"CEO duyệt\n/ từ chối",a:"ceo",scr:"Kho › Phiếu chờ duyệt",t:"CEO duyệt và ghi sổ, hoặc từ chối",from:2,
+     do:"Duyệt (ghi sổ), hoặc từ chối kèm lý do bắt buộc.",sys:"Duyệt hay từ chối đều mở khoá phần giữ lại. Từ chối thì có thể bán tăng lại.",
+     st:["pending","posted (hoặc rejected)"],k:"Người duyệt phải khác người lập (409 `second_person_required`), trừ khi người lập là CEO hoặc công ty chỉ có một người.",
+     e:["CEO từ chối phiếu xuất huỷ hàng ở chờ xử lý: kho bắt buộc chọn nhập lại tồn hoặc trả NCC."],
+     api:["POST /inventory/documents/:id/approve","…/reject","…/decide"]},
+    {n:"Tồn đổi\ntheo loại",a:"he",scr:"—",t:"Tồn thay đổi theo loại phiếu",
+     do:"Không ai thao tác.",sys:"Ghi một dòng thẻ kho cho mỗi biến động (ngăn, số sau, chứng từ gốc). Kiểm kê không đổi giá vốn.",
+     k:"Tồn thực 20 → 18, phần giữ lại 2 được giải phóng. Có thể bán vẫn là 15 vì đã giảm từ lúc gửi duyệt.",
+     e:["Tồn thực xuống dưới đang giữ: lấy lại phần giữ của kiện (đơn chưa thanh toán trước), kiện sang Thiếu hàng.","Phiếu kiểm kê CEO duyệt được ghi dù tồn âm; SKU mang cờ Tồn âm."],
+     s:{tt:18,gl:0}},
+    {n:"Đẩy tồn\nlên sàn",a:"he",scr:"—",t:"Đẩy tồn mới lên sàn",
+     do:"Không ai thao tác.",sys:"Có thể bán tăng: phân hàng cho kiện Thiếu hàng trước rồi mới đẩy. Có thể bán giảm: đẩy ngay.",
+     k:"Ở ví dụ số trên sàn đã là 15 từ bước gửi duyệt, nên không đẩy gì thêm.",
+     e:["Đối chiếu mỗi 15 phút: sàn cao hơn thì đẩy giảm ngay; sàn thấp hơn thì chờ một lượt rồi mới đẩy tăng và bật cờ Lệch tồn."]},
+    {n:"Xem\nthẻ kho",a:"admin",scr:"Kho › Thẻ kho",t:"Xem thẻ kho",
+     do:"Xem từng biến động, mới nhất trước.",sys:"Mỗi dòng có chứng từ gốc để lần ngược.",
+     k:"Chứng từ đã ghi sổ không sửa được. Sai thì lập phiếu kiểm kê mới.",api:["GET /inventory/stock/:variantId","GET /inventory/documents"]}
+  ],
+  machines:[
+    {n:"Phiếu kho (kiểm kê, xuất huỷ, chuyển chờ xử lý)",rows:[["draft","→","pending"],["pending","→","posted"],["pending","→","rejected (bắt buộc lý do)"],["draft","→","cancelled"]]},
+    {n:"Phiếu kiểm hàng hoàn (tự sinh)",rows:[["draft","→","posted (không thiếu)"],["draft","→","pending (có thiếu)"],["pending","→","posted · draft (kiểm lại)"]]}
+  ],
+  extra:"slips",
+  links:[["nhap-hang","Hàng lỗi phát hiện sau khi nhận: chuyển chờ xử lý rồi trả NCC."],["kenh-ban","Kiểm kê đầu kỳ khi nối gian hàng đầu tiên."],["don-kien","Kiểm kê giảm lấy lại phần giữ của kiện; kiểm kê tăng phân hàng cho kiện thiếu."],["tra-hang","Phiếu kiểm hàng hoàn; phần hỏng sinh phiếu xuất huỷ."]],
+  faq:[["Vừa gửi duyệt mà sàn đã giảm tồn?","Phiếu giảm đang chờ duyệt làm phần giữ lại tăng, có thể bán giảm ngay để món đó không bị bán mất."],["Hàng bàn giao trong lúc chờ CEO duyệt có bị tính hai lần không?","Không. Δ tính theo tồn sổ lúc đếm."],["Nhân viên kho tự duyệt phiếu được không?","Không. Chỉ CEO, hoặc công ty chỉ có một người, mới tự duyệt."],["CEO từ chối xuất huỷ hàng ở chờ xử lý thì hàng đi đâu?","Kho bắt buộc chọn nhập lại tồn hoặc trả NCC."]],
+  vênh:["Ai bấm huỷ phiếu nháp: sơ đồ để làn Hệ thống, còn quyền trong 21 §15.3 là của người lập."]
+},
+{
+  id:"tai-chinh", no:"6", short:"Tài chính", title:"Tài chính: phí, thuế và đối soát sàn",
+  goal:"Tính tiền và lãi từng đơn theo cấu hình phí, thuế đã duyệt, rồi so với số tiền sàn thực trả.",
+  start:"Admin soạn cấu hình ở Tài chính › Cấu hình phí và thuế.", end:"Dòng đối soát của đơn ở Đã quyết toán, hoặc Đã xử lý sau khi chốt lệch.",
+  example:"Sàn A: phí 14% + 3.000. Áo bán giá niêm yết 239.000, giá vốn 150.000. App ước thực nhận 202.540; sàn quyết toán 200.000.",
+  meter:[{k:"cfg",l:"Bản cấu hình mới"},{k:"gia",l:"Giá niêm yết"},{k:"uoc",l:"Thực nhận ước tính"},{k:"thuc",l:"Sàn trả thực tế"},{k:"lech",l:"Lệch"},{k:"ds",l:"Đối soát đơn"}],
+  init:{cfg:"—",gia:"239.000",uoc:"—",thuc:"—",lech:"—",ds:"none"},
+  meterNote:"Số giả định để minh hoạ. Ngưỡng lệch ví dụ: hơn 1.000đ hoặc 1% thì thành Lệch.",
+  steps:[
+    {n:"Soạn cấu hình,\nchạy thử",a:"admin",scr:"Tài chính › Cấu hình phí và thuế",t:"Soạn cấu hình, chạy thử",
+     do:"Tạo phiên bản cho một loại: phí (theo gian hàng), chế độ thuế, luật thuế, ngưỡng lệch, lãi tối thiểu. Nhập ngày hiệu lực, bấm Chạy thử.",
+     sys:"Chạy thử trên dữ liệu thật nhưng không ghi gì: tổng phí % mới, listing đổi giá hoặc rơi dưới giá thấp nhất, lãi gộp ước tính 30 ngày.",
+     st:["—","draft"],api:["POST /finance/configs","POST /finance/configs/:id/dry-run"],s:{cfg:"Nháp"}},
+    {n:"Gửi duyệt",a:"admin",scr:"Cấu hình phí và thuế",t:"Gửi duyệt",
+     do:"Bấm Gửi duyệt.",sys:"Khoá sửa, mang theo kết quả chạy thử lần cuối.",st:["draft","pending_approval"],
+     e:["Chưa chạy thử: 422 `dry_run_required`."],api:["POST /finance/configs/:id/submit"],s:{cfg:"Chờ duyệt"}},
+    {n:"CEO duyệt",a:"ceo",scr:"Cấu hình phí và thuế",t:"CEO duyệt, trả về hoặc từ chối",
+     do:"Duyệt, trả về (về nháp) hoặc từ chối; hai cách sau bắt buộc lý do.",sys:"Duyệt thì sang Đã lên lịch; ngày hiệu lực đã qua thì Đang áp dụng ngay và ghi điều chỉnh hồi tố.",
+     st:["pending_approval","scheduled"],k:"Người duyệt khác người soạn; CEO tự soạn thì tự duyệt, ghi `selfApproved`.",
+     e:["Hai phiên bản cùng ngày hiệu lực: 409 `config_overlap`.","Nhiều listing rơi dưới giá thấp nhất: vẫn duyệt được, các listing đó vào danh sách giá chờ xác nhận."],
+     api:["POST /finance/configs/:id/approve","…/request-changes · …/reject"],s:{cfg:"Đã lên lịch"}},
+    {n:"Áp dụng từ\nngày hiệu lực",a:"he",scr:"—",t:"Áp dụng từ ngày hiệu lực",
+     do:"Không ai thao tác.",sys:"Đúng ngày, bản mới sang Đang áp dụng, bản cũ sang Hết hiệu lực. Phát sự kiện tính lại giá; giá mới chờ Admin xác nhận.",
+     st:["scheduled","active (bản cũ superseded)"],k:"Đơn phát sinh từ ngày hiệu lực dùng phí mới; đơn cũ giữ phiên bản cũ. Bản đã duyệt không sửa được, muốn đổi thì tạo bản mới.",
+     e:["Bản đang áp dụng có số sai: lập bản sửa lỗi cùng ngày hiệu lực (`isCorrection`)."],s:{cfg:"Đang áp dụng"}},
+    {n:"Kiện giao:\nghi ước tính",a:"he",scr:"—",t:"Kiện giao xong: ghi sổ ước tính",
+     do:"Không ai thao tác.",sys:"Kiện sang Đã giao thì ghi các dòng ước tính: doanh thu, trợ giá, ship, từng loại phí, thuế khấu trừ, giá vốn.",
+     st:["none","pending (Chờ sàn quyết toán)"],k:"Sổ thu chi chỉ thêm dòng, không sửa dòng. Thực nhận = 239.000 × 0,86 − 3.000 ≈ 202.540.",
+     s:{uoc:"202.540",ds:"pending"}},
+    {n:"Kéo\nquyết toán",a:"san",scr:"Tài chính › Đối soát sàn",t:"Kéo quyết toán từ sàn",
+     do:"Tự chạy định kỳ; Admin cũng chạy tay được.",sys:"Kéo từ API tài chính của sàn, chống trùng theo (gian hàng, mã giao dịch). Ghi dòng thực tế; dòng ước tính được đánh dấu “đã thay”, không xoá.",
+     k:"Mốc kéo chỉ tiến khi cả lô ghi xong.",
+     e:["Quyết toán của đơn không có trong app: ghi vào gian hàng, cờ Không rõ đơn.","Số dư ví sàn khác số sàn báo: cờ Lệch ví."],
+     api:["POST /finance/settlement-runs","GET /finance/settlement-runs"],s:{thuc:"200.000"}},
+    {n:"So với\ndự tính",a:"he",scr:"—",t:"So tiền sàn trả với dự tính",
+     do:"Không ai thao tác.",sys:"Lệch trong ngưỡng: tự sang Đã quyết toán. Vượt ngưỡng: sang Lệch.",
+     st:["pending","mismatch"],k:"200.000 − 202.540 = −2.540 (khoảng 1,25%), vượt cả 1.000đ lẫn 1%.",
+     e:["Sàn trừ thuế khác ước tính: cờ Lệch thuế, lấy số sàn làm số thật.","Sàn điều chỉnh muộn trên đơn đã quyết toán: lệch luỹ kế vượt ngưỡng thì quay lại Lệch."],
+     api:["GET /finance/payments?status=mismatch"],s:{lech:"−2.540",ds:"mismatch"}},
+    {n:"Admin chốt\n(dưới mức chốt)",a:"admin",scr:"Tài chính › Đối soát sàn",t:"Chốt lệch chưa vượt mức chốt",from:6,
+     do:"Chấp nhận khoản lệch, ghi lý do bắt buộc.",sys:"Ghi người chốt, lý do.",st:["mismatch","resolved"],
+     k:"Người chốt phải khác người soạn cấu hình phí đang áp dụng cho gian hàng đó.",api:["POST /finance/payments/:orderId/resolve"],s:{ds:"resolved"}},
+    {n:"CEO chốt\n(vượt mức chốt)",a:"ceo",scr:"Đối soát sàn",t:"Nhánh: lệch vượt mức chốt",from:6,br:1,
+     do:"CEO tự chốt (nhãn Tự duyệt), hoặc duyệt trước để Admin chốt.",sys:"Admin chốt khi chưa có CEO duyệt: 409 `ceo_approval_required`.",
+     st:["mismatch","resolved"],api:["POST /finance/payments/:orderId/ceo-approve"],s:{ds:"resolved · Tự duyệt"}},
+    {n:"Báo cáo\nlãi, dòng tiền",a:"ceo",scr:"Tài chính",t:"Lãi theo đơn, xuất sổ, dự báo dòng tiền",from:7,
+     do:"CEO, Admin hoặc vai Kế toán xem lãi theo đơn, theo SKU; xuất sổ sang phần mềm kế toán.",
+     sys:"Lãi gộp = thực nhận − giá vốn; mang nhãn Ước tính tới khi có quyết toán.",
+     k:"Ví dụ (tự suy): 200.000 − 150.000 = 50.000. App không khai thuế, chỉ cảnh báo khi doanh thu năm sắp chạm mốc 500 triệu và 3 tỷ.",
+     api:["GET /finance/orders/profits","GET /finance/ledger/export","GET /finance/cash-forecast"]}
+  ],
+  machines:[
+    {n:"Phiên bản cấu hình",rows:[["draft","→","pending_approval"],["pending_approval","→","scheduled · active · draft · rejected"],["scheduled","→","active → superseded"],["draft · pending · scheduled","→","cancelled (trước ngày hiệu lực)"]]},
+    {n:"Đối soát của đơn",rows:[["none","→","pending (kiện đầu giao xong)"],["pending","→","settled · mismatch"],["mismatch","→","resolved"],["settled · resolved","→","mismatch (điều chỉnh muộn)"],["none","→","mismatch (thu tiền đơn đã huỷ)"]]}
+  ],
+  extra:"money",
+  links:[["kenh-ban","Cấu hình phí là đầu vào bộ lọc giá; bản mới có hiệu lực thì ra giá chờ xác nhận."],["don-kien","Kiện giao xong mới sinh dòng sổ; đơn Hoàn tất không phải chờ tiền về."],["tra-hang","Hoàn tiền khách, phí khi hoàn, giá vốn ghi giảm."],["nhap-hang","Tiền trả NCC, tiền NCC hoàn; gợi ý nhập lại hiện số tiền dự kiến."]],
+  faq:[["Sửa phí sàn ngay được không?","Không. Tạo phiên bản mới, chạy thử, CEO duyệt; đơn cũ giữ phiên bản cũ."],["Quyết toán khớp thì có ai phải làm gì không?","Không. Hệ thống tự chuyển Đã quyết toán."],["Admin chốt được khoản lệch lớn không?","Vượt mức chốt thì cần CEO duyệt trước."],["Sàn hoàn tiền cho đơn COD bị hoàn về?","Chỉ ghi hoàn tới mức doanh thu đã ghi (ở đây là 0); yêu cầu trả bật cờ Cần xử lý."]],
+  vênh:["Sơ đồ gọi bước Admin là “Chốt lệch trong ngưỡng”. Thực ra lệch trong ngưỡng đã tự quyết toán; “ngưỡng” ở bước này là mức chốt `resolveLimit`. Sổ tay ghi “chưa vượt mức chốt”.","Mục 21 của tài liệu hợp đồng API vẫn ghi “đề xuất, chờ xác nhận”: route và mã lỗi luồng này có thể còn đổi."]
+}
+];
+
+/* Thứ tự hiển thị: Bắt đầu đứng đầu như một luồng chuẩn bị */
+const TERMS = [
+ ["Tồn thực","Hàng bán được đang ở kho, kể cả hàng trong kiện chưa bàn giao.","kho"],
+ ["Đang giữ","Phần tồn thực đã giữ cho kiện chưa bàn giao.","kho"],
+ ["Giữ lại chờ duyệt","Phần tạm trừ khi phiếu giảm tồn đang chờ duyệt.","kho"],
+ ["Có thể bán","max(0, tồn thực − đang giữ − giữ lại chờ duyệt). Đây là số đẩy lên sàn.","kho"],
+ ["Đang về","Tổng còn chờ của các đề nghị nhập đã đặt NCC.","nhập"],
+ ["Chờ xử lý","Hàng lỗi, hàng hoàn, hàng trả chưa kiểm. Không bán được, không thuộc tồn thực. (quarantine)","kho"],
+ ["Còn chờ","Số đặt − đã nhận − đã đóng do giao thiếu, theo từng dòng đề nghị.","nhập"],
+ ["Còn thiếu cho đơn","max(0, tổng số lượng SKU trên các kiện Thiếu hàng − có thể bán).","kho"],
+ ["Thẻ kho","Nhật ký từng biến động tồn, kèm chứng từ gốc.","kho"],
+ ["Ghi sổ","Chốt chứng từ để tồn hoặc tiền thay đổi. Đã ghi sổ thì không sửa.","chung"],
+ ["Người duyệt khác người làm","Người duyệt phải khác người lập; ngoại lệ là CEO, hoặc công ty chỉ có một người (gắn nhãn Tự duyệt).","chung"],
+ ["Tự duyệt","CEO tự duyệt việc của mình, hoặc công ty chỉ có một người dùng. Nhật ký gắn nhãn.","chung"],
+ ["Phân hệ","Nhóm chức năng bật, tắt được theo công ty.","bắt đầu"],
+ ["Membership","Tư cách thành viên của một tài khoản trong một công ty.","bắt đầu"],
+ ["Sản phẩm cha","Một mặt hàng, gom các biến thể. Không có tồn riêng.","bắt đầu"],
+ ["SKU (biến thể)","Một phân loại bán được; đơn vị tính tồn, giá vốn và listing.","bắt đầu"],
+ ["Độ hoàn thiện","SKU đã đủ trường bắt buộc (Sẵn sàng) hay chưa (Chờ hoàn thiện).","bắt đầu"],
+ ["Đề nghị nhập","Một lần xin và đặt hàng với một NCC, gồm nhiều dòng.","nhập"],
+ ["Phiếu nhận","Một đợt NCC giao hàng của một đề nghị.","nhập"],
+ ["Lỗi giữ lại","Hàng lỗi phát hiện khi người giao đã đi; vào chờ xử lý.","nhập"],
+ ["Trả tại chỗ","Hàng trả người giao ngay; không đổi tồn.","nhập"],
+ ["Đóng thiếu","CEO bỏ phần còn chờ của đề nghị khi NCC không giao bù.","nhập"],
+ ["Phiếu trả NCC","Chứng từ đưa hàng lỗi trả lại NCC.","nhập"],
+ ["Giá vốn bình quân","Giá vốn tính lại mỗi lần nhận hàng có giá.","nhập"],
+ ["Gian hàng","Một shop trên sàn, xác định bằng cặp (sàn, mã shop).","kênh"],
+ ["Listing","Một SKU trên một gian hàng, có trạng thái riêng.","kênh"],
+ ["Ghép SKU","Ánh xạ SKU sàn → SKU app, hoặc → “không quản tồn”.","kênh"],
+ ["Không quản tồn","Dòng không trừ tồn: quà tặng, combo, dịch vụ. Cần CEO duyệt.","kênh"],
+ ["Mốc kéo đơn","Thời điểm bắt đầu lấy đơn, bằng lúc chốt tồn đầu kỳ. (orderCutoffAt)","kênh"],
+ ["Đơn còn mở","Đơn chưa bàn giao, được kéo một lượt lúc thiết lập gian hàng.","kênh"],
+ ["Kiểm kê đầu kỳ","Phiếu đếm tồn khi nối gian hàng đầu tiên của công ty.","kênh"],
+ ["Lệch tồn","Tồn sàn khác app hai lượt đối chiếu liền nhau.","kênh"],
+ ["capabilities","Năng lực của sàn (duyệt listing, cách ẩn, cách tách kiện, hạn trả). FE rẽ nhánh theo trường này, không theo tên sàn.","kênh"],
+ ["Giá muốn bán / niêm yết / thực nhận / giá thấp nhất","Các con số của bộ lọc giá theo sàn.","kênh"],
+ ["Kiện","Nhóm món đi chung một mã vận đơn.","đơn"],
+ ["Giữ nguyên kiện","Chỉ giữ hàng khi mọi món của kiện đều đủ.","đơn"],
+ ["Phân hàng cho kiện","Chia số có thể bán mới tăng cho các kiện Thiếu hàng theo thứ tự ưu tiên.","đơn"],
+ ["Báo sàn sẵn sàng (RTS)","Báo sàn kiện đã sẵn sàng giao để lấy vận đơn.","đơn"],
+ ["Bàn giao","Lúc kiện rời kho cho ĐVVC; lúc duy nhất trừ tồn thực.","đơn"],
+ ["Bàn giao bắt buộc","Sàn báo đã giao cho ĐVVC khi app chưa giữ đủ hàng; vẫn trừ, có thể tồn âm.","đơn"],
+ ["Nhảy cóc","Sàn báo bỏ qua vài bước; hệ thống bù tác động tồn đúng một lần.","đơn"],
+ ["Dỡ kiện về kệ","Mở kiện đã đóng để huỷ hoặc sửa.","đơn"],
+ ["Nhóm gói","Các kiện chung mã kiện sàn, đi như một gói (TikTok).","đơn"],
+ ["Hạn chuẩn bị hàng","Hạn sàn đặt để bàn giao; còn 25% thời gian thì cờ Sắp trễ hạn.","đơn"],
+ ["Yêu cầu trả","Khách trả hàng sau khi đã nhận.","trả"],
+ ["Hoàn (kiện)","Kiện quay về trước khi khách nhận; khác yêu cầu trả.","trả"],
+ ["Chỉ hoàn tiền","Shop hoàn tiền, khách giữ hàng. (refund_only)","trả"],
+ ["Phiếu kiểm hàng hoàn (KT)","Chia hàng về thành bán lại, hỏng, trả NCC.","trả"],
+ ["Kiện không khớp","Kiện trả về chưa gắn được với yêu cầu nào.","trả"],
+ ["Δ kiểm kê","Số đếm − tồn sổ lúc đếm.","kho"],
+ ["Tồn âm","Cờ khi tồn thực xuống dưới 0 (bàn giao bắt buộc, kiểm kê CEO duyệt).","kho"],
+ ["Phiên bản cấu hình","Bản phí hoặc thuế có ngày hiệu lực; đã duyệt thì không sửa.","tiền"],
+ ["Chạy thử (dry-run)","Mô phỏng tác động của cấu hình mới, không ghi gì.","tiền"],
+ ["Thực nhận","Tiền shop thật sự nhận từ đơn sau phí và thuế.","tiền"],
+ ["Quyết toán","Số tiền sàn báo đã trả vào số dư của shop.","tiền"],
+ ["Ngưỡng lệch và mức chốt","`abs`, `pct` quyết định đơn khớp hay lệch; `resolveLimit` là mức vượt qua thì cần CEO duyệt mới chốt.","tiền"]
+];
+
+/* ===================== TIỆN ÍCH ===================== */
+const $ = (s, r=document) => r.querySelector(s);
+const fmt = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/`([^`]+)`/g,"<code>$1</code>");
+const flowById = id => FLOWS.find(f => f.id === id);
+const actorChip = a => `<span class="chip"><i style="background:var(${ACTORS[a].c})"></i>${ACTORS[a].n}</span>`;
+const store = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* trạng thái sau mỗi bước = trạng thái của bước "from" + thay đổi của bước */
+function states(f){
+  const out=[];
+  f.steps.forEach((s,i)=>{
+    const from = s.from ?? i-1;
+    const before = from < 0 ? {...f.init} : {...out[from]};
+    out[i] = Object.assign({...before}, s.s || {});
+    s._before = before; s._from = from;
+  });
+  return out;
+}
+FLOWS.forEach(f => f._st = states(f));
+
+/* ===================== VIEWS ===================== */
+const VIEWS = [
+  {id:"nen-tang",label:"Nền tảng",no:"·"},
+  ...FLOWS.map(f=>({id:f.id,label:f.short,no:f.no})),
+  {id:"on-nhanh",label:"Ôn nhanh",no:"?",sep:1},
+  {id:"tu-dien",label:"Từ điển",no:"Aa"}
+];
+const cur = {};
+
+function renderTabs(active){
+  $("#tabs").innerHTML = VIEWS.map(v=>`<button class="tab${v.sep?" sep":""}" role="tab" data-go="${v.id}" aria-selected="${v.id===active}"><span class="no">${v.no}</span>${v.label}</button>`).join("");
+  const on = $(`#tabs [aria-selected="true"]`); if(on) on.scrollIntoView({block:"nearest",inline:"center"});
+}
+
+function go(id, push=true){
+  if(!VIEWS.some(v=>v.id===id)) id="nen-tang";
+  renderTabs(id);
+  const m = $("#main");
+  if(id==="nen-tang") m.innerHTML = viewHome();
+  else if(id==="on-nhanh") m.innerHTML = viewFaq();
+  else if(id==="tu-dien") m.innerHTML = viewGlossary();
+  else { m.innerHTML = viewFlow(flowById(id)); drawStep(flowById(id)); }
+  if(id==="nen-tang") initSim();
+  if(id==="tu-dien") initGlossary();
+  if(id==="on-nhanh") initFaq();
+  if(push && location.hash.slice(1)!==id) history.replaceState(null,"","#"+id);
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+/* ---------- Nền tảng ---------- */
+function viewHome(){
+  const roles = [
+    ["CEO","Mọi quyền. Người duy nhất duyệt đề nghị nhập và bật, tắt phân hệ. Duyệt phiếu kho, phiếu trả NCC, cấu hình phí. Không ai đổi vai hay khoá được CEO.","ceo"],
+    ["Admin","Do CEO mời. Quản nhân viên, vai trò, sản phẩm, giá, kết nối sàn, đẩy lên sàn, soạn cấu hình phí. Không duyệt nhập, không xem giá vốn.","admin"],
+    ["Sale","Xử lý đơn cần chú ý, huỷ đơn sàn, yêu cầu trả, ghép SKU. Chỉ xem gian hàng.","sale"],
+    ["Nhân viên kho","Lập đề nghị nhập, đặt NCC, nhận hàng, phiếu trả NCC, đóng gói, bàn giao, lập phiếu kho, nhận hàng trả.","kho"]
+  ];
+  const outside = [["Sàn","Lazada, TikTok Shop (Shopee để sau). Sàn là nguồn đúng về đơn và giao hàng.","san"],["NCC","Nhà cung cấp, giao hàng theo đề nghị nhập.","ncc"],["Khách","Mua trên sàn, nhận hàng, có thể gửi yêu cầu trả.","khach"],["Hệ thống","Commerio tự chạy: kéo đơn, giữ hàng, đẩy tồn, đối soát.","he"]];
+  return `
+  <p class="lead">Commerio là phần mềm cho shop bán trên sàn: mỗi công ty có một kho, bán trên Lazada và TikTok Shop. App là nguồn đúng về <b>tồn và giá</b>; sàn là nguồn đúng về <b>đơn và giao hàng</b>. Mọi luồng dưới đây xoay quanh một câu hỏi: hàng đi đâu, ai bấm, con số nào đổi.</p>
+
+  <div class="sec-h"><h2>Bức tranh lớn</h2><span class="mono">bấm một luồng để mở</span></div>
+  <div class="map">
+    ${FLOWS.map(f=>`<button class="mapc" data-go="${f.id}"><span class="mono">LUỒNG ${f.no}</span><h3>${f.short}</h3><p>${fmt(f.goal)}</p></button>`).join("")}
+  </div>
+  <div class="card panel" style="margin-top:12px">
+    <span class="label">Một vòng hàng hoá</span>
+    <div class="chain">
+      <span class="s">Đề nghị nhập</span><span class="arrow">→</span><span class="k">CEO duyệt</span><span class="arrow">→</span><span class="s">Đặt NCC <small class="sub">(đang về ↑)</small></span><span class="arrow">→</span><span class="s">Ghi sổ phiếu nhận <small class="sub">(tồn ↑)</small></span><span class="arrow">→</span><span class="k">Đẩy tồn lên sàn</span><span class="arrow">→</span><span class="s">Đơn về <small class="sub">(giữ ↑)</small></span><span class="arrow">→</span><span class="s">Đóng gói</span><span class="arrow">→</span><span class="s">Bàn giao <small class="sub">(tồn ↓)</small></span><span class="arrow">→</span><span class="s">Giao xong</span><span class="arrow">→</span><span class="k">Đối soát tiền</span>
+    </div>
+    <p class="sub note" style="margin:10px 0 0">Nhánh phụ: huỷ trước bàn giao, giao thất bại và hoàn về, thất lạc, khách trả hàng → kiểm hàng hoàn → phần tốt về tồn. Khi có thể bán + đang về − còn thiếu cho đơn ≤ ngưỡng, hệ thống gợi ý nhập lại và vòng bắt đầu lại.</p>
+  </div>
+
+  <div class="sec-h"><h2>Các con số tồn của một SKU</h2></div>
+  <div class="grid2">
+    <div class="tbl"><table>
+      <tr><th>Số</th><th>Nghĩa</th></tr>
+      <tr><td><b>Tồn thực</b></td><td>Hàng bán được đang ở kho, kể cả hàng trong kiện chưa bàn giao.</td></tr>
+      <tr><td><b>Đang giữ</b></td><td>Phần tồn thực đã giữ cho kiện chưa bàn giao.</td></tr>
+      <tr><td><b>Giữ lại chờ duyệt</b></td><td>Phần giảm trên phiếu kho đang chờ CEO duyệt.</td></tr>
+      <tr><td><b>Có thể bán</b></td><td><code>max(0, tồn thực − đang giữ − giữ lại)</code>. Số này được đẩy lên sàn.</td></tr>
+      <tr><td><b>Đang về</b></td><td>Tổng còn chờ của các đề nghị đã đặt NCC.</td></tr>
+      <tr><td><b>Chờ xử lý</b></td><td>Hàng lỗi, hàng hoàn chưa kiểm. Không bán được, không thuộc tồn thực.</td></tr>
+    </table></div>
+    <div class="card sim" id="sim">
+      <span class="label">Thử tay</span>
+      <h3 style="font-size:18px;margin-top:4px">Bấm để thấy số nào đổi</h3>
+      <div class="simmeter" id="simMeter"></div>
+      <div class="simbtns" id="simBtns"></div>
+      <div class="simlog" id="simLog" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="sec-h"><h2>Ai làm gì</h2></div>
+  <div class="grid2">
+    <div class="tbl"><table><tr><th>Vai có sẵn</th><th>Việc chính</th></tr>
+      ${roles.map(r=>`<tr><td style="white-space:nowrap">${actorChip(r[2])}</td><td>${r[1]}</td></tr>`).join("")}
+      <tr><td colspan="2" class="sub" style="font-size:13px">Vai tự tạo (ví dụ Kế toán) gồm các quyền chọn từ danh sách. Người gán chỉ gán được vai gồm những quyền mình đang có.</td></tr>
+    </table></div>
+    <div class="tbl"><table><tr><th>Bên ngoài và hệ thống</th><th>Vai trò trong luồng</th></tr>
+      ${outside.map(r=>`<tr><td style="white-space:nowrap">${actorChip(r[2])}</td><td>${r[1]}</td></tr>`).join("")}
+    </table></div>
+  </div>
+
+  <div class="sec-h"><h2>Sáu nguyên tắc nên nhớ</h2></div>
+  <div class="grid3">
+    ${[
+      ["Mỗi đối tượng một máy trạng thái","Đề nghị nhập, phiếu nhận, đơn, kiện, listing, yêu cầu trả… mỗi thứ có trạng thái riêng và chỉ đi theo các chuyển đã định."],
+      ["Tồn chỉ là con số","Không ai sửa tay. Tồn đổi qua chứng từ: phiếu nhận, phiếu kho, bàn giao, phiếu kiểm hàng hoàn. Mỗi biến động có một dòng thẻ kho."],
+      ["Đã ghi sổ thì không sửa","Sai thì lập chứng từ mới để bù (thường là phiếu kiểm kê), không đảo hay sửa chứng từ cũ."],
+      ["Chống làm hai lần","Mỗi lần ghi có version; việc gửi ra ngoài đi qua hàng chờ. Bàn giao báo hai lần cũng chỉ trừ tồn một lần."],
+      ["Sàn đúng về giao, app đúng về tồn và giá","Trạng thái kiện theo sàn; số tồn và giá theo app, rồi app đẩy lên sàn."],
+      ["Người duyệt khác người làm","Lập và duyệt phải là hai người. CEO, hoặc công ty chỉ có một người, được tự duyệt và bị gắn nhãn."]
+    ].map((p,i)=>`<div class="card panel"><span class="mono" style="color:var(--accent);font-weight:600">0${i+1}</span><h3 style="margin-top:4px">${p[0]}</h3><p class="sub" style="margin:0;font-size:14px">${p[1]}</p></div>`).join("")}
+  </div>
+
+  <div class="sec-h"><h2>Ngoài MVP</h2></div>
+  <p class="sub" style="margin:0">Có trên sơ đồ hoặc trong tài liệu nhưng đã ẩn khỏi bản MVP (FE#249): <span class="tag out">Tạo đơn tay</span> <span class="tag out">Xác nhận COD</span> <span class="tag out">Tự giao</span> <span class="tag out">Khách hàng</span> <span class="tag out">Báo cáo</span> <span class="tag out">Yêu cầu trả tay</span>. Shopee để sau.</p>`;
+}
+
+/* mô phỏng tồn */
+let sim, simPrev;
+function initSim(){
+  sim = {tt:10,dg:0,gl:0,cxl:0,dv:0}; simPrev={...sim};
+  const acts = [
+    ["Đơn về, giữ 1", s=> s.tt-s.dg-s.gl>=1 ? (s.dg++, "Kiện giữ được hàng: đang giữ +1, có thể bán −1. Tồn thực chưa đổi.") : "!Không đủ có thể bán: kiện sang Thiếu hàng, không số nào đổi."],
+    ["Bàn giao 1", s=> s.dg>=1 ? (s.tt--, s.dg--, "Kiện rời kho: tồn thực −1, đang giữ −1. Có thể bán không đổi.") : "!Chưa có kiện nào đang giữ để bàn giao."],
+    ["Huỷ trước bàn giao", s=> s.dg>=1 ? (s.dg--, "Nhả phần giữ: đang giữ −1, có thể bán +1.") : "!Không có kiện đang giữ."],
+    ["Đặt NCC 5", s=> (s.dv+=5, "Đề nghị sang Đang chờ vận chuyển: đang về +5. Chưa bán được.")],
+    ["Ghi sổ nhận 5", s=> s.dv>=5 ? (s.dv-=5, s.tt+=5, "Phiếu nhận ghi sổ: tồn thực +5, đang về −5, có thể bán +5.") : "!Chưa đặt NCC (đang về < 5)."],
+    ["Hàng hoàn về 1", s=> (s.cxl++, "Quét nhận hàng hoàn: chờ xử lý +1. Chưa bán được.")],
+    ["Kiểm: bán lại 1", s=> s.cxl>=1 ? (s.cxl--, s.tt++, "Phiếu kiểm hàng hoàn ghi sổ: chờ xử lý −1, tồn thực +1, có thể bán +1.") : "!Chờ xử lý đang 0."],
+    ["Gửi duyệt phiếu giảm 1", s=> s.tt-s.dg-s.gl>=1 ? (s.gl++, "Phiếu kiểm kê giảm chờ duyệt: giữ lại +1, có thể bán −1 ngay.") : "!Không đủ có thể bán để giảm."],
+    ["CEO duyệt phiếu giảm", s=> s.gl>=1 ? (s.gl--, s.tt--, "Ghi sổ: tồn thực −1, giữ lại −1. Có thể bán giữ nguyên.") : "!Không có phiếu nào đang chờ."]
+  ];
+  $("#simBtns").innerHTML = acts.map((a,i)=>`<button class="btn" data-sim="${i}">${a[0]}</button>`).join("") + `<button class="btn" data-sim="reset">Làm lại</button>`;
+  $("#simLog").innerHTML = "Bắt đầu: tồn thực 10, chưa giữ cho kiện nào.";
+  $("#simBtns").onclick = e=>{
+    const b = e.target.closest("[data-sim]"); if(!b) return;
+    simPrev = {...sim};
+    let msg;
+    if(b.dataset.sim==="reset"){ sim={tt:10,dg:0,gl:0,cxl:0,dv:0}; simPrev={...sim}; $("#simLog").innerHTML=""; msg="Làm lại từ tồn thực 10."; }
+    else msg = acts[+b.dataset.sim][1](sim);
+    const bad = msg.startsWith("!");
+    $("#simLog").insertAdjacentHTML("afterbegin", `<div class="${bad?"bad":""}">› ${bad?msg.slice(1):msg}</div>`);
+    paintSim();
+  };
+  paintSim();
+}
+function paintSim(){
+  const v = s=>({tt:s.tt,dg:s.dg,gl:s.gl,ctb:Math.max(0,s.tt-s.dg-s.gl),dv:s.dv,cxl:s.cxl});
+  const a=v(sim), b=v(simPrev);
+  const L={tt:"Tồn thực",dg:"Đang giữ",gl:"Giữ lại",ctb:"Có thể bán",dv:"Đang về",cxl:"Chờ xử lý"};
+  $("#simMeter").innerHTML = Object.keys(L).map(k=>`<div class="${a[k]>b[k]?"flash-up":a[k]<b[k]?"flash-down":""}"><span class="label">${L[k]}</span><b>${a[k]}</b></div>`).join("");
+}
+
+/* ---------- Luồng ---------- */
+function viewFlow(f){
+  if(cur[f.id]==null) cur[f.id]=0;
+  return `
+  <div class="fhead">
+    <div class="card">
+      <div class="flowno">LUỒNG ${f.no} · ${f.steps.length} BƯỚC</div>
+      <h2 style="margin-top:6px">${f.title}</h2>
+      <p style="margin:10px 0 0">${fmt(f.goal)}</p>
+      <dl class="ends"><dt>Bắt đầu</dt><dd>${fmt(f.start)}</dd><dt>Kết thúc</dt><dd>${fmt(f.end)}</dd></dl>
+    </div>
+    <div class="card example"><span class="label">Ví dụ chạy xuyên luồng</span><p>${fmt(f.example)}</p>
+      <p class="sub" style="font-size:13px">Bấm từng bước trên sơ đồ, hoặc dùng phím ← →. Nét đứt là nhánh phụ.</p></div>
+  </div>
+
+  <div class="card stage" id="stage">
+    <div class="stage-top">
+      <div class="counter" id="counter"></div>
+      <div class="ctrl">
+        <button class="btn" id="prev" type="button">← Trước</button>
+        <button class="btn primary" id="next" type="button">Bước sau →</button>
+      </div>
+    </div>
+    <div class="svgbox" id="svgbox">${svgFlow(f)}</div>
+    <div class="meter" id="meter"></div>
+    <div class="meter-note">${fmt(f.meterNote)}</div>
+    <div class="detail" id="detail"></div>
+  </div>
+
+  ${f.after?`<div class="sec-h"><h2>Sau khi thiết lập: việc chạy liên tục</h2></div>
+  <div class="card panel"><ul class="note" style="margin:0;padding-left:18px">${f.after.map(x=>`<li>${fmt(x)}</li>`).join("")}</ul></div>`:""}
+
+  ${extra(f)}
+
+  <div class="sec-h"><h2>Tóm tắt luồng</h2></div>
+  <div class="grid2">
+    <div class="card panel"><h3>Máy trạng thái</h3>
+      ${f.machines.map(m=>`<div style="margin-top:10px"><span class="label">${m.n}</span><div class="sm">${m.rows.map(r=>`<div class="row"><span class="pill">${fmt(r[0])}</span><span class="arrow">${r[1]}</span><span class="pill to">${fmt(r[2])}</span></div>`).join("")}</div></div>`).join("")}
+    </div>
+    <div class="card panel"><h3>Ai làm bước nào</h3>
+      ${whoTable(f)}
+      <h3 style="margin-top:18px">Chỗ nối sang luồng khác</h3>
+      <div class="links">${f.links.map(l=>{const t=flowById(l[0]);return `<button class="link" data-go="${l[0]}"><b>${t.no} · ${t.short}</b><span>${fmt(l[1])}</span></button>`}).join("")}</div>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card panel"><h3>Câu hỏi hay gặp</h3>${f.faq.map(q=>`<details class="faq"><summary>${fmt(q[0])}</summary><p>${fmt(q[1])}</p></details>`).join("")}</div>
+    <div class="card panel warnbox"><h3>Tài liệu còn vênh</h3><ul class="note" style="margin:0;padding-left:18px">${f["vênh"].map(x=>`<li>${fmt(x)}</li>`).join("")}</ul></div>
+  </div>`;
+}
+
+function whoTable(f){
+  const by={};
+  f.steps.forEach((s,i)=>{(by[s.a]=by[s.a]||[]).push(i+1)});
+  return `<div class="sm">${LANE_ORDER.filter(a=>by[a]).map(a=>`<div class="row">${actorChip(a)}<span class="sub">bước ${by[a].join(", ")}</span></div>`).join("")}</div>`;
+}
+
+const G = {colW:150, laneH:62, labelW:112, nodeW:130, nodeH:44, pad:10};
+function geo(f){
+  const lanes = LANE_ORDER.filter(a=>f.steps.some(s=>s.a===a));
+  const pos = f.steps.map((s,i)=>({x:G.labelW+i*G.colW+10, y:lanes.indexOf(s.a)*G.laneH+(G.laneH-G.nodeH)/2}));
+  return {lanes,pos,w:G.labelW+f.steps.length*G.colW+10,h:lanes.length*G.laneH};
+}
+function svgFlow(f){
+  const {lanes,pos,w,h} = geo(f); f._geo={lanes,pos};
+  let s = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Sơ đồ các bước của luồng ${f.short}">`;
+  lanes.forEach((a,i)=>{
+    s+=`<rect class="lane-bg${i%2?" alt":""}" x="0" y="${i*G.laneH}" width="${w}" height="${G.laneH}"/>`;
+    s+=`<rect class="lane-bar" x="0" y="${i*G.laneH}" width="4" height="${G.laneH}" fill="var(${ACTORS[a].c})"/>`;
+    s+=`<text class="lane-name" x="14" y="${i*G.laneH+G.laneH/2+4}">${ACTORS[a].n}</text>`;
+  });
+  f.steps.forEach((st,i)=>{
+    if(st._from<0) return;
+    const a=pos[st._from], b=pos[i];
+    const x1=a.x+G.nodeW, y1=a.y+G.nodeH/2, x2=b.x, y2=b.y+G.nodeH/2;
+    let d;
+    if(x2>x1){ const mx=(x1+x2)/2; d=`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`; }
+    else d=`M${x1},${y1} L${x2},${y2}`;
+    s+=`<path class="edge${st.br?" branch":""}" data-edge="${i}" d="${d}" marker-end="url(#ah-${f.id})"/>`;
+  });
+  s+=`<defs><marker id="ah-${f.id}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--line2)"/></marker></defs>`;
+  f.steps.forEach((st,i)=>{
+    const p=pos[i]; const lines=st.n.split("\n");
+    s+=`<g class="node${st.br?" branch":""}" data-step="${i}" tabindex="0" role="button" aria-label="Bước ${i+1}: ${st.t}">
+      <rect x="${p.x}" y="${p.y}" width="${G.nodeW}" height="${G.nodeH}" rx="8"/>
+      <text class="num" x="${p.x+8}" y="${p.y+13}">${String(i+1).padStart(2,"0")}</text>
+      ${lines.map((l,j)=>`<text x="${p.x+G.nodeW/2+6}" y="${p.y+(lines.length===1?27:20+j*14)}" text-anchor="middle">${l}</text>`).join("")}
+    </g>`;
+  });
+  s+=`<g class="token" id="token" aria-hidden="true"><circle class="halo" cx="0" cy="0" r="9"/><circle class="core" cx="0" cy="0" r="5"/></g></svg>`;
+  return s;
+}
+
+/* chuỗi bước dẫn tới bước hiện tại (để tô "đã qua") */
+function pathTo(f,i){ const set=new Set(); let k=i; while(k>=0){ set.add(k); k=f.steps[k]._from; } return set; }
+
+function drawStep(f){
+  const i = cur[f.id], st=f.steps[i], before=st._before, after=f._st[i];
+  const path = pathTo(f,i);
+  document.querySelectorAll("#svgbox .node").forEach(n=>{
+    const k=+n.dataset.step; n.classList.toggle("on",k===i); n.classList.toggle("done",k!==i&&path.has(k));
+  });
+  document.querySelectorAll("#svgbox .edge").forEach(e=>{
+    const k=+e.dataset.edge; e.classList.toggle("on",k===i); e.classList.toggle("done",k!==i&&path.has(k));
+  });
+  const p=f._geo.pos[i];
+  $("#token").style.transform=`translate(${p.x+G.nodeW-2}px,${p.y+2}px)`;
+  const box=$("#svgbox"), cx=p.x+G.nodeW/2;
+  if(cx<box.scrollLeft+40||cx>box.scrollLeft+box.clientWidth-40) box.scrollTo({left:cx-box.clientWidth/2,behavior:reduce?"auto":"smooth"});
+  $("#counter").textContent = `Bước ${i+1}/${f.steps.length}${st.br?" · nhánh phụ":""}`;
+  $("#prev").disabled = i===0; $("#next").disabled = i===f.steps.length-1;
+
+  $("#meter").innerHTML = f.meter.map(m=>{
+    const a=after[m.k], b=before[m.k];
+    const num = typeof a==="number" && typeof b==="number";
+    let cls="", d="";
+    if(num && a!==b){ cls=a>b?"up":"down"; d=(a>b?"+":"−")+Math.abs(a-b); }
+    else if(!num && a!==b){ cls="chg"; d=`trước: ${b}`; }
+    return `<div class="cell ${cls}"><span class="label">${m.l}</span><div class="v${num||typeof a==="number"?"":" txt"}">${fmt(a)}</div><div class="d">${d||"&nbsp;"}</div></div>`;
+  }).join("");
+
+  const changed = f.meter.some(m=>after[m.k]!==before[m.k]);
+  $("#detail").innerHTML = `
+    <div class="dhead"><span class="stepno">BƯỚC ${String(i+1).padStart(2,"0")}</span><h3>${fmt(st.t)}</h3></div>
+    <div class="chips">${actorChip(st.a)}${st.scr&&st.scr!=="—"?`<span class="chip">Màn hình: ${fmt(st.scr)}</span>`:""}${st.br?`<span class="chip">Nhánh từ bước ${st._from+1}</span>`:""}${changed?"":`<span class="chip">Số không đổi</span>`}</div>
+    <div class="blk"><span class="label">Người làm</span><p>${fmt(st.do)}</p></div>
+    <div class="blk"><span class="label">Hệ thống tự làm</span><p>${fmt(st.sys)}</p></div>
+    ${st.st?`<div class="blk"><span class="label">Trạng thái trước → sau</span><div class="st"><span class="pill">${fmt(st.st[0])}</span><span class="arrow">→</span><span class="pill to">${fmt(st.st[1])}</span></div></div>`:""}
+    ${st.k?`<div class="blk"><span class="label">Khái niệm cần nắm</span><p>${fmt(st.k)}</p></div>`:""}
+    ${st.e?`<div class="blk"><span class="label">Tình huống lệch</span><ul>${st.e.map(x=>`<li>${fmt(x)}</li>`).join("")}</ul></div>`:""}
+    ${st.api?`<div class="blk"><span class="label">API (tiền tố /api/v1)</span><div class="api">${st.api.map(x=>`<code>${x.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</code>`).join("")}</div></div>`:""}`;
+  // khối cuối lẻ thì trải hết hàng
+  const blks=[...document.querySelectorAll("#detail .blk")]; if(blks.length%2) blks[blks.length-1].classList.add("full");
+  store.set("st-"+f.id,String(i));
+}
+
+function extra(f){
+  if(f.extra==="price") return `
+  <div class="sec-h"><h2>Bộ lọc giá theo sàn</h2><span class="mono">số giả định</span></div>
+  <div class="grid2">
+    <div class="card panel"><p style="margin:0">Người dùng nhập <b>giá muốn bán</b> (số muốn thực nhận mỗi món). Hệ thống:</p>
+      <ol class="note" style="padding-left:20px;margin:8px 0 0">
+        <li>Bù phí: <code style="white-space:normal">P =(giá muốn bán + phí cố định) / (1 − tổng phí %)</code></li>
+        <li>Làm tròn lên theo đuôi đã cấu hình.</li>
+        <li>Chặn giá thấp nhất: thực nhận phải ≥ giá vốn × (1 + lãi tối thiểu).</li>
+        <li>Ghi đè tay vẫn phải qua bước 3.</li></ol>
+      <p class="sub note">Tổng phí % gồm cả thuế: hộ kinh doanh cộng 1,5%; doanh nghiệp cộng v/(1+v) ≈ 9,09% với thuế 10%. Giá vốn tăng chỉ cảnh báo, không tự đổi giá.</p></div>
+    <div class="tbl"><table>
+      <tr><th>Sàn</th><th>Phí</th><th>Niêm yết</th><th>Thực nhận</th><th></th></tr>
+      <tr><td>A</td><td>14% + 3.000</td><td class="n">239.000</td><td class="n">≈ 202.540</td><td class="plus">Đạt</td></tr>
+      <tr><td>B</td><td>9%</td><td class="n">229.000</td><td class="n">≈ 208.390</td><td class="plus">Đạt</td></tr>
+      <tr><td>A, ghi đè</td><td>14% + 3.000</td><td class="n">195.000</td><td class="n">164.700</td><td class="minus"><code>below_floor</code></td></tr>
+      <tr><td colspan="5" class="sub" style="font-size:13px">Giá muốn bán 200.000, giá vốn 150.000, lãi tối thiểu 10% → giá thấp nhất 165.000.</td></tr>
+    </table></div>
+  </div>
+  <div class="sec-h"><h2>Lazada và TikTok Shop khác nhau ở đâu</h2></div>
+  <div class="tbl"><table>
+    <tr><th>Điểm</th><th>Lazada</th><th>TikTok Shop</th></tr>
+    <tr><td>Cách nối</td><td>Dán token; OAuth nếu có Redirect URL</td><td>Dán token hoặc OAuth; phải bấm uỷ quyền từ Commerio</td></tr>
+    <tr><td>Hạn trả hàng</td><td>Admin nhập số ngày (1–60)</td><td>Không nhập; đơn COMPLETED là hết hạn trả</td></tr>
+    <tr><td>Ẩn listing</td><td>Tắt riêng từng SKU</td><td>Đưa tồn về 0; tắt theo cả sản phẩm</td></tr>
+    <tr><td>Tách kiện</td><td>Theo từng đơn vị</td><td>Theo SKU</td></tr>
+    <tr><td>Sửa nội dung listing</td><td>Chưa hỗ trợ</td><td>Có; vẫn bán bản cũ trong lúc duyệt</td></tr>
+    <tr><td>Token</td><td>Refresh token sống 50 ngày, tới hạn phải kết nối lại</td><td>Tài liệu chưa ghi</td></tr>
+  </table></div>`;
+  if(f.extra==="timing") return `
+  <div class="sec-h"><h2>Bảng tồn theo thời điểm</h2><span class="mono">q = số lượng của kiện</span></div>
+  <div class="tbl"><table>
+    <tr><th>Thời điểm</th><th>Tồn thực</th><th>Đang giữ</th><th>Có thể bán</th><th>Chờ xử lý</th></tr>
+    ${[["Lấy đơn, kiện giữ được hàng","0","+q","−q","0"],["Lấy đơn, kiện thiếu hàng","0","0","0","0"],["Đóng gói, báo sàn sẵn sàng","0","0","0","0"],["Bàn giao","−q","−q","0","0"],["Huỷ trước bàn giao","0","−q","+q","0"],["Hàng hoàn về kho (quét nhận)","0","0","0","+q"],["Kiểm hàng hoàn: phần bán lại","+q","0","+q","−q"],["Kiểm hàng hoàn: phần hỏng (xuất huỷ ghi sổ)","0","0","0","−q"],["Thất lạc sau bàn giao","0","0","0","0"]].map(r=>`<tr><td>${r[0]}</td>${r.slice(1).map(c=>`<td class="n ${c.startsWith("+")?"plus":c.startsWith("−")?"minus":"zero"}">${c==="0"?"·":c}</td>`).join("")}</tr>`).join("")}
+  </table></div>`;
+  if(f.extra==="slips") return `
+  <div class="sec-h"><h2>Loại phiếu và tác động lên tồn</h2></div>
+  <div class="tbl"><table>
+    <tr><th>Loại phiếu</th><th>Lúc gửi duyệt</th><th>Tồn thực khi ghi sổ</th><th>Chờ xử lý khi ghi sổ</th><th>Có thể bán</th></tr>
+    <tr><td>Kiểm kê khu vực tồn thực <code>stocktake</code></td><td>Nếu giảm: giữ lại phần giảm</td><td class="n">±Δ</td><td class="zero">·</td><td>Theo tồn thực</td></tr>
+    <tr><td>Kiểm kê khu vực chờ xử lý</td><td>Không giữ</td><td class="zero">·</td><td class="n">±Δ</td><td>Không đổi</td></tr>
+    <tr><td>Xuất huỷ từ kệ <code>write_off</code></td><td>Giữ lại q</td><td class="n minus">−q</td><td class="zero">·</td><td class="minus">Giảm</td></tr>
+    <tr><td>Xuất huỷ từ chờ xử lý</td><td>Không giữ</td><td class="zero">·</td><td class="n minus">−q</td><td>Không đổi</td></tr>
+    <tr><td>Chuyển chờ xử lý <code>to_quarantine</code></td><td>Giữ lại q</td><td class="n minus">−q</td><td class="n plus">+q</td><td class="minus">Giảm</td></tr>
+    <tr><td>Bị từ chối (mọi loại)</td><td>Hết phần giữ lại</td><td class="zero">·</td><td class="zero">·</td><td class="plus">Tăng lại</td></tr>
+  </table></div>`;
+  if(f.extra==="money") return `
+  <div class="sec-h"><h2>Các khoản tiền của một đơn</h2></div>
+  <div class="grid2">
+    <div class="tbl"><table><tr><th>Khoản</th><th>Chiều</th><th>Mã</th></tr>
+      ${[["Doanh thu hàng (sau voucher shop)","vào","revenue"],["Sàn trợ giá (voucher, freeship sàn)","vào","platform_subsidy"],["Ship khách trả / phí ship đầy đủ","vào / ra","shipping_income / shipping_cost"],["Phí bắt buộc: cố định, giao dịch, dịch vụ","ra","fee_fixed · fee_transaction · fee_service"],["Phí tuỳ chọn: Voucher Xtra, Freeship Xtra, affiliate","ra","fee_optional"],["Thuế sàn khấu trừ (hộ kinh doanh)","ra","withholding_tax"],["Hoàn tiền khách","ra","customer_refund"],["Phí khi hoàn, trả","ra","return_fee"],["Bồi thường thất lạc","vào","lost_compensation"],["Phạt, điều chỉnh của sàn","ra","penalty · adjustment"],["Giá vốn (không phải tiền mặt)","–","cogs · cogs_reversal"]].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><code style="white-space:normal">${r[2]}</code></td></tr>`).join("")}
+    </table></div>
+    <div class="card panel"><h3>Lãi theo đơn (chỉ phần đã giao)</h3>
+<pre class="mono" style="white-space:pre-wrap;margin:8px 0 0;font-size:12.5px;line-height:1.7">Doanh thu thuần = doanh thu đã giao − hoàn tiền khách
+Thực nhận       = doanh thu thuần + trợ giá + ship khách trả
+                  − phí ship − phí bắt buộc − phí tuỳ chọn
+                  − phí khi hoàn − thuế khấu trừ + bồi thường
+Giá vốn         = giá vốn dòng đã giao − giá vốn phần bán lại
+Lãi gộp         = thực nhận − giá vốn</pre>
+      <p class="sub note">Doanh nghiệp chia doanh thu cho (1 + thuế GTGT). Hộ kinh doanh trên 500 triệu/năm bị sàn khấu trừ 1% GTGT + 0,5% TNCN. App xuất sổ sang phần mềm kế toán, không tự làm sổ cái và không khai thuế.</p></div>
+  </div>`;
+  return "";
+}
+
+/* ---------- Ôn nhanh ---------- */
+function viewFaq(){
+  return `<div class="sec-h" style="margin-top:0"><h2>Ôn nhanh</h2><span class="mono">câu hỏi từ cả 7 luồng</span></div>
+  <p class="sub" style="margin:0;max-width:66ch">Đọc câu hỏi, tự trả lời trong đầu, rồi mở ra so. Lọc theo luồng nếu chỉ muốn ôn một phần.</p>
+  <div class="filters" id="faqF"><button aria-pressed="true" data-f="all">Tất cả</button>${FLOWS.map(f=>`<button aria-pressed="false" data-f="${f.id}">${f.short}</button>`).join("")}</div>
+  <div class="sec-h"><h2>Mười điều hay hỏi trong buổi bảo vệ</h2></div>
+  <div class="tbl"><table><tr><th>#</th><th>Câu hỏi</th><th>Ý chính để trả lời</th></tr>
+  ${[
+   ["Vì sao tách “có thể bán” khỏi “tồn thực”?","Hàng đã giữ cho kiện vẫn nằm trên kệ (tồn thực) nhưng không được bán lần nữa. Sàn chỉ thấy có thể bán."],
+   ["Khi nào tồn thực bị trừ?","Chỉ lúc bàn giao. Lấy đơn chỉ giữ hàng."],
+   ["Vì sao gian hàng đầu tiên phải kiểm kê?","Cần số tồn thật và mốc kéo đơn đúng; lùi mốc sẽ trừ hai lần cho kiện đã rời kho."],
+   ["Sửa chứng từ sai thế nào?","Không sửa. Lập phiếu mới để bù, thường là phiếu kiểm kê, CEO duyệt."],
+   ["Vì sao đơn và kiện tách riêng?","Một đơn có thể nhiều kiện, mỗi kiện một vận đơn; giữ hàng và giao tính theo kiện."],
+   ["Hàng trả về có bán ngay không?","Không. Vào chờ xử lý, kiểm và ghi sổ xong phần tốt mới vào tồn thực."],
+   ["Ai duyệt cái gì?","CEO duyệt nhập, phiếu kho, cấu hình phí, lệch lớn. Người duyệt luôn khác người làm, trừ CEO tự duyệt có nhãn."],
+   ["App và sàn lệch tồn thì sao?","Đối chiếu 15 phút: sàn cao hơn đẩy giảm ngay; thấp hơn chờ một lượt rồi đẩy tăng, bật cờ."],
+   ["Đổi phí sàn ảnh hưởng đơn cũ không?","Không. Mỗi phiên bản có ngày hiệu lực; đơn cũ giữ phiên bản cũ."],
+   ["Đang về tính thế nào?","Tổng còn chờ của các đề nghị đã đặt NCC; tính lại, không ai cộng tay."]
+  ].map((r,i)=>`<tr><td class="n">${i+1}</td><td><b>${r[0]}</b></td><td>${r[1]}</td></tr>`).join("")}
+  </table></div>
+  <div class="faqlist" id="faqList"></div>`;
+}
+function initFaq(){
+  const paint = id => {
+    $("#faqList").innerHTML = FLOWS.filter(f=>id==="all"||f.id===id).map(f=>`<div class="card"><div class="sec-h" style="margin:12px 0 4px"><h2 style="font-size:17px">${f.no} · ${f.short}</h2></div>${f.faq.map(q=>`<details class="faq"><summary>${fmt(q[0])}</summary><p>${fmt(q[1])}</p></details>`).join("")}</div>`).join("");
+  };
+  $("#faqF").onclick = e=>{const b=e.target.closest("[data-f]"); if(!b) return; document.querySelectorAll("#faqF button").forEach(x=>x.setAttribute("aria-pressed",x===b)); paint(b.dataset.f);};
+  paint("all");
+}
+
+/* ---------- Từ điển ---------- */
+function viewGlossary(){
+  return `<div class="sec-h" style="margin-top:0"><h2>Từ điển</h2><span class="mono">${TERMS.length} thuật ngữ</span></div>
+  <input class="search" id="q" type="search" placeholder="Tìm: giữ hàng, mốc, quyết toán…" aria-label="Tìm thuật ngữ">
+  <dl class="gl" id="gl"></dl>`;
+}
+function initGlossary(){
+  const norm = s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");
+  const paint = q=>{
+    const n=norm(q);
+    const list = TERMS.filter(t=>!n||norm(t[0]+" "+t[1]).includes(n));
+    $("#gl").innerHTML = list.length ? list.map(t=>`<div><dt>${t[0]}<small>${t[2]}</small></dt><dd>${fmt(t[1])}</dd></div>`).join("") : `<p class="sub">Không có thuật ngữ khớp.</p>`;
+  };
+  $("#q").oninput = e=>paint(e.target.value);
+  paint("");
+}
+
+/* ===================== SỰ KIỆN ===================== */
+document.addEventListener("click", e=>{
+  const g = e.target.closest("[data-go]"); if(g){ go(g.dataset.go); return; }
+  const n = e.target.closest("#svgbox .node");
+  const id = location.hash.slice(1); const f = flowById(id);
+  if(n && f){ cur[f.id]=+n.dataset.step; drawStep(f); return; }
+  if(f && e.target.closest("#prev")){ cur[f.id]=Math.max(0,cur[f.id]-1); drawStep(f); }
+  if(f && e.target.closest("#next")){ cur[f.id]=Math.min(f.steps.length-1,cur[f.id]+1); drawStep(f); }
+});
+document.addEventListener("keydown", e=>{
+  const f = flowById(location.hash.slice(1)); if(!f) return;
+  if(e.target.matches("input,textarea")) return;
+  if(e.key==="ArrowRight"){ cur[f.id]=Math.min(f.steps.length-1,cur[f.id]+1); drawStep(f); e.preventDefault(); }
+  else if(e.key==="ArrowLeft"){ cur[f.id]=Math.max(0,cur[f.id]-1); drawStep(f); e.preventDefault(); }
+  else if((e.key==="Enter"||e.key===" ") && e.target.closest(".node")){ cur[f.id]=+e.target.closest(".node").dataset.step; drawStep(f); e.preventDefault(); }
+});
+window.addEventListener("hashchange", ()=>go(location.hash.slice(1),false));
+
+/* giao diện sáng / tối */
+(function(){
+  const saved = store.get("theme"); if(saved) document.documentElement.dataset.theme = saved;
+  $("#themeBtn").onclick = ()=>{
+    const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = dark ? "light" : "dark";
+    document.documentElement.dataset.theme = next; store.set("theme", next);
+  };
+})();
+
+FLOWS.forEach(f=>{ const v=+store.get("st-"+f.id); if(v>=0&&v<f.steps.length) cur[f.id]=v; });
+go(location.hash.slice(1)||"nen-tang", false);
+</script>
+</body>
+</html>
