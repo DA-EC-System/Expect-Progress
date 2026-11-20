@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kịch bản demo staging</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#f3efe6; --paper:#fffcf5; --paper2:#f8f3e8; --ink:#1b2130; --muted:#5b6170; --faint:#8a8f9a; --line:#ddd4c2; --line2:#cfc4ae;
+  --accent:#c4410f; --accent-ink:#fff; --accent-soft:#fbe4d6;
+  --sys:#3653c9; --sys-soft:#e2e7fa;
+  --up:#1d7f46; --up-soft:#dcf1e3; --down:#b8322a; --down-soft:#f8dedb; --warn:#9a6512; --warn-soft:#f6ead2;
+  --l-ceo:#8a3ab0; --l-he:#3653c9; --l-san:#b8336a; --l-kho:#557520;
+  --shadow:0 1px 0 rgba(27,33,48,.04),0 6px 20px -12px rgba(27,33,48,.25);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14171e; --paper:#1c2029; --paper2:#222733; --ink:#ebe6da; --muted:#a8acb6; --faint:#7d828d; --line:#323846; --line2:#414858;
+  --accent:#ff7a3d; --accent-ink:#1a0c04; --accent-soft:#3b2116;
+  --sys:#8ea2ff; --sys-soft:#232c4d;
+  --up:#5fd08e; --up-soft:#16301f; --down:#ff7f74; --down-soft:#3a1d1b; --warn:#f0bd62; --warn-soft:#352a14;
+  --l-ceo:#c88ae6; --l-he:#8ea2ff; --l-san:#f27aa9; --l-kho:#a3cc5c;
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 10px 26px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#14171e; --paper:#1c2029; --paper2:#222733; --ink:#ebe6da; --muted:#a8acb6; --faint:#7d828d; --line:#323846; --line2:#414858;
+  --accent:#ff7a3d; --accent-ink:#1a0c04; --accent-soft:#3b2116;
+  --sys:#8ea2ff; --sys-soft:#232c4d;
+  --up:#5fd08e; --up-soft:#16301f; --down:#ff7f74; --down-soft:#3a1d1b; --warn:#f0bd62; --warn-soft:#352a14;
+  --l-ceo:#c88ae6; --l-he:#8ea2ff; --l-san:#f27aa9; --l-kho:#a3cc5c;
+  --shadow:0 1px 0 rgba(0,0,0,.2),0 10px 26px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque","Be Vietnam Pro",system-ui,sans-serif;text-wrap:balance;margin:0;line-height:1.15}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.86em}
+code{background:var(--paper2);border:1px solid var(--line);border-radius:4px;padding:0 .3em;overflow-wrap:anywhere}
+button{font:inherit;color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+.mast{border-bottom:1px solid var(--line);background:var(--paper)}
+.mast .wrap{padding-block:28px 22px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
+.kicker{font:600 11px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.mast h1{font-size:clamp(28px,4.6vw,44px);font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.mast p{margin:10px 0 0;color:var(--muted);max-width:64ch}
+.docno{border:1.5px dashed var(--line2);border-radius:10px;padding:10px 14px;font:12px/1.6 "JetBrains Mono",monospace;color:var(--muted)}
+.docno b{color:var(--ink);font-weight:600}
+.btn{border:1px solid var(--line2);background:var(--paper2);border-radius:999px;padding:3px 11px;font-size:12px;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;gap:6px;align-items:center;overflow-x:auto;padding-block:8px}
+.nav a{flex:0 0 auto;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;padding:5px 10px;border-radius:8px;white-space:nowrap}
+.nav a:hover{background:var(--paper2);color:var(--ink)}
+.nav a .no{font:600 11px "JetBrains Mono",monospace;color:var(--faint);margin-right:5px}
+.prog{margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:8px;font:12px "JetBrains Mono",monospace;color:var(--muted);padding-left:10px}
+.bar{width:90px;height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--up);transition:width .25s}
+
+main{padding-block:26px 64px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}
+.box{padding:14px 16px}
+.box h3{font-size:16px;margin-bottom:6px}
+.box p,.box ul{margin:0;color:var(--muted);font-size:14px}
+.box ul{padding-left:18px}
+.lbl{font:600 10.5px/1 "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:6px;display:block}
+
+.sec{margin-top:40px;scroll-margin-top:60px}
+.sec-h{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.sec-h .big{font:800 40px/1 "Bricolage Grotesque",sans-serif;color:var(--accent)}
+.sec-h h2{font-size:24px}
+.sec-h p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.say{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;font-size:14px}
+.say b{font-weight:600}
+
+.step{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px 16px;margin-bottom:10px}
+.step.done{opacity:.62}
+.step.done .t{text-decoration:line-through;text-decoration-color:var(--faint)}
+.chk{width:22px;height:22px;margin-top:2px;accent-color:var(--up);cursor:pointer}
+.head{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.t{font-weight:600;font-size:16px}
+.id{font:600 12px "JetBrains Mono",monospace;color:var(--faint)}
+.who{font:600 11px/1 "JetBrains Mono",monospace;padding:4px 7px;border-radius:999px;border:1px solid currentColor}
+.scr{font-size:13px;color:var(--muted)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 18px;margin-top:8px}
+.cols p{margin:0;font-size:14px}
+.cols .see{color:var(--up)}
+.cols .see .lbl{color:var(--up)}
+.cols .see .lbl::before{content:"✓ "}
+.note{margin-top:8px;font-size:13px;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:6px 10px}
+.stock{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+.pill{font:12px/1 "JetBrains Mono",monospace;padding:5px 8px;border-radius:7px;background:var(--paper2);border:1px solid var(--line);white-space:nowrap}
+.pill.up{background:var(--up-soft);border-color:transparent;color:var(--up)}
+.pill.down{background:var(--down-soft);border-color:transparent;color:var(--down)}
+.real{display:flex;gap:6px;align-items:center;margin-top:10px;font-size:13px;color:var(--muted)}
+.real input{flex:1;min-width:0;max-width:420px;font:13px "Be Vietnam Pro",sans-serif;color:var(--ink);background:var(--paper2);border:1px solid var(--line);border-radius:7px;padding:5px 8px}
+.real input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left;white-space:normal}
+.tbl th{font:600 11px "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.tbl td.ch{color:var(--accent);font-weight:600}
+.scroll{overflow-x:auto}
+footer{border-top:1px solid var(--line);padding-block:18px;color:var(--faint);font-size:13px}
+@media (max-width:640px){.mast .wrap{grid-template-columns:1fr}.sec-h .big{font-size:30px}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <div class="kicker">Commerio · demo cho thầy</div>
+      <h1>Kịch bản demo trên staging</h1>
+      <p>Happy case của 4 luồng ổn định: nhập 20 áo, nối thêm gian hàng Lazada, bán 2 áo qua TikTok Shop, rồi kiểm kê thấy thiếu 2. Cả buổi bám một SKU để người xem thấy số tồn đổi qua từng bước.</p>
+    </div>
+    <div class="docno">
+      <div>Môi trường <b>staging · công ty Jastech</b></div>
+      <div>Tài khoản <b>CEO</b> (một người làm hết)</div>
+      <div>SKU xuyên suốt <b>AO-0001-DEN</b></div>
+      <div>Thời lượng <b>~12–15 phút</b></div>
+      <div>Bản <b>20/11/2026</b></div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <button class="btn" id="themeBtn" type="button">Sáng / tối</button>
+        <button class="btn" id="resetBtn" type="button">Xoá đánh dấu</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Các phần">
+  <div class="wrap" id="nav">
+    <a href="#chuan-bi"><span class="no">0</span>Chuẩn bị</a>
+    <span id="navFlows" style="display:contents"></span>
+    <a href="#tong-ket">Tổng kết số</a>
+    <a href="#de-sau">Để sau</a>
+    <div class="prog"><span id="progTxt">0/0</span><span class="bar"><i id="progBar"></i></span></div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section class="sec" id="chuan-bi" style="margin-top:0">
+  <div class="sec-h"><div class="big">0</div><div><h2>Chuẩn bị trước khi bấm quay</h2><p>Làm hết phần này trước, không quay. Mục đích là lúc quay chỉ còn bấm và nói.</p></div></div>
+  <div class="grid3">
+    <div class="card box"><span class="lbl">Tab 1 · Commerio staging</span><h3>Đăng nhập CEO</h3>
+      <ul><li>Vào <code>116-118-6-7.sslip.io</code>, chọn công ty Jastech.</li><li>Tắt các hộp hướng dẫn lần đầu (tick “Không hiện lại”) để video gọn.</li><li>Mở <b>Kho › Tồn kho</b>, ghi lại số của AO-0001-DEN (lúc soạn: tồn 99, tạm giữ 0, có thể bán 99, giá vốn 100 ₫).</li><li>Mở <b>Kiện hàng › Thiếu hàng</b> (đang có 1 kiện): nếu kiện đó cần áo đen thì lúc ghi sổ nhập, hệ thống sẽ chia hàng cho nó trước và số tạm giữ sẽ khác bảng dưới.</li></ul></div>
+    <div class="card box"><span class="lbl">Tab 2 · Lazada ISV console</span><h3>Lấy access token</h3>
+      <ul><li>Testing Tools › <b>Loan Test Account</b>: tài khoản seller thử đang mượn tới <b>24/11/2026 22:23</b>. Quay sau ngày đó thì phải mượn tài khoản mới.</li><li>Testing Tools › <b>API Explorer</b>: chọn Region Việt Nam, chọn App Key của app Commerio, bấm <b>Get Token</b>, copy access token.</li><li>Dán tạm vào ghi chú máy, không dán vào trang này.</li></ul></div>
+    <div class="card box"><span class="lbl">Tab 3 · TikTok Partner Center</span><h3>Mở sandbox</h3>
+      <ul><li>Kits de développement › Boutiques de développement › tab <b>Tester les fonctions</b>.</li><li>Ở cột trái chọn tài khoản thử có shop <code>SANDBOX_VN7703317749853964039</code>, tức shop đã nối với Jastech.</li><li>Xem trước sản phẩm “[DEMO] Áo thun basic cổ tròn - Đen” còn bán trong Seller Center nhúng bên phải.</li></ul></div>
+  </div>
+</section>
+
+<div id="flows"></div>
+
+<section class="sec" id="tong-ket">
+  <div class="sec-h"><div class="big">Σ</div><div><h2>Số tồn của AO-0001-DEN qua cả buổi</h2><p>Số dự kiến, tính từ trạng thái lúc soạn. Staging đổi thì cộng trừ theo cùng độ lệch. Ô đậm màu là số vừa đổi ở bước đó.</p></div></div>
+  <div class="card scroll"><table class="tbl" id="sumTbl"></table></div>
+  <p style="color:var(--muted);font-size:14px;margin-top:10px">Có thể bán = tồn kho − tạm giữ − khoá chờ duyệt. Số này là số được đẩy lên mọi gian hàng; tồn kho chỉ bị trừ lúc bàn giao cho shipper.</p>
+</section>
+
+<section class="sec" id="de-sau">
+  <div class="sec-h"><div class="big">…</div><div><h2>Để sau</h2><p>Không nằm trong kịch bản chính, chỉ làm nếu còn thời gian.</p></div></div>
+  <div class="grid3">
+    <div class="card box"><h3>Đẩy sản phẩm mới lên sàn</h3><p>Gian hàng › Listing & giá › Đẩy lên sàn. Cần SKU đủ ảnh, cân nặng, kích thước gói và ghép danh mục.</p></div>
+    <div class="card box"><h3>Đơn Lazada</h3><p>Đặt bằng tài khoản buyer thử của Lazada, rồi đi tiếp các bước đóng gói giống phần 3.</p></div>
+    <div class="card box"><h3>Giao xong, đơn hoàn tất</h3><p>Phụ thuộc sàn thử có cho giả lập trạng thái đã giao hay không.</p></div>
+    <div class="card box"><h3>Nhánh lỗi</h3><p>Giao thiếu, hàng lỗi và phiếu trả NCC, CEO từ chối phiếu kho, hàng hoàn về.</p></div>
+  </div>
+</section>
+
+</main>
+<footer><div class="wrap">Trang không lưu token hay mật khẩu. Ô đánh dấu và số ghi tay chỉ nằm trong trình duyệt đang mở trang này. Các bước dựa theo <code>so-tay-luong-nghiep-vu.html</code> và giao diện staging xem ngày 20/11/2026.</div></footer>
+
+<script>
+const WHO = {ceo:["CEO","--l-ceo"], he:["Hệ thống","--l-he"], san:["Sàn","--l-san"], kho:["Kho (CEO làm)","--l-kho"]};
+const KEYS = [["tt","Tồn kho"],["tg","Tạm giữ"],["kc","Khoá chờ duyệt"],["ctb","Có thể bán"],["cv","Chưa về"]];
+
+const FLOWS = [
+{id:"nhap-hang",no:"1",name:"Nhập hàng",title:"Nhập hàng: đặt 20 áo đen, nhận đủ",
+ intro:"Một đơn đặt hàng đi qua duyệt, đặt NCC, kiểm nhận và ghi sổ. Tồn chỉ tăng ở bước ghi sổ.",
+ say:"Nhân viên không sửa tay số tồn. Muốn tăng tồn thì phải có đơn đặt được CEO duyệt và phiếu nhập kho được ghi sổ.",
+ start:{tt:99,tg:0,kc:0,ctb:99,cv:0},
+ steps:[
+  {t:"Tạo đơn đặt hàng nhập",a:"kho",scr:"Nhập hàng › Đặt hàng nhập › Tạo đơn đặt hàng nhập",
+   do:"Chọn NCC “NCC Nhập áo”, thêm dòng AO-0001-DEN, số lượng 20, giá nhập 120 ₫. Lưu rồi bấm Gửi duyệt.",
+   see:"Có đơn DN-000002 ở trạng thái Chờ duyệt, không sửa được nữa."},
+  {t:"CEO duyệt",a:"ceo",scr:"Chi tiết đơn DN-000002",
+   do:"Bấm Duyệt.",
+   see:"Đơn sang Đã duyệt, giá nhập được chốt.",
+   note:"CEO vừa lập vừa duyệt nên được tự duyệt, nhật ký thao tác gắn nhãn tự duyệt. Có thể mở Quản trị › Nhật ký thao tác cho thầy xem."},
+  {t:"Đã đặt NCC",a:"kho",scr:"Chi tiết đơn DN-000002",
+   do:"Bấm Đã đặt NCC, nhập ngày giao dự kiến (ví dụ ngày mai).",
+   see:"Đơn sang Đang chờ vận chuyển, cột Chưa về là 20.",s:{cv:20}},
+  {t:"Lập phiếu nhập kho",a:"kho",scr:"Nhập hàng › Phiếu nhập kho",
+   do:"Lập phiếu từ đơn DN-000002. Dòng AO-0001-DEN: NCC báo giao 20, đạt 20, lỗi 0.",
+   see:"Phiếu ở Đang kiểm. Tồn kho chưa đổi vì hàng đang kiểm chưa bán được."},
+  {t:"Ghi sổ phiếu nhập",a:"kho",scr:"Chi tiết phiếu nhập",
+   do:"Bấm Ghi sổ.",
+   see:"Phiếu khớp, đơn sang Đã nhận đủ. Kho: tồn 119, có thể bán 119, giá vốn bình quân khoảng 103 ₫ (99 × 100 + 20 × 120, chia 119).",
+   s:{tt:119,ctb:119,cv:0}},
+  {t:"Tồn mới lên TikTok",a:"he",scr:"Tab TikTok › Seller Center nhúng",
+   do:"Không bấm gì. Mở sản phẩm áo đen trong Seller Center sandbox, tải lại.",
+   see:"Tồn trên TikTok là 119 (chờ vài giây tới vài phút).",
+   note:"Nếu chưa đổi: đợi lượt đối chiếu 15 phút, hoặc bỏ đoạn này khỏi video và nói bằng lời."}
+ ]},
+{id:"kenh-ban",no:"2",name:"Kênh bán",title:"Kênh bán: nối thêm gian hàng Lazada",
+ intro:"Jastech đã có gian hàng TikTok, nên Lazada là gian hàng thứ hai và được chọn đẩy tồn hiện có, không phải kiểm kê lại.",
+ say:"Gian hàng đầu tiên của công ty bắt buộc kiểm kê để chốt tồn thật. Từ gian hàng thứ hai, hệ thống tin số tồn đang có và đẩy lên luôn.",
+ steps:[
+  {t:"Thêm gian hàng Lazada bằng token",a:"ceo",scr:"Kênh bán › Gian hàng › Thêm gian hàng",
+   do:"Chọn Lazada, dán access token lấy ở API Explorer, bấm Kết nối.",
+   see:"Gian hàng Lazada mới hiện ra ở trạng thái đang kết nối và mở màn thiết lập.",
+   note:"Shop thử của Lazada không có mật khẩu, nên dùng dán token thay vì đăng nhập uỷ quyền. Có thể nói câu này khi quay."},
+  {t:"Ghép SKU, đặt hạn trả hàng",a:"ceo",scr:"Màn thiết lập gian hàng",
+   do:"Xem bảng gợi ý ghép SKU sàn với SKU Commerio, sửa hoặc bỏ dòng sai. Nhập số ngày trả hàng, ví dụ 7.",
+   see:"Mỗi dòng có trạng thái ghép và tồn đang có trên sàn."},
+  {t:"Chọn đẩy tồn hiện có, Hoàn tất",a:"ceo",scr:"Màn thiết lập › Hoàn tất",
+   do:"Chọn “Đẩy tồn hiện có”. Chỉ cho thầy xem mốc kéo đơn (không sửa được). Bấm Hoàn tất.",
+   see:"Gian hàng Lazada sang Đã kết nối, nằm cạnh gian hàng TikTok trong danh sách."},
+  {t:"Kéo đơn còn mở, đẩy tồn",a:"he",scr:"Gian hàng Lazada › Listing & giá",
+   do:"Không bấm gì. Mở Listing & giá của gian hàng Lazada.",
+   see:"SKU đã ghép có tồn đẩy lên bằng số có thể bán. Nếu có ghép áo đen thì tồn Lazada là 119.",
+   note:"Shop Lazada thử không có sẵn sản phẩm áo đen thì bảng ghép có thể trống. Vẫn đủ để chứng minh nối và thiết lập; việc đẩy sản phẩm nằm ở mục Để sau."}
+ ]},
+{id:"don-kien",no:"3",name:"Đơn & kiện",title:"Đơn và kiện: bán 2 áo qua TikTok",
+ intro:"Tạo đơn thử trong sandbox TikTok, kéo về Commerio, rồi đóng gói và bàn giao.",
+ say:"Khách đặt là giữ hàng ngay, để hai sàn không bán trùng món cuối. Tồn kho chỉ bị trừ khi kiện được giao cho shipper.",
+ steps:[
+  {t:"Tạo đơn thử 2 áo đen",a:"san",scr:"Tab TikTok › Tester les fonctions › Vue acheteur",
+   do:"Bấm Créer une commande de test, chọn “[DEMO] Áo thun basic cổ tròn - Đen”, số lượng 2, đặt đơn.",
+   see:"Đơn mới hiện ở vue acheteur kèm mã đơn TikTok."},
+  {t:"Đồng bộ đơn",a:"he",scr:"Đơn hàng › Đồng bộ đơn",
+   do:"Bấm Đồng bộ đơn (hoặc chờ, hệ thống tự kéo mỗi 5 phút).",
+   see:"Đơn DH-000004 về, có một kiện. Kho: tạm giữ 2, có thể bán 117, tồn kho vẫn 119. Tồn trên TikTok và Lazada cũng thành 117.",
+   s:{tg:2,ctb:117},
+   note:"Nếu đơn ở Chưa thanh toán: kiện vẫn giữ hàng nhưng chưa đóng gói được. Thanh toán đơn trong vue acheteur rồi đồng bộ lại để đơn sang Đang xử lý."},
+  {t:"Lấy hàng, đóng gói",a:"kho",scr:"Kiện hàng › Danh sách lấy hàng · Chờ đóng gói",
+   do:"In danh sách lấy hàng. Mở kiện, quét hoặc nhập đủ 2 áo, bấm Đóng gói.",
+   see:"Kiện sang Đã đóng gói. Hàng trong hộp vẫn tính vào tồn kho."},
+  {t:"Báo sẵn sàng, in vận đơn",a:"kho",scr:"Kiện hàng › Đã đóng gói",
+   do:"Bấm báo sàn sẵn sàng giao, lấy và in vận đơn.",
+   see:"Kiện sang Chờ lấy hàng, có mã vận đơn của TikTok."},
+  {t:"Bàn giao cho shipper",a:"kho",scr:"Kiện hàng › Chờ lấy hàng › Bàn giao",
+   do:"Quét hoặc nhập mã kiện, xác nhận bàn giao.",
+   see:"Kiện sang Đang vận chuyển. Kho: tồn 117, tạm giữ 0, có thể bán vẫn 117. Kho › Phiếu kho có phiếu xuất XK.",
+   s:{tt:117,tg:0},
+   note:"Sandbox có thể tự báo đã lấy hàng trước khi kịp quét; hệ thống chỉ ghi bàn giao một lần nên kết quả vẫn như trên."}
+ ]},
+{id:"phieu-kho",no:"4",name:"Phiếu kho",title:"Phiếu kho: kiểm kê thấy thiếu 2",
+ intro:"Đếm thực tế được 115 trong khi sổ ghi 117. Sửa bằng phiếu kiểm kê có CEO duyệt, không sửa tay con số.",
+ say:"Phiếu làm giảm tồn khoá phần giảm ngay khi gửi duyệt, để món đã biết là thiếu không bị bán tiếp trong lúc chờ CEO.",
+ steps:[
+  {t:"Lập phiếu kiểm kê",a:"kho",scr:"Kho › Phiếu kho › Tạo phiếu",
+   do:"Chọn loại Kiểm kê, khu vực tồn thực. Thêm dòng AO-0001-DEN, số đếm 115, lý do “Kiểm kê cuối ngày”. Lưu nháp.",
+   see:"Phiếu KK ở Nháp, dòng hiện chênh lệch −2."},
+  {t:"Gửi duyệt",a:"kho",scr:"Chi tiết phiếu kiểm kê",
+   do:"Bấm Gửi duyệt.",
+   see:"Phiếu Chờ duyệt. Kho: khoá chờ duyệt 2, có thể bán 115. Tồn trên các sàn cũng giảm xuống 115.",
+   s:{kc:2,ctb:115}},
+  {t:"CEO duyệt, ghi sổ",a:"ceo",scr:"Kho › Phiếu kho (Chờ duyệt)",
+   do:"Mở phiếu, bấm Duyệt.",
+   see:"Phiếu Đã ghi sổ. Kho: tồn 115, khoá chờ duyệt 0, có thể bán 115. Giá vốn không đổi.",
+   s:{tt:115,kc:0}},
+  {t:"Xem thẻ kho",a:"ceo",scr:"Kho › AO-0001-DEN › Thẻ kho",
+   do:"Mở thẻ kho của SKU.",
+   see:"Ba dòng của buổi demo: nhập +20 (phiếu nhập), xuất −2 (XK), kiểm kê −2 (KK). Mỗi dòng mở được chứng từ gốc."}
+ ]}
+];
+
+/* --- lưu đánh dấu, bọc try/catch --- */
+const SKEY="commerio-demo-staging-v1";
+let state={};
+try{state=JSON.parse(localStorage.getItem(SKEY)||"{}")||{}}catch(e){state={}}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(state))}catch(e){}}
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* --- dựng trang --- */
+let cur={tt:99,tg:0,kc:0,ctb:99,cv:0};
+const rows=[["Đầu buổi",{...cur},{}]];
+let html="",nav="",total=0;
+FLOWS.forEach(f=>{
+  nav+=`<a href="#${f.id}"><span class="no">${f.no}</span>${f.name}</a>`;
+  html+=`<section class="sec" id="${f.id}"><div class="sec-h"><div class="big">${f.no}</div><div><h2>${esc(f.title)}</h2><p>${esc(f.intro)}</p></div></div>`;
+  html+=`<p class="say"><b>Câu nói khi quay:</b> ${esc(f.say)}</p>`;
+  f.steps.forEach((s,i)=>{
+    const id=`${f.no}.${i+1}`; total++;
+    let stock="";
+    if(s.s){
+      const before={...cur}; Object.assign(cur,s.s);
+      rows.push([`${id} ${s.t}`,{...cur},s.s]);
+      stock=`<div class="stock"><span class="lbl" style="margin:0">Số đổi</span>`+
+        Object.keys(s.s).map(k=>{const n=KEYS.find(x=>x[0]===k)[1];const d=cur[k]-before[k];
+          return `<span class="pill ${d>0?"up":"down"}">${n} ${before[k]} → ${cur[k]}</span>`}).join("")+`</div>`;
+    }
+    const w=WHO[s.a]; const done=!!(state[id]&&state[id].d); const note=(state[id]&&state[id].n)||"";
+    html+=`<div class="card step${done?" done":""}" data-id="${id}">
+      <input type="checkbox" class="chk" aria-label="Đã xong bước ${id}" ${done?"checked":""}>
+      <div>
+        <div class="head"><span class="id">${id}</span><span class="t">${esc(s.t)}</span><span class="who" style="color:var(${w[1]})">${w[0]}</span></div>
+        <div class="scr">${esc(s.scr)}</div>
+        <div class="cols"><p><span class="lbl">Bấm</span>${esc(s.do)}</p><p class="see"><span class="lbl">Phải thấy</span>${esc(s.see)}</p></div>
+        ${s.note?`<div class="note">${esc(s.note)}</div>`:""}
+        ${stock}
+        <label class="real">Số thật / ghi chú <input type="text" value="${esc(note)}" placeholder="vd: tồn 119, mã đơn DH-000004"></label>
+      </div></div>`;
+  });
+  html+=`</section>`;
+});
+document.getElementById("flows").innerHTML=html;
+document.getElementById("navFlows").innerHTML=nav;
+
+/* bảng tổng kết */
+let t=`<thead><tr><th>Sau bước</th>${KEYS.map(k=>`<th>${k[1]}</th>`).join("")}</tr></thead><tbody>`;
+rows.forEach(r=>{t+=`<tr><td>${esc(r[0])}</td>${KEYS.map(k=>`<td class="${k[0] in r[2]?"ch":""}">${r[1][k[0]]}</td>`).join("")}</tr>`});
+document.getElementById("sumTbl").innerHTML=t+"</tbody>";
+
+/* tiến độ */
+function prog(){const d=document.querySelectorAll(".step .chk:checked").length;
+  document.getElementById("progTxt").textContent=`${d}/${total}`;
+  document.getElementById("progBar").style.width=(total?d/total*100:0)+"%";}
+document.querySelectorAll(".step").forEach(el=>{
+  const id=el.dataset.id, cb=el.querySelector(".chk"), inp=el.querySelector("input[type=text]");
+  cb.addEventListener("change",()=>{state[id]={...(state[id]||{}),d:cb.checked};el.classList.toggle("done",cb.checked);save();prog();});
+  inp.addEventListener("input",()=>{state[id]={...(state[id]||{}),n:inp.value};save();});
+});
+prog();
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  state={};save();
+  document.querySelectorAll(".step").forEach(el=>{el.classList.remove("done");el.querySelector(".chk").checked=false;el.querySelector("input[type=text]").value="";});
+  prog();
+});
+
+/* sáng / tối */
+const root=document.documentElement;
+try{const th=localStorage.getItem(SKEY+"-theme");if(th)root.dataset.theme=th}catch(e){}
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme=dark?"light":"dark";
+  try{localStorage.setItem(SKEY+"-theme",root.dataset.theme)}catch(e){}
+});
+</script>
+</body>
+</html>
